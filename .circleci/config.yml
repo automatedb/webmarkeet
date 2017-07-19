@@ -28,15 +28,15 @@ jobs:
 
       - run:
           name: Install Selenium
-          command:
-            - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
-            - 'java -jar selenium-server-standalone-2.53.0.jar > /dev/null 2>&1':
-                      background: true
-            - 'php bin/console server:run 127.0.0.1:8000 --no-debug > server.log 2>&1':
-                  background: true
-            - "Xvfb :99 -ac 2>/dev/null":
-                  background: true
-            - sleep 3 # give xvfb some time to start
+          command: |
+            wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
+            'java -jar selenium-server-standalone-2.53.0.jar > /dev/null 2>&1':
+              background: true
+            'php bin/console server:run 127.0.0.1:8000 --no-debug > server.log 2>&1':
+              background: true
+            "Xvfb :99 -ac 2>/dev/null":
+              background: true
+            sleep 3 # give xvfb some time to start
 
       # Download and cache dependencies
       - restore_cache:
