@@ -36,12 +36,12 @@ jobs:
       - run: php composer.phar install -n --prefer-dist
 
       - run:
-        name: Create the .env file
-        command: cp .env.example .env
+          name: Create the .env file
+          command: cp .env.example .env
 
       - run:
-        name: Create new key
-        command: php artisan key:generate
+          name: Create new key
+          command: php artisan key:generate
 
       - save_cache:
           paths:
