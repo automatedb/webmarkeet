@@ -19,24 +19,24 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Install Composer
-        command: |
-          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-          php -r "if (hash_file('SHA384', 'composer-setup.php') === trim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'Installer verified'; } else { echo 'Installer invalid'; unlink('composer-setup.php'); } echo PHP_EOL;"
-          php composer-setup.php
-          php -r "unlink('composer-setup.php');"
+          name: Install Composer
+          command: |
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+            php -r "if (hash_file('SHA384', 'composer-setup.php') === trim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'Installer verified'; } else { echo 'Installer invalid'; unlink('composer-setup.php'); } echo PHP_EOL;"
+            php composer-setup.php
+            php -r "unlink('composer-setup.php');"
 
       - run:
-        name: Install Selenium
-        command: |
-          - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
-          - 'java -jar selenium-server-standalone-2.53.0.jar > /dev/null 2>&1':
-                    background: true
-          - 'php bin/console server:run 127.0.0.1:8000 --no-debug > server.log 2>&1':
-                background: true
-          - "Xvfb :99 -ac 2>/dev/null":
-                background: true
-          - sleep 3 # give xvfb some time to start
+          name: Install Selenium
+          command: |
+            - wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
+            - 'java -jar selenium-server-standalone-2.53.0.jar > /dev/null 2>&1':
+                      background: true
+            - 'php bin/console server:run 127.0.0.1:8000 --no-debug > server.log 2>&1':
+                  background: true
+            - "Xvfb :99 -ac 2>/dev/null":
+                  background: true
+            - sleep 3 # give xvfb some time to start
 
       # Download and cache dependencies
       - restore_cache:
