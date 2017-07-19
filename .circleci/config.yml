@@ -30,7 +30,7 @@ jobs:
           name: Install Selenium
           command: |
             wget http://selenium-release.storage.googleapis.com/2.53/selenium-server-standalone-2.53.0.jar
-            'java -jar selenium-server-standalone-2.53.0.jar > /dev/null 2>&1':
+            'java -jar selenium-server-standalone-2.53.0.jar':
               background: true
             'php bin/console server:run 127.0.0.1:8000 --no-debug > server.log 2>&1':
               background: true
