@@ -47,6 +47,8 @@ jobs:
 
       - run: php composer.phar install -n --prefer-dist
 
+      - run: php artisan key:generate
+
       - save_cache:
           paths:
             - ./vendor
