@@ -1,4 +1,6 @@
-## A propos
+## Prérequis
+
+Avoir docker et docker compose d'installer sur votre environnement.
 
 ## Installation et mise à jour
 
