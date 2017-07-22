@@ -17,7 +17,7 @@ class CreateContentsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->string('slug')->unique();
-            $table->text('description');
+            $table->text('content');
             $table->string('status');
             $table->string('thumbnail');
             $table->integer('user_id');
