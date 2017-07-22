@@ -14,9 +14,11 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker): arra
 });
 
 $factory->define(App\Models\Content::class, function(Faker\Generator $faker): array {
+    $title = $faker->sentence;
+
     return [
-        \App\Models\Content::$TITLE => $faker->title,
-        \App\Models\Content::$SLUG => $faker->slug,
+        \App\Models\Content::$TITLE => $title,
+        \App\Models\Content::$SLUG => str_slug($title),
         \App\Models\Content::$CONTENT => $faker->paragraphs(3, true),
         \App\Models\Content::$STATUS => $faker->word,
         \App\Models\Content::$THUMBNAIL => $faker->url
