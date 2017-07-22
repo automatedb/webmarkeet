@@ -36,6 +36,18 @@ Démarrage en tâche de fond :
 docker-compose up -D
 ```
 
+## Ajouter des jeux de tests
+
+Pour ajouter des jeux de tests en base de données :
+
+```bash
+php artisan db:seed
+```
+
+Cette opération va ajouter : 
+
+- 1 auteur associé à 20 contenus
+
 ## Contributeurs
 
 * Nicolas MORICET
