@@ -32,6 +32,10 @@ $factory->define(App\Models\Content::class, function(Faker\Generator $faker): ar
         \App\Models\Content::$SLUG => str_slug($title),
         \App\Models\Content::$CONTENT => $faker->paragraphs(3, true),
         \App\Models\Content::$STATUS => $faker->word,
-        \App\Models\Content::$THUMBNAIL => $faker->url
+        \App\Models\Content::$THUMBNAIL => array_random([
+            '/img/01.jpg',
+            '/img/02.jpg',
+            '/img/03.jpg'
+        ])
     ];
 });
