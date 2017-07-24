@@ -24,6 +24,21 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     ];
 });
 
+/**
+ * Permet de définir un adminstrateur en base de données
+ */
+$factory->defineAs(\App\Models\User::class, 'admin', function($faker) use ($factory) {
+    $user1 = $factory->raw(\App\Models\User::class);
+
+    return array_merge($user1, [
+        'firstname' => $faker->firstName,
+        'lastname' => $faker->lastName,
+        'email' => 'john.doe@domain.tld',
+        'password' => bcrypt('password'),
+        'role' => 'admin'
+    ]);
+});
+
 $factory->define(App\Models\Content::class, function(Faker\Generator $faker): array {
     $title = $faker->sentence;
 
