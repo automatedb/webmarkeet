@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\BadCredentialsException;
 use App\Exceptions\RequireFieldsException;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserCtrl extends Controller
 {
@@ -16,14 +18,18 @@ class UserCtrl extends Controller
 
     /**
      * Show authentication blog
+     * @Middleware("web")
      * @Get("/authentication")
      */
-    public function authentication() {
-        return response()->view('User/authentication');
+    public function authentication(Request $request) {
+        return response()->view('User/authentication', [
+            'alert' => $request->session()->get('alert')
+        ]);
     }
 
     /**
      * Show authentication blog
+     * @Middleware("web")
      * @Post("/post-authentication")
      */
     public function postAuthentication(Request $request) {
@@ -31,6 +37,19 @@ class UserCtrl extends Controller
             throw new RequireFieldsException('Tous les champs sont requis');
         }
 
-        $this->userService->authentication($request->email, $request->password);
+        try {
+            $user = $this->userService->authentication($request->email, $request->password);
+        } catch (BadCredentialsException $e) {
+            $request->session()->flash('alert', [
+                'message' => 'Vos identifiants sont invalides.',
+                'type' => 'warning'
+            ]);
+
+            return redirect()->action('UserCtrl@authentication');
+        }
+
+        Auth::login($user, true);
+
+        return redirect()->action('AdminCtrl@index');
     }
 }

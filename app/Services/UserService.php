@@ -15,7 +15,7 @@ class UserService
         $this->user = $user;
     }
 
-    public function authentication(string $email, string $password) {
+    public function authentication(string $email, string $password): User {
         $user = $this->user->where('email', $email)->first();
 
         if(empty($user)) {

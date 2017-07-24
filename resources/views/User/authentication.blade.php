@@ -1,6 +1,8 @@
 @extends('Layout.content')
 
+
 @section('content')
+    @widget('Alert', $alert)
     {!! Form::open(['action' => 'UserCtrl@postAuthentication']) !!}
 
     <div class="form-group">
