@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class AdminCtrl extends Controller
 {
     /**
-     * @Middleware("web")
+     * @Middleware("auth")
      * @Get("/admin")
      */
     public function index() {
