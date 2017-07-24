@@ -3,13 +3,13 @@
 namespace App\Services;
 
 use App\Exceptions\NoFoundException;
-use App\Models;
+use App\Models\Content;
 
 class ContentService
 {
     private $content;
 
-    public function __construct(Models\Content $content) {
+    public function __construct(Content $content) {
         $this->content = $content;
     }
 
