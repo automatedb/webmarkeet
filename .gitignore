@@ -13,3 +13,7 @@ npm-debug.log
 docker-compose.yml
 public/img
 /storage
+public/css/
+public/fonts/
+public/js/
+public/mix-manifest.json
