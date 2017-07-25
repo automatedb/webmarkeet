@@ -22,6 +22,14 @@ class UserCtrl extends Controller
     }
 
     /**
+     * Show index customer page
+     * @Get("/app")
+     */
+    public function index() {
+        return response()->view('User.index');
+    }
+
+    /**
      * Show authentication blog
      * @Get("/authentication")
      */
@@ -47,7 +55,7 @@ class UserCtrl extends Controller
 
             Auth::login($user);
 
-            $redirect = 'AdminCtrl@index';
+            $redirect = ($user->role === 'admin') ? 'AdminCtrl@index' : 'UserCtrl@index';
         } catch (BadCredentialsException | UserNotFoundException $e) {
             $request->session()->flash('alert', [
                 'message' => 'Vos identifiants sont invalides.',
@@ -56,5 +64,14 @@ class UserCtrl extends Controller
         }
 
         return redirect()->action($redirect);
+    }
+
+    /**
+     * @Get("/app/logout")
+     */
+    public function logout() {
+        Auth::logout();
+
+        return redirect()->action('ContentCtrl@index');
     }
 }
