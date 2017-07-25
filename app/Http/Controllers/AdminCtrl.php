@@ -10,18 +10,9 @@ use Illuminate\Support\Facades\Auth;
 class AdminCtrl extends Controller
 {
     /**
-     * @Get("/admin")
+     * @Get("/app/admin")
      */
     public function index() {
          return response()->view('Admin/index');
-    }
-
-    /**
-     * @Get("/admin/logout")
-     */
-    public function logout() {
-        Auth::logout();
-
-        return redirect()->action('ContentCtrl@index');
     }
 }
