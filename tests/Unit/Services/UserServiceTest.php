@@ -50,10 +50,10 @@ class UserServiceTest extends TestCase
         $mock = \Mockery::mock(User::class);
 
         $mock->shouldReceive('where')->once()->andReturn($mock);
-        $mock->shouldReceive('first')->once()->andReturn((object) [
+        $mock->shouldReceive('first')->once()->andReturn(new User([
             'email' => 'john.doe@domain.tld',
             'password' => bcrypt('password')
-        ]);
+        ]));
 
         $userService = new UserService($mock);
 

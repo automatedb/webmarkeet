@@ -20,6 +20,10 @@ class Authentication
             return redirect()->action('UserCtrl@authentication');
         }
 
+        if(Auth::check() && strpos('authentication', $request->path()) > -1) {
+            return redirect()->action('AdminCtrl@index');
+        }
+
         return $next($request);
     }
 }
