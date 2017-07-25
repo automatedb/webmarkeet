@@ -34,6 +34,6 @@ class CreateContentsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('contents');
+        Schema::dropIfExists('contents');
     }
 }

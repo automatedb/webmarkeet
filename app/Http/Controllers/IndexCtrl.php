@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-class IndexCtrl
+class IndexCtrl extends Controller
 {
     /**
      * Show index page
