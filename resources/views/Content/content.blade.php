@@ -1,4 +1,4 @@
-@extends('Layout.content')
+@extends('Layout.guest.content')
 
 @section('content')
     <img src="{{ $content->thumbnail }}" alt="">

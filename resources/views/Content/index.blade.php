@@ -1,4 +1,4 @@
-@extends('Layout.content')
+@extends('Layout.guest.content')
 
 @section('content')
     @foreach ($contents as $content)
