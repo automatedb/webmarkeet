@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
+    /** @var User */
     private $user;
 
     public function __construct(User $user) {
@@ -58,5 +59,15 @@ class UserService
         }
 
         return $user;
+    }
+
+    public function delete(int $id): bool {
+        $user = $this->user->where('id', $id)->first();
+
+        if(empty($user)) {
+            return false;
+        }
+
+        return $user->delete();
     }
 }

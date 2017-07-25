@@ -156,6 +156,31 @@ class UserCtrl extends Controller
     }
 
     /**
+     * @Get("/app/delete")
+     */
+    public function delete(Request $request) {
+        $user = Auth::user();
+
+        if(!$this->userService->delete($user->id)) {
+            $request->session()->flash('alert', [
+                'message' => "Il nous est impossible de supprimer votre compte. Notre équipe a été informé de ce problème. Nous vous prions de nous excuser et vous invitons à recommencer ultérieurement.",
+                'type' => 'warning'
+            ]);
+
+            return redirect()->back();
+        };
+
+        Auth::logout();
+
+        $request->session()->flash('alert', [
+            'message' => "Votre comptes est supprimé. Nous sommes désolé de vous voir partir. Merci de la confiance que vous nous avez accordé jusqu'aujourd'hui. Cordialement.",
+            'type' => 'success'
+        ]);
+
+        return redirect()->action('UserCtrl@authentication');
+    }
+
+    /**
      * @Get("/app/logout")
      */
     public function logout() {

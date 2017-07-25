@@ -212,4 +212,40 @@ class UserServiceTest extends TestCase
         $this->assertEquals($user->firstname, 'jane');
         $this->assertEquals($user->role, 'customer');
     }
+
+    public function testDeleteWithUserNotFound() {
+        // Arrange
+        $mock = \Mockery::mock(User::class);
+
+        $mock->shouldReceive('where')->once()->andReturn($mock);
+        $mock->shouldReceive('first')->once()->andReturn(null);
+
+        $userService = new UserService($mock);
+
+        // Act
+        $result = $userService->delete(1);
+
+        // Assert
+        $this->assertFalse($result);
+    }
+
+    public function testDeleteWithSuccess() {
+        // Arrange
+        $mock = \Mockery::mock(User::class);
+
+        $userMock = \Mockery::mock(new User([]));
+
+        $userMock->shouldReceive('delete')->andReturn(true);
+
+        $mock->shouldReceive('where')->once()->andReturn($mock);
+        $mock->shouldReceive('first')->once()->andReturn($userMock);
+
+        $userService = new UserService($mock);
+
+        // Act
+        $result = $userService->delete(1);
+
+        // Assert
+        $this->assertTrue($result);
+    }
 }

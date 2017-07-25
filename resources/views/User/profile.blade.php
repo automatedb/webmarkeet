@@ -35,6 +35,7 @@
                 </div>
 
                 <div class="form-group">
+                    {{ link_to_action('UserCtrl@delete', 'Supprimer mon compte', [], ['class' => 'btn btn-danger']) }}
                     {!! Form::submit('Mettre à jour', ['class' => 'btn btn-primary']) !!}
                 </div>
 
