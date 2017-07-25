@@ -35,7 +35,10 @@
                 </div>
 
                 <div class="form-group">
-                    {{ link_to_action('UserCtrl@delete', 'Supprimer mon compte', [], ['class' => 'btn btn-danger']) }}
+                    @if($user->role !== 'admin')
+                        {{ link_to_action('UserCtrl@delete', 'Supprimer mon compte', [], ['class' => 'btn btn-danger']) }}
+                    @endif
+                    {{ link_to_action('UserCtrl@logout', 'Me déconnecter', [], ['class' => 'btn btn-warning']) }}
                     {!! Form::submit('Mettre à jour', ['class' => 'btn btn-primary']) !!}
                 </div>
 
