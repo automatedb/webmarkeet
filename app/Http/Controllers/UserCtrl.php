@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\BadCredentialsException;
 use App\Exceptions\RequireFieldsException;
+use App\Exceptions\UnexpectedException;
 use App\Exceptions\UserNotFoundException;
+use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class UserCtrl
@@ -27,6 +30,92 @@ class UserCtrl extends Controller
      */
     public function index() {
         return response()->view('User.index');
+    }
+
+    /**
+     * Show profil page
+     * @Get("/app/profile")
+     */
+    public function profile(Request $request) {
+        return response()->view('User.profile', [
+            'alert' => $request->session()->get('alert'),
+            'user' => Auth::user()
+        ]);
+    }
+
+    /**
+     * Show index customer page
+     * @Post("/app/profile/update")
+     */
+    public function modify(Request $request) {
+        $user = Auth::user();
+        $keyOldPassword = 'oldpassword';
+
+        $rules = [
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'email' => 'required'
+        ];
+
+        $values = $request->all();
+
+        $validator = Validator::make($values, $rules);
+
+        if($validator->fails()) {
+            throw new RequireFieldsException("Tous les champs sont requis.");
+        }
+
+        $passwordRules = [
+            $keyOldPassword => 'required',
+            'password' => 'required',
+            'confirm' => 'required|same:password'
+        ];
+
+        $validator = Validator::make($values, $passwordRules);
+
+        $errors = $validator->errors()->toArray();
+
+        $nErrors = count($errors);
+        $changePasswordBlocked = false;
+        $messagePassword = '';
+
+        if($nErrors < 3) {
+            // User has only entered a password and a confirm
+            if(key_exists($keyOldPassword, $errors) && $nErrors === 1) {
+                $changePasswordBlocked = true;
+                $messagePassword = "Par contre, nous ne pouvons pas changer votre mot de passe. Pour cela vous devez saisir votre mot de passe courant.";
+            // User has only entered an old password
+            } else if (!key_exists($keyOldPassword, $errors) && $nErrors === 2) {
+                $changePasswordBlocked = true;
+                $messagePassword = "Par contre, vous avez saisi votre mot de passe courant, mais pas de nouveau mot de passe, nous n'avons donc pas changer votre mot de passe.";
+                // User has only entered an old password with either a password or confirmation
+            } else if(!key_exists($keyOldPassword, $errors) && $nErrors === 1) {
+                $changePasswordBlocked = true;
+                $messagePassword = "Par contre, le mot de passe saisi est différent de sa confirmation. Nous n'avons donc pas changer votre mot de passe.";
+            }
+        }
+
+        try {
+            if(!$changePasswordBlocked) {
+                $this->userService->update($user->id, $values[User::$FIRSTNAME], $values[User::$LASTNAME], $values[User::$EMAIL], $values[$keyOldPassword], $values[User::$PASSWORD]);
+            } else {
+                $this->userService->update($user->id, $values[User::$FIRSTNAME], $values[User::$LASTNAME], $values[User::$EMAIL]);
+            }
+
+            $request->session()->flash('alert', [
+                'message' => sprintf('Vos informations ont été modifiées. %s', $messagePassword),
+                'type' => 'success'
+            ]);
+        } catch (UserNotFoundException | UnexpectedException $e) {
+            throw new UnexpectedException("Erreur non défini");
+        } catch (BadCredentialsException $e) {
+            $request->session()->flash('alert', [
+                'message' => 'Votre ancien mot de passe est invalide.',
+                'type' => 'warning'
+            ]);
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -53,7 +142,7 @@ class UserCtrl extends Controller
         try {
             $user = $this->userService->authentication($request->email, $request->password);
 
-            Auth::login($user);
+            Auth::login($user, true);
 
             $redirect = ($user->role === 'admin') ? 'AdminCtrl@index' : 'UserCtrl@index';
         } catch (BadCredentialsException | UserNotFoundException $e) {

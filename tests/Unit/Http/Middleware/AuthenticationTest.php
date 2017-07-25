@@ -9,13 +9,30 @@ use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-    public function testHandleRedirectToAuthentication()
+    public function testHandleRedirectToAuthenticationFromAdmin()
     {
         // Arrange
         Auth::shouldReceive('check')->once()->andReturn(false);
         $requestMock = \Mockery::mock(Request::class);
 
         $requestMock->shouldReceive('path')->once()->andReturn('/app/admin');
+
+        $authentication = new \App\Http\Middleware\Authentication();
+
+        // Act
+        $result = $authentication->handle($requestMock, function($request) { });
+
+        // Assert
+        $this->assertEquals('http://localhost/authentication', $result->getTargetUrl());
+    }
+
+    public function testHandleRedirectToAuthenticationFromApp()
+    {
+        // Arrange
+        Auth::shouldReceive('check')->once()->andReturn(false);
+        $requestMock = \Mockery::mock(Request::class);
+
+        $requestMock->shouldReceive('path')->once()->andReturn('/app');
 
         $authentication = new \App\Http\Middleware\Authentication();
 
