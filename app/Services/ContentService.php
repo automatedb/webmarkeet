@@ -26,4 +26,8 @@ class ContentService
 
         return $result[0];
     }
+
+    public function getContents() {
+        return $this->content->get();
+    }
 }
