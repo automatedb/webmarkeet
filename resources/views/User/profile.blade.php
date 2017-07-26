@@ -63,8 +63,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Je suis conscience qu'en supprimant mon compte je perds aussi tout mes accès aux formations vidéos et aux codes sources.</p>
-                    <p>Je comprends aussi que la suppression de mon compte sera effectif et irreversible immédiatement après avoir cliqué sur "Je confirme". </p>
+                    <p>Je suis conscience qu'en supprimant mon compte je perds aussi tous mes accès aux formations vidéos et aux codes sources.</p>
+                    <p>Je comprends aussi que la suppression de mon compte sera effective et irreversible immédiatement après avoir cliqué sur "Je confirme". </p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
