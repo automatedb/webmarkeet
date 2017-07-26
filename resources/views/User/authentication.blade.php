@@ -12,10 +12,12 @@
                 {!! Form::open(['action' => 'UserCtrl@postAuthentication']) !!}
 
                 <div class="form-group">
-                    {!! Form::text('email', '', ['class' => 'form-control']) !!}
+                    {!! Form::text('email', '', ['class' => 'form-control required']) !!}
+                    <p class="form-control-feedback hidden-xs-up">Merci d'entrer votre email.</p>
                 </div>
                 <div class="form-group">
-                    {!! Form::password('password', ['class' => 'form-control']) !!}
+                    {!! Form::password('password', ['class' => 'form-control required']) !!}
+                    <p class="form-control-feedback hidden-xs-up">Merci d'entrer votre mot de passe.</p>
                 </div>
                 <div class="form-group">
                     {!! Form::submit('Connexion', ['class' => 'btn btn-primary']) !!}
