@@ -14,6 +14,8 @@ class Content extends Model
 
     public static $STATUS = 'status';
 
+    public static $TYPE = 'type';
+
     public static $THUMBNAIL = 'thumbnail';
 
     public static $USER_ID = 'user_id';
@@ -25,6 +27,6 @@ class Content extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'slug', 'content', 'status', 'thumbnail', 'user_id'];
+    protected $fillable = ['title', 'slug', 'content', 'status', 'type', 'thumbnail', 'user_id'];
 
 }

@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateContentsTable extends Migration
 {
@@ -18,6 +18,7 @@ class CreateContentsTable extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('content');
+            $table->string('type');
             $table->string('status');
             $table->string('thumbnail');
             $table->integer('user_id');

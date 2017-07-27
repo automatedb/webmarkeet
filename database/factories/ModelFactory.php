@@ -61,7 +61,8 @@ $factory->define(App\Models\Content::class, function(Faker\Generator $faker): ar
         \App\Models\Content::$TITLE => $title,
         \App\Models\Content::$SLUG => str_slug($title),
         \App\Models\Content::$CONTENT => $faker->paragraphs(3, true),
-        \App\Models\Content::$STATUS => $faker->word,
+        \App\Models\Content::$STATUS => array_random(array_keys(config('content.status'))),
+        \App\Models\Content::$TYPE => array_random(array_keys(config('content.type'))),
         \App\Models\Content::$THUMBNAIL => array_random([
             '/img/01.jpg',
             '/img/02.jpg',
