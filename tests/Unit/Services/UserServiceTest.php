@@ -109,6 +109,10 @@ class UserServiceTest extends TestCase
         $userService->update(1, 'jane', 'doe', 'jane.doe@domain.tld', 'password');
     }
 
+    public function testUpdateWithEmailAlreadyExists() {
+        $this->assertTrue(false);
+    }
+
     public function testUpdatePasswordWithBadPassword() {
         // Arrange
         $mock = \Mockery::mock(User::class);

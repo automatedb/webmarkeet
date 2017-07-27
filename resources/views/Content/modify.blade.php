@@ -62,10 +62,10 @@
 @push('scripts')
     {!! Html::script('https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js') !!}
 
-<script type="application/javascript">
-    new SimpleMDE({
-        element: $("#editor")[0],
-        showIcons: ["code"]
-    })
-</script>
+    <script type="application/javascript">
+        new SimpleMDE({
+            element: $("#editor")[0],
+            showIcons: ["code"]
+        })
+    </script>
 @endpush

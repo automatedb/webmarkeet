@@ -28,7 +28,13 @@ class ContentService
     }
 
     public function getContentForBlog() {
-        return $this->content->get();
+        $contents = $this->content->get();
+
+        foreach ($contents as $index => $content) {
+            $contents[$index]->content = $this->converter->convertToHtml($contents[$index]->content);
+        }
+
+        return $contents;
     }
 
     public function getContentBySlug(string $slug) {
