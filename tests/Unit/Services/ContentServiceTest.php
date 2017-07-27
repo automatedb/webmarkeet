@@ -245,4 +245,67 @@ class ContentServiceTest extends TestCase
         // Assert
         $this->assertTrue($result);
     }
+
+
+    public function testAddWithUnknownType() {
+        // Arrange
+        $mock = \Mockery::mock(Content::class);
+
+        $contentService = new ContentService($mock, $this->converterMock);
+
+        // Assert
+        $this->expectException(UnknownTypeException::class);
+
+        // Act
+        $contentService->add(1, 'title', 'slug', 'content', 'PUBLISHED', 'OTHER', []);
+
+    }
+
+    public function testAddWithUnknownStatus() {
+        // Arrange
+        $mock = \Mockery::mock(Content::class);
+
+        $contentService = new ContentService($mock, $this->converterMock);
+
+        // Assert
+        $this->expectException(UnknownStatusException::class);
+
+        // Act
+        $contentService->add(1, 'title', 'slug', 'content', 'OTHER', 'CONTENT', []);
+
+    }
+
+    public function testAddWithSlugAlreadyExists() {
+        // Arrange
+        $mock = \Mockery::mock(Content::class);
+
+        $mock->shouldReceive('where')->once()->andReturn($mock);
+        $mock->shouldReceive('count')->once()->andReturn(1);
+
+        $contentService = new ContentService($mock, $this->converterMock);
+
+        // Assert
+        $this->expectException(SlugAlreadyExistsException::class);
+
+        // Act
+        $contentService->add(1, 'title', 'slug', 'content', 'DRAFT', 'CONTENT', []);
+
+    }
+
+    public function testAddWithSuccess() {
+        // Arrange
+        $mock = \Mockery::mock(Content::class);
+
+        $mock->shouldReceive('where')->once()->andReturn($mock);
+        $mock->shouldReceive('count')->once()->andReturn(0);
+        $mock->shouldReceive('save')->once()->andReturn(1);
+
+        $contentService = new ContentService($mock, $this->converterMock);
+
+        // Act
+        $result = $contentService->add(1, 'title', 'slug', 'content', 'DRAFT', 'CONTENT', []);
+
+        // Assert
+        $this->assertEquals($result, 1);
+    }
 }

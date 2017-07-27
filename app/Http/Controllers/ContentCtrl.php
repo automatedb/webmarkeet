@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\NoFoundException;
 use App\Exceptions\RequireFieldsException;
+use App\Exceptions\SlugAlreadyExistsException;
 use App\Models\Content;
 use App\Services\ContentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use League\Flysystem\Exception;
 
@@ -73,8 +75,63 @@ class ContentCtrl extends Controller
      * Show content form
      * @Get("/app/admin/contents/add")
      */
-    public function add() {
-        return response()->view('Content.add');
+    public function add(Request $request) {
+        return response()->view('Content.add', [
+            'status' => config('content.status'),
+            'types' => config('content.type'),
+            'alert' => $request->session()->get('alert')
+        ]);
+    }
+
+    /**
+     * Post new content
+     * @Post("/app/admin/contents/add")
+     */
+    public function postAdd(Request $request) {
+        $thumbnail = [];
+        $rules = [
+            'title' => 'required',
+            'slug' => 'required',
+            'status' => 'required',
+            'type' => 'required'
+        ];
+
+        $values = $request->all();
+
+        $validation = Validator::make($values, $rules);
+
+        if($validation->fails()) {
+            throw new RequireFieldsException('Fields required');
+        }
+
+        if($request->hasFile('thumbnail')) {
+            $request->file('thumbnail')->store(config('content.uploadDirectory'));
+
+            $thumbnail[ContentService::HASH_NAME] = $request->thumbnail->hashName();
+            $thumbnail[ContentService::ORIGINAL_NAME] = $request->thumbnail->getClientOriginalName();
+        }
+
+        $user = Auth::user();
+
+        try {
+            $contentId = $this->contentService->add(
+                $user->id,
+                $values[Content::$TITLE],
+                $values[Content::$SLUG],
+                $values[Content::$STATUS],
+                $values[Content::$TYPE],
+                $values[Content::$CONTENT],
+                $thumbnail);
+        } catch (SlugAlreadyExistsException $e) {
+            $request->session()->flash('alert', [
+                'message' => "L'url que vous essayez de saisir existe déjà pour un autre contenu.",
+                'type' => 'warning'
+            ]);
+
+            return redirect()->back()->withInput();
+        }
+
+        return redirect()->action('ContentCtrl@modify', [ 'id' => $contentId ]);
     }
 
     /**
@@ -91,7 +148,7 @@ class ContentCtrl extends Controller
     }
 
     /**
-     * Show content form to modify
+     * Post modifications
      * @Post("/app/admin/contents/modify/{id}")
      */
     public function postModify(Request $request) {
@@ -123,9 +180,9 @@ class ContentCtrl extends Controller
                 intval($values['id']),
                 $values[Content::$TITLE],
                 $values[Content::$SLUG],
-                $values[Content::$CONTENT],
                 $values[Content::$STATUS],
                 $values[Content::$TYPE],
+                $values[Content::$CONTENT],
                 $thumbnail
             );
 

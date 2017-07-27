@@ -32,11 +32,13 @@
         </div>
         <div class="col col-md-3">
 
-            <div class="form-group">
-                {!! Form::label('thumbnail', 'Illustration du contenu') !!}
-                {!! Html::image($content->thumbnail, 'Thumbnail', [ 'class' => 'img-thumbnail' ]) !!}
-                {!! Form::file('thumbnail', [ 'class' => 'form-control', 'id' => 'thumbnail' ]) !!}
-            </div>
+                <div class="form-group">
+                    {!! Form::label('thumbnail', 'Illustration du contenu') !!}
+                    @if(!empty($content->thumbnail))
+                        {!! Html::image($content->thumbnail, 'Thumbnail', [ 'class' => 'img-thumbnail' ]) !!}
+                    @endif
+                    {!! Form::file('thumbnail', [ 'class' => 'form-control', 'id' => 'thumbnail' ]) !!}
+                </div>
 
             <div class="form-group">
                 {!! Form::label('type', 'Type de contenu') !!}
@@ -66,6 +68,6 @@
         new SimpleMDE({
             element: $("#editor")[0],
             showIcons: ["code"]
-        })
+        });
     </script>
 @endpush

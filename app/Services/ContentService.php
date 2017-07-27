@@ -65,14 +65,8 @@ class ContentService
         return $content;
     }
 
-    public function update(int $id, string $title, string $slug, string $content, string $status, string $type, array $thumbnail = []): Content {
-        if(!array_key_exists($type, config('content.type'))) {
-            throw new UnknownTypeException('Type not exists');
-        }
-
-        if(!array_key_exists($status, config('content.status'))) {
-            throw new UnknownStatusException('Status not exists');
-        }
+    public function update(int $id, string $title, string $slug, string $status, string $type, string $content = null, array $thumbnail = []): Content {
+        $this->validParams($status, $type);
 
         $contentModel = $this->content->where('id', $id)->first();
 
@@ -80,17 +74,19 @@ class ContentService
             throw new ContentNotFoundException('Content not found');
         }
 
-        if(!empty($thumbnail)) {
-            try {
-                $this->moveThumbnail($thumbnail);
+        $this->setThumbnail($thumbnail, $contentModel);
 
-                $contentModel->thumbnail = DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $thumbnail[self::ORIGINAL_NAME];
-            } catch (DontMoveFileException $e) {
-                if($e->getCode() === 200) {
-                    throw new UnexpectedException("The update method isn't used correctly. A right thumbnail parameter is required.");
-                }
-            }
-        }
+//        if(!empty($thumbnail)) {
+//            try {
+//                $this->moveThumbnail($thumbnail);
+//
+//                $contentModel->thumbnail = DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $thumbnail[self::ORIGINAL_NAME];
+//            } catch (DontMoveFileException $e) {
+//                if($e->getCode() === 200) {
+//                    throw new UnexpectedException("The update method isn't used correctly. A right thumbnail parameter is required.");
+//                }
+//            }
+//        }
 
         $contentModel->title = $title;
         $contentModel->slug = $slug;
@@ -105,7 +101,39 @@ class ContentService
         return $contentModel;
     }
 
+    public function add(int $userId, string $title, string $slug, string $status, string $type, string $content = null, array $thumbnail = []): int {
+        $this->validParams($status, $type);
+
+        $n = $this->content->where('slug', $slug)->count();
+
+        if($n) {
+            throw new SlugAlreadyExistsException('Slug already exists.');
+        }
+
+        $data = [];
+
+        $this->setThumbnail($thumbnail, $data);
+
+        $data[Content::$TITLE] = $title;
+        $data[Content::$SLUG] = $slug;
+        $data[Content::$CONTENT] = $content;
+        $data[Content::$STATUS] = $status;
+        $data[Content::$TYPE] = $type;
+        $data[Content::$USER_ID] = $userId;
+
+        $content = new Content($data);
+
+        $lastId = 0;
+
+        if($content->save($data)) {
+            $lastId = $content->id;
+        }
+
+        return $lastId;
+    }
+
     public function delete(int $id) {
+        /** @var Content $content */
         $content = $this->content->where('id', $id)->first();
 
         if(empty($content)) {
@@ -113,6 +141,30 @@ class ContentService
         }
 
         return $content->delete($id);
+    }
+
+    private function setThumbnail($thumbnail, &$data) {
+        if(!empty($thumbnail)) {
+            try {
+                $this->moveThumbnail($thumbnail);
+
+                $data[Content::$THUMBNAIL] = DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $thumbnail[self::ORIGINAL_NAME];
+            } catch (DontMoveFileException $e) {
+                if($e->getCode() === 200) {
+                    throw new UnexpectedException("The update method isn't used correctly. A right thumbnail parameter is required.");
+                }
+            }
+        }
+    }
+
+    private function validParams(string $status, string $type) {
+        if(!array_key_exists($type, config('content.type'))) {
+            throw new UnknownTypeException('Type not exists');
+        }
+
+        if(!array_key_exists($status, config('content.status'))) {
+            throw new UnknownStatusException('Status not exists');
+        }
     }
 
     private function moveThumbnail(array $thumbnail) {

@@ -17,10 +17,10 @@ class CreateContentsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->string('slug')->unique();
-            $table->text('content');
+            $table->text('content')->nullable();
             $table->string('type');
             $table->string('status');
-            $table->string('thumbnail');
+            $table->string('thumbnail')->nullable();
             $table->integer('user_id');
             $table->timestamps();
 

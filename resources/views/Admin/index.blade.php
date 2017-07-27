@@ -1,5 +1,7 @@
 @extends('Layout.admin.content')
 
 @section('content')
-    {{ link_to_action('UserCtrl@logout', 'Déconnection') }}
+    <div class="text-center">
+        No content yet!
+    </div>
 @endsection
