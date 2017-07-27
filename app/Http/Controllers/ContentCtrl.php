@@ -62,9 +62,10 @@ class ContentCtrl extends Controller
      * Show all contents
      * @Get("/app/admin/contents")
      */
-    public function contents() {
+    public function contents(Request $request) {
         return response()->view('Content.contents', [
-            'contents' => $this->contentService->getContents()
+            'contents' => $this->contentService->getContents(),
+            'alert' => $request->session()->get('alert')
         ]);
     }
 
@@ -147,6 +148,20 @@ class ContentCtrl extends Controller
      * @Get("/app/admin/contents/delete/{id}")
      */
     public function delete(Request $request, $id) {
+        $data = [
+            'message' => 'Contenu supprimé.',
+            'type' => 'success'
+        ];
 
+        if(!$this->contentService->delete($id)) {
+            $data = [
+                'message' => 'Une erreur est survenue.',
+                'type' => 'danger'
+            ];
+        }
+
+        $request->session()->flash('alert', $data);
+
+        return redirect()->back();
     }
 }
