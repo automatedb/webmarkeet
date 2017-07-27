@@ -6,8 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Content extends Model
 {
+    // Status
+    public const PUBLISHED = 'PUBLISHED';
+
+    public const DRAFT = 'DRAFT';
+
+    public const CONTENT = 'CONTENT';
+
+    // Types
+    public const TUTORIAL = 'TUTORIAL';
+
     public static $TITLE = 'title';
 
+    // Properties
     public static $SLUG = 'slug';
 
     public static $CONTENT = 'content';

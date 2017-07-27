@@ -28,7 +28,8 @@ class ContentService
     }
 
     public function getContentForBlog() {
-        $contents = $this->content->get();
+        $contents = $this->content->where('type', Content::CONTENT)
+            ->where('status', Content::PUBLISHED)->get();
 
         foreach ($contents as $index => $content) {
             $contents[$index]->content = $this->converter->convertToHtml($contents[$index]->content);

@@ -28,6 +28,7 @@ class ContentServiceTest extends TestCase
         // Arrange
         $mock = \Mockery::mock(Content::class);
 
+        $mock->shouldReceive('where')->twice()->andReturn($mock);
         $mock->shouldReceive('get')->once()->andReturn([]);
 
         $contentService = new ContentService($mock, $this->converterMock);
@@ -44,6 +45,7 @@ class ContentServiceTest extends TestCase
         // Arrange
         $mock = \Mockery::mock(Content::class);
 
+        $mock->shouldReceive('where')->twice()->andReturn($mock);
         $mock->shouldReceive('get')->once()->andReturn([
             new Content([
                 'title' => 'A title 1',
