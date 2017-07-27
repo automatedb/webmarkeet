@@ -28,20 +28,26 @@ class ContentService
     }
 
     public function getContentForBlog() {
-        return $this->content->get();
+        $contents = $this->content->get();
+
+        foreach ($contents as $index => $content) {
+            $contents[$index]->content = $this->converter->convertToHtml($contents[$index]->content);
+        }
+
+        return $contents;
     }
 
     public function getContentBySlug(string $slug) {
-        /** @var Content $result */
-        $result = $this->content->where('slug', $slug)->first();
+        /** @var Content $content */
+        $content = $this->content->where('slug', $slug)->first();
 
-        if(empty($result)) {
+        if(empty($content)) {
             throw new NoFoundException("Content not found");
         }
 
-        $result->content = $this->converter->convertToHtml($result->content);
+        $content->content = $this->converter->convertToHtml($content->content);
 
-        return $result;
+        return $content;
     }
 
     public function getContents() {
@@ -96,6 +102,16 @@ class ContentService
         }
 
         return $contentModel;
+    }
+
+    public function delete(int $id) {
+        $content = $this->content->where('id', $id)->first();
+
+        if(empty($content)) {
+            throw new ContentNotFoundException('Content not found');
+        }
+
+        return $content->delete($id);
     }
 
     private function moveThumbnail(array $thumbnail) {

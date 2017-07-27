@@ -9,10 +9,20 @@ use App\Exceptions\UnknownStatusException;
 use App\Exceptions\UnknownTypeException;
 use App\Models\Content;
 use App\Services\ContentService;
+use League\CommonMark\Converter;
 use Tests\TestCase;
 
 class ContentServiceTest extends TestCase
 {
+    private $converterMock;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->converterMock = \Mockery::mock(Converter::class);
+    }
+
     public function testGetContentForBlogNoResultReturn()
     {
         // Arrange
@@ -20,7 +30,7 @@ class ContentServiceTest extends TestCase
 
         $mock->shouldReceive('get')->once()->andReturn([]);
 
-        $contentService = new ContentService($mock);
+        $contentService = new ContentService($mock, $this->converterMock);
 
         // Act
         $results = $contentService->getContentForBlog();
@@ -35,15 +45,19 @@ class ContentServiceTest extends TestCase
         $mock = \Mockery::mock(Content::class);
 
         $mock->shouldReceive('get')->once()->andReturn([
-            [
-                'title' => 'A title 1'
-            ],
-            [
-                'title' => 'A title 2'
-            ]
+            new Content([
+                'title' => 'A title 1',
+                'content' => 'content'
+            ]),
+            new Content([
+                'title' => 'A title 2',
+                'content' => 'content'
+            ])
         ]);
 
-        $contentService = new ContentService($mock);
+        $this->converterMock->shouldReceive('convertToHtml')->twice()->andReturn('string');
+
+        $contentService = new ContentService($mock, $this->converterMock);
 
         // Act
         $results = $contentService->getContentForBlog();
@@ -59,7 +73,7 @@ class ContentServiceTest extends TestCase
         $mock->shouldReceive('where')->once()->andReturn($mock);
         $mock->shouldReceive('first')->once()->andReturn(null);
 
-        $contentService = new ContentService($mock);
+        $contentService = new ContentService($mock, $this->converterMock);
 
         // Assert
         $this->expectException(ContentNotFoundException::class);
@@ -78,7 +92,7 @@ class ContentServiceTest extends TestCase
             'title' => 'title'
         ]));
 
-        $contentService = new ContentService($mock);
+        $contentService = new ContentService($mock, $this->converterMock);
 
         // Act
         $result = $contentService->getContent(1);
@@ -91,45 +105,42 @@ class ContentServiceTest extends TestCase
         // Arrange
         $mock = \Mockery::mock(Content::class);
 
-        $mock->shouldReceive('where')->twice()->andReturn($mock);
-        $mock->shouldReceive('get')->once()->andReturn([
-            new Content()
-        ]);
+        $mock->shouldReceive('where')->once()->andReturn($mock);
         $mock->shouldReceive('first')->once()->andReturn(null);
 
-        $contentService = new ContentService($mock);
+        $contentService = new ContentService($mock, $this->converterMock);
 
         // Assert
         $this->expectException(ContentNotFoundException::class);
 
         // Act
-        $contentService->update(1, 'title', 'slug', 'content', 'DRAFT', 'CONTENT', null);
+        $contentService->update(1, 'title', 'slug', 'content', 'DRAFT', 'CONTENT');
     }
 
     public function testUpdateWithUnknownType() {
         // Arrange
         $mock = \Mockery::mock(Content::class);
 
-        $contentService = new ContentService($mock);
+        $contentService = new ContentService($mock, $this->converterMock);
 
         // Assert
         $this->expectException(UnknownTypeException::class);
 
         // Act
-        $contentService->update(1, 'title', 'slug', 'content', 'DRAFT', 'OTHER', null);
+        $contentService->update(1, 'title', 'slug', 'content', 'DRAFT', 'OTHER');
     }
 
     public function testUpdateWithUnknownStatus() {
         // Arrange
         $mock = \Mockery::mock(Content::class);
 
-        $contentService = new ContentService($mock);
+        $contentService = new ContentService($mock, $this->converterMock);
 
         // Assert
         $this->expectException(UnknownStatusException::class);
 
         // Act
-        $contentService->update(1, 'title', 'slug', 'content', 'OTHER', 'CONTENT', null);
+        $contentService->update(1, 'title', 'slug', 'content', 'OTHER', 'CONTENT');
     }
 
     public function testUpdateWithFailure() {
@@ -142,19 +153,16 @@ class ContentServiceTest extends TestCase
 
         $userMock->shouldReceive('save')->once()->andReturn(false);
 
-        $mock->shouldReceive('where')->twice()->andReturn($mock);
-        $mock->shouldReceive('get')->once()->andReturn([
-            new Content()
-        ]);
+        $mock->shouldReceive('where')->once()->andReturn($mock);
         $mock->shouldReceive('first')->once()->andReturn($userMock);
 
-        $contentService = new ContentService($mock);
+        $contentService = new ContentService($mock, $this->converterMock);
 
         // Assert
         $this->expectException(UnexpectedException::class);
 
         // Act
-        $contentService->update(1, 'title', 'slug', 'content', 'DRAFT', 'CONTENT', null);
+        $contentService->update(1, 'title', 'slug', 'content', 'DRAFT', 'CONTENT');
 
     }
 
@@ -168,18 +176,71 @@ class ContentServiceTest extends TestCase
 
         $userMock->shouldReceive('save')->once()->andReturn(true);
 
-        $mock->shouldReceive('where')->twice()->andReturn($mock);
-        $mock->shouldReceive('get')->once()->andReturn([
-            new Content()
-        ]);
+        $mock->shouldReceive('where')->once()->andReturn($mock);
         $mock->shouldReceive('first')->once()->andReturn($userMock);
 
-        $contentService = new ContentService($mock);
+        $contentService = new ContentService($mock, $this->converterMock);
 
         // Act
-        $content = $contentService->update(1, 'title', 'slug', 'content', 'DRAFT', 'CONTENT', null);
+        $content = $contentService->update(1, 'title', 'slug', 'content', 'DRAFT', 'CONTENT');
 
         // Assert
         $this->assertEquals($content->title, 'title');
+    }
+
+    public function testDeleteWithContentNotFound() {
+        // Arrange
+        $mock = \Mockery::mock(Content::class);
+
+        $mock->shouldReceive('where')->once()->andReturn($mock);
+        $mock->shouldReceive('first')->once()->andReturn(null);
+
+        $contentService = new ContentService($mock, $this->converterMock);
+
+        // Assert
+        $this->expectException(ContentNotFoundException::class);
+
+        // Act
+        $contentService->delete(1);
+    }
+
+    public function testDeleteWithFailure() {
+        // Arrange
+        $mock = \Mockery::mock(Content::class);
+
+        $contentMock = \Mockery::mock(new Content());
+
+        $contentMock->shouldReceive('delete')->once()->andReturn(false);
+
+        $mock->shouldReceive('where')->once()->andReturn($mock);
+        $mock->shouldReceive('first')->once()->andReturn($contentMock);
+
+        $contentService = new ContentService($mock, $this->converterMock);
+
+        // Act
+        $result = $contentService->delete(1);
+
+        // Assert
+        $this->assertFalse($result);
+    }
+
+    public function testDeleteWithSuccess() {
+        // Arrange
+        $mock = \Mockery::mock(Content::class);
+
+        $contentMock = \Mockery::mock(new Content());
+
+        $contentMock->shouldReceive('delete')->once()->andReturn(true);
+
+        $mock->shouldReceive('where')->once()->andReturn($mock);
+        $mock->shouldReceive('first')->once()->andReturn($contentMock);
+
+        $contentService = new ContentService($mock, $this->converterMock);
+
+        // Act
+        $result = $contentService->delete(1);
+
+        // Assert
+        $this->assertTrue($result);
     }
 }
