@@ -76,18 +76,6 @@ class ContentService
 
         $this->setThumbnail($thumbnail, $contentModel);
 
-//        if(!empty($thumbnail)) {
-//            try {
-//                $this->moveThumbnail($thumbnail);
-//
-//                $contentModel->thumbnail = DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $thumbnail[self::ORIGINAL_NAME];
-//            } catch (DontMoveFileException $e) {
-//                if($e->getCode() === 200) {
-//                    throw new UnexpectedException("The update method isn't used correctly. A right thumbnail parameter is required.");
-//                }
-//            }
-//        }
-
         $contentModel->title = $title;
         $contentModel->slug = $slug;
         $contentModel->content = $content;

@@ -64,9 +64,9 @@ $factory->define(App\Models\Content::class, function(Faker\Generator $faker): ar
         \App\Models\Content::$STATUS => array_random(array_keys(config('content.status'))),
         \App\Models\Content::$TYPE => array_random(array_keys(config('content.type'))),
         \App\Models\Content::$THUMBNAIL => array_random([
-            '/img/01.jpg',
-            '/img/02.jpg',
-            '/img/03.jpg'
+            '01.jpg',
+            '02.jpg',
+            '03.jpg'
         ])
     ];
 });

@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Exceptions\NoFoundException;
 use App\Exceptions\RequireFieldsException;
 use App\Exceptions\SlugAlreadyExistsException;
+use App\Helpers\ImgHelper;
 use App\Models\Content;
 use App\Services\ContentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use League\Flysystem\Exception;
 
@@ -33,7 +35,10 @@ class ContentCtrl extends Controller
         $contents = $this->contentService->getContentForBlog();
 
         return response()->view('Content/index', [
-            'contents' => $contents
+            'contents' => $contents,
+            'title' => sprintf('Blog - %s', Config::get('app.name')),
+            'description' => Config::get('app.description'),
+            'image' => '/img/robots-trading.jpg'
         ]);
     }
 
@@ -50,7 +55,10 @@ class ContentCtrl extends Controller
             $content = $this->contentService->getContentBySlug($slug);
 
             $data = [
-                'content' => $content
+                'content' => $content,
+                'title' => sprintf('%s - %s', $content->title, Config::get('app.name')),
+                'description' => strip_tags(str_limit($content->content, 160)),
+                'image' => ImgHelper::link($content->thumbnail, $content->id, 1200)
             ];
         } catch (NoFoundException $e) {
             $view = '404';

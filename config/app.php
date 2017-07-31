@@ -12,7 +12,16 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Website name'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Description
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'description' => env('APP_DESCRIPTION'),
 
     /*
     |--------------------------------------------------------------------------
@@ -180,6 +189,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Arrilot\Widgets\ServiceProvider::class,
         GrahamCampbell\Markdown\MarkdownServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
     ],
 
@@ -234,6 +244,7 @@ return [
         'Widget' => Arrilot\Widgets\Facade::class,
         'AsyncWidget' => Arrilot\Widgets\AsyncFacade::class,
         'Markdown' => GrahamCampbell\Markdown\Facades\Markdown::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];
