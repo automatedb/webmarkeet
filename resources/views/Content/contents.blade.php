@@ -5,29 +5,41 @@
         @widget('Alert', $alert)
     </section>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Titre</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="row form-group">
+        <div class="col-md-12">
             {{ link_to_action('ContentCtrl@add', 'Ajouter un contenu', [], [ 'class' => 'btn btn-primary' ]) }}
-            @foreach($contents as $index => $content)
-                <tr>
-                    <th scope="row">{{ $index + 1 }}</th>
-                    <td>{{ link_to_action('ContentCtrl@modify', $content->title, [ 'id' => $content->id ], []) }}</td>
-                    <td>
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete-modal">
-                            Supprimer
-                        </button>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Titre</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($contents as $index => $content)
+                        <tr>
+                            <th class="text-center" scope="row">{{ $index + 1 }}</th>
+                            <td>
+                                {{ link_to_action('ContentCtrl@modify', $content->title, [ 'id' => $content->id ], []) }}<br>
+                                <small>{{ $content->type }} - {{ $content->status }}</small>
+                            </td>
+                            <td class="align-middle text-center">
+                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete-modal">
+                                    Supprimer
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <!-- Delete modal -->
     <div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-hidden="true">
