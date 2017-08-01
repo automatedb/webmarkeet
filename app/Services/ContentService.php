@@ -89,9 +89,7 @@ class ContentService
         $contentModel->status = $status;
         $contentModel->type = $type;
 
-        if(empty($contentModel->posted_at) && $status === Content::PUBLISHED) {
-            $contentModel->posted_at = new \DateTime();
-        }
+        $this->publishContent($status, $contentModel);
 
         if(!$contentModel->save()) {
             throw new UnexpectedException('Unexpected error');
@@ -123,6 +121,8 @@ class ContentService
         $data[Content::$USER_ID] = $userId;
 
         $content = new Content($data);
+
+        $this->publishContent($status, $content);
 
         $lastId = 0;
 
@@ -182,6 +182,13 @@ class ContentService
 
         if(!rename($from, $to)) {
             throw new DontMoveFileException("Cannot move file.", 200);
+        }
+    }
+
+    private function publishContent(string $status, Content $contentModel): void
+    {
+        if (empty($contentModel->posted_at) && $status === Content::PUBLISHED) {
+            $contentModel->posted_at = new \DateTime();
         }
     }
 }
