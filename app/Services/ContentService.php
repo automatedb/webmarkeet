@@ -9,6 +9,7 @@ use App\Exceptions\SlugAlreadyExistsException;
 use App\Exceptions\UnexpectedException;
 use App\Exceptions\UnknownStatusException;
 use App\Exceptions\UnknownTypeException;
+use App\Jobs\ImageCleaner;
 use App\Jobs\ImageResizer;
 use App\Models\Content;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -141,6 +142,8 @@ class ContentService
         if(empty($content)) {
             throw new ContentNotFoundException('Content not found');
         }
+
+        $this->dispatch(new ImageCleaner($id));
 
         return $content->delete($id);
     }
