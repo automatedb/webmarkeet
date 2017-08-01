@@ -35,7 +35,7 @@
                 <div class="form-group">
                     {!! Form::label('thumbnail', 'Illustration du contenu') !!}
                     @if(!empty($content->thumbnail))
-                        {!! Html::image($content->thumbnail, 'Thumbnail', [ 'class' => 'img-thumbnail' ]) !!}
+                        {!! Html::image(asset(sprintf('/img/%s', $content->thumbnail)), 'Thumbnail', [ 'class' => 'img-thumbnail' ]) !!}
                     @endif
                     {!! Form::file('thumbnail', [ 'class' => 'form-control', 'id' => 'thumbnail' ]) !!}
                 </div>
