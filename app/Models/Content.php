@@ -29,6 +29,8 @@ class Content extends Model
 
     public static $THUMBNAIL = 'thumbnail';
 
+    public static $POSTED_AT = 'posted_at';
+
     public static $USER_ID = 'user_id';
 
     protected $table = 'contents';
@@ -38,6 +40,6 @@ class Content extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'slug', 'content', 'status', 'type', 'thumbnail', 'user_id'];
+    protected $fillable = ['title', 'slug', 'content', 'status', 'type', 'thumbnail', 'posted_at', 'user_id'];
 
 }

@@ -29,7 +29,9 @@ class ContentService
 
     public function getContentForBlog() {
         $contents = $this->content->where('type', Content::CONTENT)
-            ->where('status', Content::PUBLISHED)->get();
+            ->where('status', Content::PUBLISHED)
+            ->whereNotNull(Content::$POSTED_AT)
+            ->orderBy(Content::$POSTED_AT, 'desc')->get();
 
         foreach ($contents as $index => $content) {
             $contents[$index]->content = $this->converter->convertToHtml($contents[$index]->content);
@@ -81,6 +83,10 @@ class ContentService
         $contentModel->content = $content;
         $contentModel->status = $status;
         $contentModel->type = $type;
+
+        if(empty($contentModel->posted_at) && $status === Content::PUBLISHED) {
+            $contentModel->posted_at = new \DateTime();
+        }
 
         if(!$contentModel->save()) {
             throw new UnexpectedException('Unexpected error');

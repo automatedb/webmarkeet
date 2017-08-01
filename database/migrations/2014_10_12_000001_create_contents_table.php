@@ -22,6 +22,7 @@ class CreateContentsTable extends Migration
             $table->string('status');
             $table->string('thumbnail')->nullable();
             $table->integer('user_id');
+            $table->timestamp('posted_at')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
