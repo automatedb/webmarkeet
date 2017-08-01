@@ -1,9 +1,11 @@
 @extends('Layout.admin.content')
 
 @section('content')
-    <section class="container">
-        @widget('Alert', $alert)
-    </section>
+    <div class="row form-group">
+        <div class="col-md-12">
+            @widget('Alert', $alert)
+        </div>
+    </div>
 
     <div class="row form-group">
         <div class="col-md-12">
@@ -22,20 +24,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($contents as $index => $content)
+                    @forelse($contents as $index => $content)
                         <tr>
-                            <th class="text-center" scope="row">{{ $index + 1 }}</th>
+                            <td class="text-center" scope="row">{{ $index + 1 }}</td>
                             <td>
                                 {{ link_to_action('ContentCtrl@modify', $content->title, [ 'id' => $content->id ], []) }}<br>
                                 <small>{{ $content->type }} - {{ $content->status }}</small>
                             </td>
                             <td class="align-middle text-center">
-                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete-modal">
+                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete-modal" data-content="{{ $content->id }}">
                                     Supprimer
                                 </button>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="3" class="text-center">Aucun contenu de créé.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -56,9 +62,22 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                    {{ link_to_action('ContentCtrl@delete', 'Oui', [ 'id' => $content->id ], [ 'class' => 'btn btn-danger' ]) }}
+                    <a href="" class="btn btn-danger">Oui</a>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script type="application/javascript">
+    var deleteUrl = '{!! URL::action('ContentCtrl@delete', 'PATTERN') !!}';
+
+    $('.modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var recipient = button.data('content');
+
+        $(this).find('.modal-footer a').attr('href', deleteUrl.replace('PATTERN', recipient));
+    })
+</script>
+@endpush

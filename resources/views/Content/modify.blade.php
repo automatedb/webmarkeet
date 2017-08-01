@@ -1,9 +1,11 @@
 @extends('Layout.admin.content')
 
 @section('content')
-    <section class="container">
-        @widget('Alert', $alert)
-    </section>
+    <div class="row form-group">
+        <div class="col-md-12">
+            @widget('Alert', $alert)
+        </div>
+    </div>
 
     {!! Form::open(['class' => 'row', 'files' => true]) !!}
         <div class="col col-md-9">
