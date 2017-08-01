@@ -21,14 +21,31 @@ $color-gray : #404853;
 }
 
 .guest-page {
+  header:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    background: rgba(64,72,82,.8);
+    transition-duration: .3s;
+  }
+
   header {
     min-height: 300px;
+    position: relative;
 
     .container {
       padding-top: 125px;
 
       h1 {
         color: #FFF;
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1.2;
       }
     }
   }
