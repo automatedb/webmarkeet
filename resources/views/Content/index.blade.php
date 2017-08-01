@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="container">
-        @foreach ($contents as $content)
-            <div class="row justify-content-md-center">
+        <div class="row justify-content-md-center">
+            @forelse ($contents as $content)
                 <article class="col-lg-8">
                     @widget('Img', [
                         'id' => $content->id,
@@ -17,8 +17,10 @@
                     </div>
                     <p>{!! str_limit($content->content, 100) !!}</p>
                 </article>
-            </div>
-        @endforeach
+            @empty
+                <p>Pas de contenu pour le moment</p>
+            @endforelse
+        </div>
     </div>
 @endsection
 
