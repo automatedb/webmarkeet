@@ -9,11 +9,15 @@ use App\Exceptions\SlugAlreadyExistsException;
 use App\Exceptions\UnexpectedException;
 use App\Exceptions\UnknownStatusException;
 use App\Exceptions\UnknownTypeException;
+use App\Jobs\ImageResizer;
 use App\Models\Content;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use League\CommonMark\Converter;
 
 class ContentService
 {
+    use DispatchesJobs;
+
     public const HASH_NAME = 'hashName';
 
     public const ORIGINAL_NAME = 'originalName';
@@ -92,6 +96,8 @@ class ContentService
             throw new UnexpectedException('Unexpected error');
         }
 
+        $this->dispatch(new ImageResizer($contentModel));
+
         return $contentModel;
     }
 
@@ -121,6 +127,8 @@ class ContentService
 
         if($content->save($data)) {
             $lastId = $content->id;
+
+            $this->dispatch(new ImageResizer($content));
         }
 
         return $lastId;
@@ -142,7 +150,7 @@ class ContentService
             try {
                 $this->moveThumbnail($thumbnail);
 
-                $data[Content::$THUMBNAIL] = DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $thumbnail[self::ORIGINAL_NAME];
+                $data[Content::$THUMBNAIL] = $thumbnail[self::ORIGINAL_NAME];
             } catch (DontMoveFileException $e) {
                 if($e->getCode() === 200) {
                     throw new UnexpectedException("The update method isn't used correctly. A right thumbnail parameter is required.");
