@@ -29,6 +29,8 @@ class ContentServiceTest extends TestCase
         $mock = \Mockery::mock(Content::class);
 
         $mock->shouldReceive('where')->twice()->andReturn($mock);
+        $mock->shouldReceive('whereNotNull')->once()->andReturn($mock);
+        $mock->shouldReceive('orderBy')->once()->andReturn($mock);
         $mock->shouldReceive('get')->once()->andReturn([]);
 
         $contentService = new ContentService($mock, $this->converterMock);
@@ -46,6 +48,8 @@ class ContentServiceTest extends TestCase
         $mock = \Mockery::mock(Content::class);
 
         $mock->shouldReceive('where')->twice()->andReturn($mock);
+        $mock->shouldReceive('whereNotNull')->once()->andReturn($mock);
+        $mock->shouldReceive('orderBy')->once()->andReturn($mock);
         $mock->shouldReceive('get')->once()->andReturn([
             new Content([
                 'title' => 'A title 1',
@@ -116,7 +120,7 @@ class ContentServiceTest extends TestCase
         $this->expectException(ContentNotFoundException::class);
 
         // Act
-        $contentService->update(1, 'title', 'slug', 'content', 'DRAFT', 'CONTENT');
+        $contentService->update(1, 'title', 'slug', 'DRAFT', 'CONTENT', 'content');
     }
 
     public function testUpdateWithUnknownType() {
@@ -129,7 +133,7 @@ class ContentServiceTest extends TestCase
         $this->expectException(UnknownTypeException::class);
 
         // Act
-        $contentService->update(1, 'title', 'slug', 'content', 'DRAFT', 'OTHER');
+        $contentService->update(1, 'title', 'slug', 'DRAFT', 'OTHER', 'content');
     }
 
     public function testUpdateWithUnknownStatus() {
@@ -142,7 +146,7 @@ class ContentServiceTest extends TestCase
         $this->expectException(UnknownStatusException::class);
 
         // Act
-        $contentService->update(1, 'title', 'slug', 'content', 'OTHER', 'CONTENT');
+        $contentService->update(1, 'title', 'slug', 'OTHER', 'CONTENT', 'content');
     }
 
     public function testUpdateWithFailure() {
@@ -164,7 +168,7 @@ class ContentServiceTest extends TestCase
         $this->expectException(UnexpectedException::class);
 
         // Act
-        $contentService->update(1, 'title', 'slug', 'content', 'DRAFT', 'CONTENT');
+        $contentService->update(1, 'title', 'slug', 'DRAFT', 'CONTENT', 'content');
 
     }
 
@@ -181,10 +185,12 @@ class ContentServiceTest extends TestCase
         $mock->shouldReceive('where')->once()->andReturn($mock);
         $mock->shouldReceive('first')->once()->andReturn($userMock);
 
-        $contentService = new ContentService($mock, $this->converterMock);
+        $contentService = \Mockery::mock(new ContentService($mock, $this->converterMock))->shouldAllowMockingProtectedMethods();
+
+//        $contentService->shouldReceive('dispatch')->once()->andReturn(null);
 
         // Act
-        $content = $contentService->update(1, 'title', 'slug', 'content', 'DRAFT', 'CONTENT');
+        $content = $contentService->update(1, 'title', 'slug', 'DRAFT', 'CONTENT', 'content');
 
         // Assert
         $this->assertEquals($content->title, 'title');
@@ -271,7 +277,7 @@ class ContentServiceTest extends TestCase
         $this->expectException(UnknownStatusException::class);
 
         // Act
-        $contentService->add(1, 'title', 'slug', 'content', 'OTHER', 'CONTENT', []);
+        $contentService->add(1, 'title', 'slug', 'OTHER', 'CONTENT', 'content', []);
 
     }
 
@@ -288,7 +294,7 @@ class ContentServiceTest extends TestCase
         $this->expectException(SlugAlreadyExistsException::class);
 
         // Act
-        $contentService->add(1, 'title', 'slug', 'content', 'DRAFT', 'CONTENT', []);
+        $contentService->add(1, 'title', 'slug', 'DRAFT', 'CONTENT', 'content', []);
 
     }
 
@@ -303,7 +309,7 @@ class ContentServiceTest extends TestCase
         $contentService = new ContentService($mock, $this->converterMock);
 
         // Act
-        $result = $contentService->add(1, 'title', 'slug', 'content', 'DRAFT', 'CONTENT', []);
+        $result = $contentService->add(1, 'title', 'slug', 'DRAFT', 'CONTENT', 'content', []);
 
         // Assert
         $this->assertEquals($result, 1);
