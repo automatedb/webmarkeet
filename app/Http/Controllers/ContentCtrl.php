@@ -46,7 +46,7 @@ class ContentCtrl extends Controller
      * Show content page from blog
      * @Get("/blog/{slug}")
      */
-    public function content(Request $request, $slug) {
+    public function content(Request $request, string $slug) {
         $view = 'Content/content';
         $data = [];
         $code = 200;
@@ -66,6 +66,30 @@ class ContentCtrl extends Controller
         }
 
         return response()->view($view, $data, $code);
+    }
+
+    /**
+     * Able to download source
+     * @Get("/blog/{slug}/download")
+     */
+    public function downloadSources(Request $request, string $slug) {
+        try {
+            $content = $this->contentService->getContentBySlug($slug);
+
+            if(!$content->sources()->count()) {
+                return response()->view('404', [], 404);
+            }
+        } catch (NoFoundException $e) {
+            return response()->view('404', [], 404);
+        }
+
+        $file = storage_path(sprintf('app/public/%s', $content->sources()->first()->name));
+
+        $typeMime = mime_content_type(storage_path(sprintf('app/public/%s', $content->sources()->first()->name)));
+
+        return response()->download($file, null, [
+            'Content-Type' => $typeMime
+        ]);
     }
 
     /**

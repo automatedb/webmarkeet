@@ -17,7 +17,8 @@ class Authentication
      */
     public function handle($request, Closure $next)
     {
-        if(!Auth::check() && strpos($request->path(), 'app') > -1) {
+        if(!Auth::check()
+            && (strpos($request->path(), 'app') > -1 || strpos($request->path(), 'download') > -1)) {
             return redirect()->action('UserCtrl@authentication');
         }
 

@@ -4,7 +4,9 @@
     @widget('BgHeader', [
             'id' => $content->id,
             'src' => $content->thumbnail,
-            'title' => $content->title
+            'title' => $content->title,
+            'sources' => $content->sources,
+            'slug' => $content->slug
         ])
     <div class="container post">
         <div class="row justify-content-md-center">

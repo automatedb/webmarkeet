@@ -126,4 +126,41 @@ class AuthenticationTest extends TestCase
             $this->assertEquals(true, true);
         });
     }
+
+    public function testHandleProtectDownloadFilesWithNotLoggedUser() {
+        // Arrange
+        Auth::shouldReceive('check')->once()->andReturn(false);
+
+        $requestMock = \Mockery::mock(Request::class);
+
+        $requestMock->shouldReceive('path')->twice()->andReturn('/blog/slug-string/download');
+
+        $authentication = new \App\Http\Middleware\Authentication();
+
+        // Act
+        $result = $authentication->handle($requestMock, function($request) { });
+
+        // Assert
+        $this->assertEquals('http://localhost/authentication', $result->getTargetUrl());
+    }
+
+    public function testHandleProtectDownloadFilesWithLoggedUser() {
+        // Arrange
+        Auth::shouldReceive('check')->twice()->andReturn(true);
+        Auth::shouldReceive('user')->once()->andReturn(new User([
+            'role' => 'customer'
+        ]));
+
+        $requestMock = \Mockery::mock(Request::class);
+
+        $requestMock->shouldReceive('path')->twice()->andReturn('/blog/slug-string/download');
+
+        $authentication = new \App\Http\Middleware\Authentication();
+
+        // Act
+        $authentication->handle($requestMock, function() {
+            // Assert
+            $this->assertEquals(true, true);
+        });
+    }
 }
