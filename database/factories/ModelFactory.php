@@ -57,16 +57,24 @@ $factory->defineAs(\App\Models\User::class, 'userdeleted', function($faker) use 
 $factory->define(App\Models\Content::class, function(Faker\Generator $faker): array {
     $title = $faker->sentence;
 
+    $status = array_random(array_keys(config('content.status')));
+    $posted_at = null;
+
+    if($status === \App\Models\Content::PUBLISHED) {
+        $posted_at = $faker->date();
+    }
+
     return [
         \App\Models\Content::$TITLE => $title,
         \App\Models\Content::$SLUG => str_slug($title),
         \App\Models\Content::$CONTENT => $faker->paragraphs(3, true),
-        \App\Models\Content::$STATUS => array_random(array_keys(config('content.status'))),
+        \App\Models\Content::$STATUS => $status,
         \App\Models\Content::$TYPE => array_random(array_keys(config('content.type'))),
         \App\Models\Content::$THUMBNAIL => array_random([
             '01.jpg',
             '02.jpg',
             '03.jpg'
-        ])
+        ]),
+        \App\Models\Content::$POSTED_AT => $posted_at
     ];
 });
