@@ -109,33 +109,32 @@ class ContentService
             throw new SlugAlreadyExistsException('Slug already exists.');
         }
 
-        $data = [];
+        $contentModel = new Content();
 
-        $this->setThumbnail($thumbnail, $data);
+        $this->setThumbnail($thumbnail, $contentModel);
 
-        $data[Content::$TITLE] = $title;
-        $data[Content::$SLUG] = $slug;
-        $data[Content::$CONTENT] = $content;
-        $data[Content::$STATUS] = $status;
-        $data[Content::$TYPE] = $type;
-        $data[Content::$USER_ID] = $userId;
 
-        $content = new Content($data);
+        $contentModel[Content::$TITLE] = $title;
+        $contentModel[Content::$SLUG] = $slug;
+        $contentModel[Content::$CONTENT] = $content;
+        $contentModel[Content::$STATUS] = $status;
+        $contentModel[Content::$TYPE] = $type;
+        $contentModel[Content::$USER_ID] = $userId;
 
-        $this->publishContent($status, $content);
+        $this->publishContent($status, $contentModel);
 
         $lastId = 0;
 
-        if($content->save($data)) {
-            $lastId = $content->id;
+        if($contentModel->save()) {
+            $lastId = $contentModel->id;
 
-            $this->dispatch(new ImageResizer($content));
+            $this->dispatch(new ImageResizer($contentModel));
         }
 
         return $lastId;
     }
 
-    public function delete(int $id) {
+    public function delete(int $id): bool {
         /** @var Content $content */
         $content = $this->content->where('id', $id)->first();
 
@@ -148,7 +147,7 @@ class ContentService
         return $content->delete($id);
     }
 
-    private function setThumbnail($thumbnail, &$data) {
+    private function setThumbnail(array $thumbnail, Content $data) {
         if(!empty($thumbnail)) {
             try {
                 $this->moveThumbnail($thumbnail);
@@ -172,10 +171,17 @@ class ContentService
         }
     }
 
-    private function moveThumbnail(array $thumbnail) {
+    private function moveThumbnail(array &$thumbnail) {
         if(!key_exists(self::HASH_NAME, $thumbnail) || !key_exists(self::ORIGINAL_NAME, $thumbnail)) {
             throw new DontMoveFileException('%s and %s are required to move file.', 100);
         }
+
+        $originalNameExploded = explode('.', $thumbnail[self::ORIGINAL_NAME]);
+
+        $ext = array_pop($originalNameExploded);
+        $originalName = strtolower(str_slug(implode('.', $originalNameExploded)));
+
+        $thumbnail[self::ORIGINAL_NAME] = $originalName . '.' . $ext;
 
         $from = storage_path('app' . DIRECTORY_SEPARATOR . config('content.uploadDirectory') . DIRECTORY_SEPARATOR . $thumbnail[self::HASH_NAME]);
         $to = public_path('img' . DIRECTORY_SEPARATOR . $thumbnail[self::ORIGINAL_NAME]);
