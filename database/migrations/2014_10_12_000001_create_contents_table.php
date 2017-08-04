@@ -21,6 +21,7 @@ class CreateContentsTable extends Migration
             $table->string('type');
             $table->string('status');
             $table->string('thumbnail')->nullable();
+            $table->string('video_id')->nullable();
             $table->integer('user_id');
             $table->timestamp('posted_at')->nullable();
             $table->timestamps();

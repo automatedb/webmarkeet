@@ -6,7 +6,6 @@ use App\Exceptions\ContentNotFoundException;
 use App\Exceptions\SlugAlreadyExistsException;
 use App\Exceptions\UnexpectedException;
 use App\Exceptions\UnknownStatusException;
-use App\Exceptions\UnknownTypeException;
 use App\Jobs\ImageResizer;
 use App\Models\Content;
 use App\Services\ContentService;
@@ -37,7 +36,7 @@ class ContentServiceTest extends TestCase
         $contentService = new ContentService($mock, $this->converterMock);
 
         // Act
-        $results = $contentService->getContentForBlog();
+        $results = $contentService->getContentsForBlog();
 
         // Assert
         $this->assertCount(0, $results);
@@ -67,7 +66,7 @@ class ContentServiceTest extends TestCase
         $contentService = new ContentService($mock, $this->converterMock);
 
         // Act
-        $results = $contentService->getContentForBlog();
+        $results = $contentService->getContentsForBlog();
 
         // Assert
         $this->assertCount(2, $results);
@@ -122,19 +121,6 @@ class ContentServiceTest extends TestCase
 
         // Act
         $contentService->update(1, 'title', 'slug', 'DRAFT', 'CONTENT', 'content');
-    }
-
-    public function testUpdateWithUnknownType() {
-        // Arrange
-        $mock = \Mockery::mock(Content::class);
-
-        $contentService = new ContentService($mock, $this->converterMock);
-
-        // Assert
-        $this->expectException(UnknownTypeException::class);
-
-        // Act
-        $contentService->update(1, 'title', 'slug', 'DRAFT', 'OTHER', 'content');
     }
 
     public function testUpdateWithUnknownStatus() {
@@ -251,21 +237,6 @@ class ContentServiceTest extends TestCase
 
         // Assert
         $this->assertTrue($result);
-    }
-
-
-    public function testAddWithUnknownType() {
-        // Arrange
-        $mock = \Mockery::mock(Content::class);
-
-        $contentService = new ContentService($mock, $this->converterMock);
-
-        // Assert
-        $this->expectException(UnknownTypeException::class);
-
-        // Act
-        $contentService->add(1, 'title', 'slug', 'content', 'PUBLISHED', 'OTHER', []);
-
     }
 
     public function testAddWithUnknownStatus() {

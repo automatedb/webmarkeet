@@ -70,14 +70,14 @@
 @endsection
 
 @push('scripts')
-<script type="application/javascript">
-    var deleteUrl = '{!! URL::action('ContentCtrl@delete', 'PATTERN') !!}';
+    <script type="application/javascript">
+        var deleteUrl = '{!! URL::action('ContentCtrl@delete', 'PATTERN') !!}';
 
-    $('.modal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var recipient = button.data('content');
+        $('.modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var recipient = button.data('content');
 
-        $(this).find('.modal-footer a').attr('href', deleteUrl.replace('PATTERN', recipient));
-    })
-</script>
+            $(this).find('.modal-footer a').attr('href', deleteUrl.replace('PATTERN', recipient));
+        })
+    </script>
 @endpush

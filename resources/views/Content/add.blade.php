@@ -29,9 +29,14 @@
         </div>
 
         <div class="form-group">
-            {!! Form::label('type', 'Type de contenu') !!}
-            {!! Form::select('type', $types, '', [ 'class' => 'form-control', 'id' => 'type' ]) !!}
+            {!! Form::label('video_id', 'ID video youtube', [ 'for' => 'video_id' ]) !!}
+            {!! Form::text('video_id', '', ['class' => 'form-control', 'placeholder' => "Saisissez un ID Youtube..."]) !!}
         </div>
+
+        {{--<div class="form-group">--}}
+            {{--{!! Form::label('type', 'Type de contenu') !!}--}}
+            {{--{!! Form::select('type', $types, '', [ 'class' => 'form-control', 'id' => 'type' ]) !!}--}}
+        {{--</div>--}}
 
         <div class="form-group">
             {!! Form::label('status', 'Status de publication', [ 'for' => 'status' ]) !!}

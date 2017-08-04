@@ -58,10 +58,23 @@ $factory->define(App\Models\Content::class, function(Faker\Generator $faker): ar
     $title = $faker->sentence;
 
     $status = array_random(array_keys(config('content.status')));
+    $contentType = array_random(array_keys(config('content.type')));
     $posted_at = null;
+    $video_id = null;
 
-    if($status === \App\Models\Content::PUBLISHED) {
+    if($status == \App\Models\Content::PUBLISHED) {
         $posted_at = $faker->date();
+    }
+
+    if($contentType == \App\Models\Content::TUTORIAL) {
+        $video_id = array_random([
+            'QuxbNXvp2sw',
+            'ceNKQ8FAhdE',
+            'bGSE2e2pHLw',
+            'I4Da_MSJeKY',
+            'OIG_FsN8qRI',
+            '_iXOJVxM-v4'
+        ]);
     }
 
     return [
@@ -75,6 +88,7 @@ $factory->define(App\Models\Content::class, function(Faker\Generator $faker): ar
             '02.jpg',
             '03.jpg'
         ]),
+        \App\Models\Content::$VIDEO_ID => $video_id,
         \App\Models\Content::$POSTED_AT => $posted_at
     ];
 });

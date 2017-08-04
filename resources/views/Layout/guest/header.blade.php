@@ -20,8 +20,11 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                <li class="nav-item">
                     {{ link_to_action('ContentCtrl@index', 'Blog', [], ['class' => 'nav-link']) }}
+                </li>
+                <li class="nav-item">
+                    {{ link_to_action('ContentCtrl@tutorials', 'Tutoriels', [], ['class' => 'nav-link']) }}
                 </li>
                 <li class="nav-item">
                     {{ link_to_action('UserCtrl@authentication', 'Authentification', [], ['class' => 'nav-link']) }}

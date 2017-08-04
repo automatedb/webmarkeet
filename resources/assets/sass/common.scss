@@ -35,18 +35,35 @@ $color-gray : #404853;
   }
 
   header {
-    min-height: 300px;
+    min-height: 225px;
     position: relative;
 
     .container {
-      padding-top: 125px;
+      padding-top: 80px;
+      padding-bottom: 30px;
 
       h1 {
         color: #FFF;
         font-size: 2rem;
         font-weight: 700;
         line-height: 1.2;
+        margin-bottom: 30px;
       }
+
+      #playing-video {
+        margin-bottom: 20px;
+
+        a {
+          color: #FFF;
+          font-size: 8rem;
+        }
+      }
+
+      //#download-btn {
+      //  >:first-child {
+      //    margin-right: 20px;
+      //  }
+      //}
     }
   }
 
@@ -58,7 +75,7 @@ $color-gray : #404853;
     }
 
     article {
-      h2 {
+      h1, h2, h3 {
         font-size: 1.8rem;
 
         a {
@@ -94,6 +111,25 @@ $color-gray : #404853;
 
     .row {
       margin-bottom: 20px;
+    }
+
+    a {
+      text-decoration: none;
+
+      #tutorial-thumb {
+        position: relative;
+        width: 100vw;
+        height: 170px;
+        display: table-cell;
+        vertical-align: middle;
+        padding-left: 20px;
+
+        h2 {
+          color: #FFF;
+          font-size: 1.6rem;
+          text-decoration: none;
+        }
+      }
     }
   }
 }
