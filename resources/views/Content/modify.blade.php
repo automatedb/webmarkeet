@@ -34,18 +34,23 @@
         </div>
         <div class="col col-md-3">
 
-                <div class="form-group">
-                    {!! Form::label('thumbnail', 'Illustration du contenu') !!}
-                    @if(!empty($content->thumbnail))
-                        {!! Html::image(asset(sprintf('/img/%s', $content->thumbnail)), 'Thumbnail', [ 'class' => 'img-thumbnail' ]) !!}
-                    @endif
-                    {!! Form::file('thumbnail', [ 'class' => 'form-control', 'id' => 'thumbnail' ]) !!}
-                </div>
+            <div class="form-group">
+                {!! Form::label('thumbnail', 'Illustration du contenu') !!}
+                @if(!empty($content->thumbnail))
+                    {!! Html::image(asset(sprintf('/img/%s', $content->thumbnail)), 'Thumbnail', [ 'class' => 'img-thumbnail' ]) !!}
+                @endif
+                {!! Form::file('thumbnail', [ 'class' => 'form-control', 'id' => 'thumbnail' ]) !!}
+            </div>
 
             <div class="form-group">
-                {!! Form::label('type', 'Type de contenu') !!}
-                {!! Form::select('type', $types, $content->type, [ 'class' => 'form-control', 'id' => 'type' ]) !!}
+                {!! Form::label('video_id', 'ID video youtube', [ 'for' => 'video_id' ]) !!}
+                {!! Form::text('video_id', $content->video_id, ['class' => 'form-control', 'placeholder' => "Saisissez un ID Youtube..."]) !!}
             </div>
+
+            {{--<div class="form-group">--}}
+                {{--{!! Form::label('type', 'Type de contenu') !!}--}}
+                {{--{!! Form::select('type', $types, $content->type, [ 'class' => 'form-control', 'id' => 'type' ]) !!}--}}
+            {{--</div>--}}
 
             <div class="form-group">
                 {!! Form::label('status', 'Status de publication', [ 'for' => 'status' ]) !!}

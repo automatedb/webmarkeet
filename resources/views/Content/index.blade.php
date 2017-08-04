@@ -29,5 +29,5 @@
     <meta name="description" content="{!! $description !!}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:image" content="{{ asset($image) }}">
+    <meta property="og:image" content="{{ asset($thumbnail) }}">
 @stop

@@ -30,8 +30,13 @@ class Img extends AbstractWidget
     {
         $size = 730;
 
-        if($this->config['type'] === 'post') {
-            $size = 300;
+        switch ($this->config['type']) {
+            case 'post':
+                $size = 300;
+                break;
+            case 'tutorial-thumbnail':
+                $size = 540;
+                break;
         }
 
         $this->config['src'] = ImgHelper::link($this->config['src'], $this->config['id'], $size);

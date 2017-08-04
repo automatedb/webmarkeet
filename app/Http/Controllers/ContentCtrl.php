@@ -32,13 +32,13 @@ class ContentCtrl extends Controller
      * @Get("/blog")
      */
     public function index() {
-        $contents = $this->contentService->getContentForBlog();
+        $contents = $this->contentService->getContentsForBlog();
 
         return response()->view('Content/index', [
             'contents' => $contents,
             'title' => sprintf('Blog - %s', Config::get('app.name')),
             'description' => Config::get('app.description'),
-            'image' => '/img/robots-trading.jpg'
+            'thumbnail' => Config::get('app.thumbnail')
         ]);
     }
 
@@ -47,7 +47,7 @@ class ContentCtrl extends Controller
      * @Get("/blog/{slug}")
      */
     public function content(Request $request, string $slug) {
-        $view = 'Content/content';
+        $view = 'Content.content';
         $data = [];
         $code = 200;
 
@@ -93,6 +93,50 @@ class ContentCtrl extends Controller
     }
 
     /**
+     * @Get("/tutorials")
+     */
+    public function tutorials() {
+        $contents = $this->contentService->getContentsForTutorials();
+
+        $contents = $contents->toArray();
+
+        $first = array_shift($contents);
+
+        return response()->view('Content.tutorials', [
+            'firstContent' => $first,
+            'contents' => $contents,
+            'title' => sprintf('Tutoriels - %s', Config::get('app.name')),
+            'description' => Config::get('app.description'),
+            'thumbnail' => Config::get('app.thumbnail')
+        ]);
+    }
+
+    /**
+     * @Get("/tutorials/{slug}")
+     */
+    public function tutorial(Request $request, $slug) {
+        $view = 'Content.tutorial';
+        $data = [];
+        $code = 200;
+
+        try {
+            $content = $this->contentService->getContentBySlug($slug);
+
+            $data = [
+                'content' => $content,
+                'title' => sprintf('%s - %s', $content->title, Config::get('app.name')),
+                'description' => strip_tags(str_limit($content->content, 160)),
+                'image' => ImgHelper::link($content->thumbnail, $content->id, 1200)
+            ];
+        } catch (NoFoundException $e) {
+            $view = '404';
+            $code = 404;
+        }
+
+        return response()->view($view, $data, $code);
+    }
+
+    /**
      * Show all contents
      * @Get("/app/admin/contents")
      */
@@ -124,8 +168,7 @@ class ContentCtrl extends Controller
         $rules = [
             'title' => 'required',
             'slug' => 'required',
-            'status' => 'required',
-            'type' => 'required'
+            'status' => 'required'
         ];
 
         $values = $request->all();
@@ -151,8 +194,8 @@ class ContentCtrl extends Controller
                 $values[Content::$TITLE],
                 $values[Content::$SLUG],
                 $values[Content::$STATUS],
-                $values[Content::$TYPE],
                 $values[Content::$CONTENT],
+                $values[Content::$VIDEO_ID],
                 $thumbnail);
         } catch (SlugAlreadyExistsException $e) {
             $request->session()->flash('alert', [
@@ -188,8 +231,7 @@ class ContentCtrl extends Controller
         $rules = [
             'title' => 'required',
             'slug' => 'required',
-            'status' => 'required',
-            'type' => 'required'
+            'status' => 'required'
         ];
 
         $values = $request->all();
@@ -213,8 +255,8 @@ class ContentCtrl extends Controller
                 $values[Content::$TITLE],
                 $values[Content::$SLUG],
                 $values[Content::$STATUS],
-                $values[Content::$TYPE],
                 $values[Content::$CONTENT],
+                $values[Content::$VIDEO_ID],
                 $thumbnail
             );
 

@@ -11,9 +11,9 @@ class Content extends Model
 
     public const DRAFT = 'DRAFT';
 
+    // Types
     public const CONTENT = 'CONTENT';
 
-    // Types
     public const TUTORIAL = 'TUTORIAL';
 
     // Properties
@@ -26,6 +26,8 @@ class Content extends Model
     public static $STATUS = 'status';
 
     public static $TYPE = 'type';
+
+    public static $VIDEO_ID = 'video_id';
 
     public static $THUMBNAIL = 'thumbnail';
 
@@ -40,7 +42,7 @@ class Content extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'slug', 'content', 'status', 'type', 'thumbnail', 'posted_at', 'user_id'];
+    protected $fillable = ['title', 'slug', 'content', 'status', 'type', 'video_id', 'thumbnail', 'posted_at', 'user_id'];
 
     public function sources() {
         return $this->belongsToMany(\App\Models\Source::class, 'contains_sources');

@@ -32,17 +32,12 @@ class ContentService
         $this->converter = $converter;
     }
 
-    public function getContentForBlog() {
-        $contents = $this->content->where('type', Content::CONTENT)
-            ->where('status', Content::PUBLISHED)
-            ->whereNotNull(Content::$POSTED_AT)
-            ->orderBy(Content::$POSTED_AT, 'desc')->get();
+    public function getContentsForBlog() {
+        return $this->getContentsForType(Content::CONTENT);
+    }
 
-        foreach ($contents as $index => $content) {
-            $contents[$index]->content = $this->converter->convertToHtml($contents[$index]->content);
-        }
-
-        return $contents;
+    public function getContentsForTutorials() {
+        return $this->getContentsForType(Content::TUTORIAL);
     }
 
     public function getContentBySlug(string $slug) {
@@ -72,8 +67,11 @@ class ContentService
         return $content;
     }
 
-    public function update(int $id, string $title, string $slug, string $status, string $type, string $content = null, array $thumbnail = []): Content {
+    public function update(int $id, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = []): Content {
+        $type = empty($videoId) ? Content::CONTENT : Content::TUTORIAL;
+
         $this->validParams($status, $type);
+
 
         $contentModel = $this->content->where('id', $id)->first();
 
@@ -88,6 +86,7 @@ class ContentService
         $contentModel->content = $content;
         $contentModel->status = $status;
         $contentModel->type = $type;
+        $contentModel->video_id = $videoId;
 
         $this->publishContent($status, $contentModel);
 
@@ -100,7 +99,9 @@ class ContentService
         return $contentModel;
     }
 
-    public function add(int $userId, string $title, string $slug, string $status, string $type, string $content = null, array $thumbnail = []): int {
+    public function add(int $userId, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = []): int {
+        $type = empty($videoId) ? Content::CONTENT : Content::TUTORIAL;
+
         $this->validParams($status, $type);
 
         $n = $this->content->where('slug', $slug)->count();
@@ -113,20 +114,20 @@ class ContentService
 
         $this->setThumbnail($thumbnail, $contentModel);
 
-
         $contentModel[Content::$TITLE] = $title;
         $contentModel[Content::$SLUG] = $slug;
         $contentModel[Content::$CONTENT] = $content;
         $contentModel[Content::$STATUS] = $status;
         $contentModel[Content::$TYPE] = $type;
         $contentModel[Content::$USER_ID] = $userId;
+        $contentModel[Content::$VIDEO_ID] = $videoId;
 
         $this->publishContent($status, $contentModel);
 
         $lastId = 0;
 
-        if($contentModel->save()) {
-            $lastId = $contentModel->id;
+        if($this->content->create($contentModel)) {
+            $lastId = $this->content->id;
 
             $this->dispatch(new ImageResizer($contentModel));
         }
@@ -145,6 +146,19 @@ class ContentService
         $this->dispatch(new ImageCleaner($id));
 
         return $content->delete($id);
+    }
+
+    private function getContentsForType(string $type) {
+        $contents = $this->content->where('type', $type)
+            ->where('status', Content::PUBLISHED)
+            ->whereNotNull(Content::$POSTED_AT)
+            ->orderBy(Content::$POSTED_AT, 'desc')->get();
+
+        foreach ($contents as $index => $content) {
+            $contents[$index]->content = $this->converter->convertToHtml($contents[$index]->content);
+        }
+
+        return $contents;
     }
 
     private function setThumbnail(array $thumbnail, Content $data) {

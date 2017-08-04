@@ -5,7 +5,7 @@ namespace App\Widgets;
 use App\Helpers\ImgHelper;
 use Arrilot\Widgets\AbstractWidget;
 
-class BgHeader extends AbstractWidget
+class TutorialThumb extends AbstractWidget
 {
     /**
      * The configuration array.
@@ -13,7 +13,10 @@ class BgHeader extends AbstractWidget
      * @var array
      */
     protected $config = [
-        'content' => null
+        'id' => null,
+        'src' => null,
+        'title' => null,
+        'slug' => null
     ];
 
     /**
@@ -22,9 +25,9 @@ class BgHeader extends AbstractWidget
      */
     public function run()
     {
-        $this->config['content']['thumbnail'] = ImgHelper::link($this->config['content']['thumbnail'], $this->config['content']['id'], 300);
+        $this->config['src'] = ImgHelper::link($this->config['src'], $this->config['id'], 540);
 
-        return view('widgets.bg_header', [
+        return view('widgets.tutorial_thumb', [
             'config' => $this->config,
         ]);
     }
