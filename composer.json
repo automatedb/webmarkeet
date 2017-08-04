@@ -9,6 +9,7 @@
         "arrilot/laravel-widgets": "^3.7",
         "graham-campbell/markdown": "^7.1",
         "intervention/image": "^2.4",
+        "laravel/cashier": "^7.0",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/annotations": "5.4.*",

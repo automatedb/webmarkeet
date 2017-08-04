@@ -3,6 +3,7 @@ namespace App\Services;
 
 
 use App\Exceptions\BadCredentialsException;
+use App\Exceptions\EmailAlreadyExistsException;
 use App\Exceptions\PasswordRequiredException;
 use App\Exceptions\UnexpectedException;
 use App\Exceptions\UserNotFoundException;
@@ -16,6 +17,18 @@ class UserService
 
     public function __construct(User $user) {
         $this->user = $user;
+    }
+
+    public function registerUser(string $firstname, string $lastname, string $email, string $password): User {
+        $this->isEmailExists(0, $email, 1);
+
+        return $this->user->create([
+            User::$FIRSTNAME => $firstname,
+            User::$LASTNAME => $lastname,
+            User::$EMAIL => $email,
+            User::$PASSWORD => bcrypt($password),
+            User::$ROLE => User::CUSTOMER
+        ]);
     }
 
     public function authentication(string $email, string $password): User {
@@ -44,6 +57,8 @@ class UserService
             throw new UserNotFoundException('User not found');
         }
 
+        $this->isEmailExists($id, $email, 2);
+
         $user[User::$FIRSTNAME] = $firstname;
         $user[User::$LASTNAME] = $lastname;
         $user[User::$EMAIL] = $email;
@@ -69,5 +84,13 @@ class UserService
         }
 
         return $user->delete();
+    }
+
+    private function isEmailExists(int $id, string $email, int $acceptance = 1) {
+        $n = $this->user->where(User::$EMAIL, $email)->where('id', '!=', $id)->count();
+
+        if($n >= $acceptance) {
+            throw new EmailAlreadyExistsException('Email already exists.');
+        }
     }
 }

@@ -190,6 +190,7 @@ return [
         Arrilot\Widgets\ServiceProvider::class,
         GrahamCampbell\Markdown\MarkdownServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Laravel\Cashier\CashierServiceProvider::class,
 
     ],
 

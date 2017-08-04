@@ -3,6 +3,7 @@
 namespace Tests\Feature\Services;
 
 use App\Exceptions\BadCredentialsException;
+use App\Exceptions\EmailAlreadyExistsException;
 use App\Exceptions\PasswordRequiredException;
 use App\Exceptions\UnexpectedException;
 use App\Exceptions\UserNotFoundException;
@@ -110,14 +111,28 @@ class UserServiceTest extends TestCase
     }
 
     public function testUpdateWithEmailAlreadyExists() {
-        $this->assertTrue(false);
+        // Arrange
+        $mock = \Mockery::mock(User::class);
+
+        $mock->shouldReceive('where')->times(3)->andReturn($mock);
+        $mock->shouldReceive('count')->once()->andReturn(2);
+        $mock->shouldReceive('first')->once()->andReturn(new User());
+
+        $userService = new UserService($mock);
+
+        // Assert
+        $this->expectException(EmailAlreadyExistsException::class);
+
+        // Act
+        $userService->update(1, 'jane', 'doe', 'jane.doe@domain.tld');
     }
 
     public function testUpdatePasswordWithBadPassword() {
         // Arrange
         $mock = \Mockery::mock(User::class);
 
-        $mock->shouldReceive('where')->once()->andReturn($mock);
+        $mock->shouldReceive('where')->times(3)->andReturn($mock);
+        $mock->shouldReceive('count')->once()->andReturn(0);
         $mock->shouldReceive('first')->once()->andReturn(new User([
             'id' => 1,
             'firtname' => 'john',
@@ -150,7 +165,8 @@ class UserServiceTest extends TestCase
 
         $userMock->shouldReceive('save')->once()->andReturn(false);
 
-        $mock->shouldReceive('where')->once()->andReturn($mock);
+        $mock->shouldReceive('where')->times(3)->andReturn($mock);
+        $mock->shouldReceive('count')->once()->andReturn(0);
         $mock->shouldReceive('first')->once()->andReturn($userMock);
 
         $userService = new UserService($mock);
@@ -177,7 +193,8 @@ class UserServiceTest extends TestCase
 
         $userMock->shouldReceive('save')->once()->andReturn(true);
 
-        $mock->shouldReceive('where')->once()->andReturn($mock);
+        $mock->shouldReceive('where')->times(3)->andReturn($mock);
+        $mock->shouldReceive('count')->once()->andReturn(0);
         $mock->shouldReceive('first')->once()->andReturn($userMock);
 
         $userService = new UserService($mock);
@@ -204,7 +221,8 @@ class UserServiceTest extends TestCase
 
         $userMock->shouldReceive('save')->once()->andReturn(true);
 
-        $mock->shouldReceive('where')->once()->andReturn($mock);
+        $mock->shouldReceive('where')->times(3)->andReturn($mock);
+        $mock->shouldReceive('count')->once()->andReturn(0);
         $mock->shouldReceive('first')->once()->andReturn($userMock);
 
         $userService = new UserService($mock);
@@ -251,5 +269,42 @@ class UserServiceTest extends TestCase
 
         // Assert
         $this->assertTrue($result);
+    }
+
+    public function testRegisterUserWithEmailAlreadyExistsException() {
+        // Arrange
+        $mock = \Mockery::mock(User::class);
+
+        $mock->shouldReceive('where')->twice()->andReturn($mock);
+        $mock->shouldReceive('count')->once()->andReturn(1);
+
+        $userService = new UserService($mock);
+
+        // Assert
+        $this->expectException(EmailAlreadyExistsException::class);
+
+        // Act
+        $userService->registerUser('firstname', 'lastname', 'john.doe@domain.tld', 'password');
+
+    }
+
+    public function testRegisterUserWithSuccess() {
+        // Arrange
+        $mock = \Mockery::mock(User::class);
+
+        $mock->shouldReceive('where')->twice()->andReturn($mock);
+        $mock->shouldReceive('count')->once()->andReturn(0);
+        $mock->shouldReceive('create')->once()->andReturn(new User([
+            User::$ROLE => User::CUSTOMER
+        ]));
+
+        $userService = new UserService($mock);
+
+        // Act
+        $user = $userService->registerUser('firstname', 'lastname', 'john.doe@domain.tld', 'password');
+
+
+        // Assert
+        $this->assertEquals($user->role, User::CUSTOMER);
     }
 }

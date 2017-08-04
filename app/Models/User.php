@@ -6,12 +6,20 @@ use Illuminate\Auth\Authenticatable as AuthenticableTrait;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Cashier\Billable;
 
 class User extends Model implements Authenticatable
 {
     use AuthenticableTrait;
     use SoftDeletes;
+    use Billable;
 
+    // User's roles
+    const ADMIN = 'admin';
+
+    const CUSTOMER = 'customer';
+
+    // Properties
     public static $FIRSTNAME = 'firstname';
 
     public static $LASTNAME = 'lastname';

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\BadCredentialsException;
+use App\Exceptions\EmailAlreadyExistsException;
+use App\Exceptions\InvalidCardException;
 use App\Exceptions\RequireFieldsException;
 use App\Exceptions\UnexpectedException;
 use App\Exceptions\UserNotFoundException;
 use App\Models\User;
+use App\Services\PaymentService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,8 +23,11 @@ class UserCtrl extends Controller
 {
     private $userService;
 
-    public function __construct(UserService $userService) {
+    private $paymentService;
+
+    public function __construct(UserService $userService, PaymentService $paymentService) {
         $this->userService = $userService;
+        $this->paymentService = $paymentService;
     }
 
     /**
@@ -133,8 +139,6 @@ class UserCtrl extends Controller
      * @Post("/post-authentication")
      */
     public function postAuthentication(Request $request) {
-        $redirect = 'UserCtrl@authentication';
-
         if (empty($request->email) || empty($request->password)) {
             throw new RequireFieldsException('Tous les champs sont requis');
         }
@@ -145,6 +149,8 @@ class UserCtrl extends Controller
             Auth::login($user, true);
 
             $redirect = ($user->role === 'admin') ? 'AdminCtrl@index' : 'UserCtrl@index';
+
+            return redirect()->action($redirect);
         } catch (BadCredentialsException | UserNotFoundException $e) {
             $request->session()->flash('alert', [
                 'message' => 'Vos identifiants sont invalides.',
@@ -152,7 +158,7 @@ class UserCtrl extends Controller
             ]);
         }
 
-        return redirect()->action($redirect);
+        return redirect()->back();
     }
 
     /**
@@ -187,5 +193,90 @@ class UserCtrl extends Controller
         Auth::logout();
 
         return redirect()->action('ContentCtrl@index');
+    }
+
+    /**
+     * @Get("/payment")
+     */
+    public function payment(Request $request) {
+        return response()->view('User.payment', [
+            'alert' => $request->session()->get('alert')
+        ]);
+    }
+
+    /**
+     * @Post("/payment")
+     */
+    public function postPayment(Request $request) {
+        $rules = [
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'confirm' => 'required',
+            'card_number' => 'required',
+            'exp_month' => 'required',
+            'exp_year' => 'required',
+            'cvc' => 'required',
+        ];
+
+        $values = $request->all();
+
+        $validator = Validator::make($values, $rules);
+
+        if($validator->fails()) {
+            throw new RequireFieldsException("Tous les champs sont requis.");
+        }
+
+        $passwordRules = [
+            'confirm' => 'same:password'
+        ];
+
+        $validator = Validator::make($values, $passwordRules);
+
+        if($validator->fails()) {
+            $request->session()->flash('alert', [
+                'message' => 'Votre confirmation est différente de votre mot de passe.',
+                'type' => 'warning'
+            ]);
+
+            return redirect()->back()->withInput();
+        }
+
+        try {
+            $this->paymentService->payment(
+                $values[User::$FIRSTNAME],
+                $values[User::$LASTNAME],
+                $values[User::$EMAIL],
+                $values[User::$PASSWORD],
+                $values['card_number'],
+                $values['exp_month'],
+                $values['exp_year'],
+                $values['cvc']
+            );
+        } catch (InvalidCardException $e) {
+            $request->session()->flash('alert', [
+                'message' => 'Les informations de paiement ne sont pas valides.',
+                'type' => 'warning'
+            ]);
+
+            return redirect()->back()->withInput();
+        } catch (EmailAlreadyExistsException $e) {
+            $request->session()->flash('alert', [
+                'message' => 'Un compte est déjà existant avec cette adresse email.',
+                'type' => 'warning'
+            ]);
+
+            return redirect()->back()->withInput();
+        }
+
+        return redirect()->action('UserCtrl@thanks');
+    }
+
+    /**
+     * @Get("/payment/thanks")
+     */
+    public function thanks() {
+        return response()->view('User.payment-thanks');
     }
 }
