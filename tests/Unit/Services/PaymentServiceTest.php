@@ -19,6 +19,7 @@ class PaymentServiceTest extends TestCase
         $mock = \Mockery::mock(UserService::class);
 
         $mockGenerateStripeToken = \Mockery::mock(GenerateStripeToken::class);
+        $mockGenerateStripeToken->shouldReceive('getToken')->once()->andReturn('token-string');
 
         $mock->shouldReceive('registerUser')->once()->andThrow(EmailAlreadyExistsException::class);
 
@@ -36,12 +37,8 @@ class PaymentServiceTest extends TestCase
         // Arrange
         $mock = \Mockery::mock(UserService::class);
 
-        $userMock = \Mockery::mock(User::class);
-
         $mockGenerateStripeToken = \Mockery::mock(GenerateStripeToken::class);
         $mockGenerateStripeToken->shouldReceive('getToken')->once()->andThrow(InvalidCardException::class);
-
-        $mock->shouldReceive('registerUser')->once()->andReturn($userMock);
 
         $paymentService = new PaymentService($mock, $mockGenerateStripeToken);
 

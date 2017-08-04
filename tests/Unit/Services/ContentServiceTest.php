@@ -7,6 +7,7 @@ use App\Exceptions\SlugAlreadyExistsException;
 use App\Exceptions\UnexpectedException;
 use App\Exceptions\UnknownStatusException;
 use App\Exceptions\UnknownTypeException;
+use App\Jobs\ImageResizer;
 use App\Models\Content;
 use App\Services\ContentService;
 use League\CommonMark\Converter;
@@ -185,9 +186,9 @@ class ContentServiceTest extends TestCase
         $mock->shouldReceive('where')->once()->andReturn($mock);
         $mock->shouldReceive('first')->once()->andReturn($userMock);
 
-        $contentService = \Mockery::mock(new ContentService($mock, $this->converterMock))->shouldAllowMockingProtectedMethods();
+        $contentService = new ContentService($mock, $this->converterMock);
 
-//        $contentService->shouldReceive('dispatch')->once()->andReturn(null);
+        $this->expectsJobs(ImageResizer::class);
 
         // Act
         $content = $contentService->update(1, 'title', 'slug', 'DRAFT', 'CONTENT', 'content');
@@ -304,9 +305,12 @@ class ContentServiceTest extends TestCase
 
         $mock->shouldReceive('where')->once()->andReturn($mock);
         $mock->shouldReceive('count')->once()->andReturn(0);
-        $mock->shouldReceive('save')->once()->andReturn(1);
+        $mock->shouldReceive('create')->once()->andReturn(true);
+        $mock->shouldReceive('getAttribute')->with('id')->once()->andReturn(1);
 
         $contentService = new ContentService($mock, $this->converterMock);
+
+        $this->expectsJobs(ImageResizer::class);
 
         // Act
         $result = $contentService->add(1, 'title', 'slug', 'DRAFT', 'CONTENT', 'content', []);
