@@ -110,7 +110,7 @@ class ContentService
             throw new SlugAlreadyExistsException('Slug already exists.');
         }
 
-        $contentModel = new Content();
+        $contentModel = [];
 
         $this->setThumbnail($thumbnail, $contentModel);
 
@@ -126,10 +126,10 @@ class ContentService
 
         $lastId = 0;
 
-        if($this->content->create($contentModel)) {
-            $lastId = $this->content->id;
+        if($content = $this->content->create($contentModel)) {
+            $lastId = $content->id;
 
-            $this->dispatch(new ImageResizer($contentModel));
+            $this->dispatch(new ImageResizer($content));
         }
 
         return $lastId;
@@ -161,7 +161,7 @@ class ContentService
         return $contents;
     }
 
-    private function setThumbnail(array $thumbnail, Content $data) {
+    private function setThumbnail(array $thumbnail, &$data) {
         if(!empty($thumbnail)) {
             try {
                 $this->moveThumbnail($thumbnail);
@@ -205,10 +205,10 @@ class ContentService
         }
     }
 
-    private function publishContent(string $status, Content $contentModel): void
+    private function publishContent(string $status, &$contentModel): void
     {
-        if (empty($contentModel->posted_at) && $status === Content::PUBLISHED) {
-            $contentModel->posted_at = new \DateTime();
+        if (empty($contentModel[Content::$POSTED_AT]) && $status == Content::PUBLISHED) {
+            $contentModel[Content::$POSTED_AT] = new \DateTime();
         }
     }
 }
