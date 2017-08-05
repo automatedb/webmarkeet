@@ -32,6 +32,32 @@ class ContentService
         $this->converter = $converter;
     }
 
+    public function getRecentContentsForBlog() {
+        $contents = $this->content->where('type', Content::CONTENT)
+            ->where('status', Content::PUBLISHED)
+            ->whereNotNull(Content::$POSTED_AT)
+            ->orderBy(Content::$POSTED_AT, 'desc')->limit(3)->get();
+
+        foreach ($contents as $index => $content) {
+            $contents[$index]->content = $this->converter->convertToHtml($contents[$index]->content);
+        }
+
+        return $contents;
+    }
+
+    public function getRecentContentsForTutorial() {
+        $contents = $this->content->where('type', Content::TUTORIAL)
+            ->where('status', Content::PUBLISHED)
+            ->whereNotNull(Content::$POSTED_AT)
+            ->orderBy(Content::$POSTED_AT, 'desc')->limit(3)->get();
+
+        foreach ($contents as $index => $content) {
+            $contents[$index]->content = $this->converter->convertToHtml($contents[$index]->content);
+        }
+
+        return $contents;
+    }
+
     public function getContentsForBlog() {
         return $this->getContentsForType(Content::CONTENT);
     }

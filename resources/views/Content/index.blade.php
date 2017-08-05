@@ -1,6 +1,20 @@
 @extends('Layout.guest.content')
 
 @section('content')
+    <header class="masthead" style="background-image: url('img/blog-thumbnail.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+                    <div class="site-heading">
+                        <h1>Blog</h1>
+                        <hr class="intro-divider">
+                        <span class="subheading">Toutes les astuces, actualités et billets d'humeurs sont ici.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
     <div class="container">
         <div class="row justify-content-md-center">
             @forelse ($contents as $content)
