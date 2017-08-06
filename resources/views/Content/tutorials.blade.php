@@ -30,6 +30,11 @@
                         'slug' => $firstContent[\App\Models\Content::$SLUG]
                     ])
                 </div>
+                <div class="col-md-6 text-center">
+                    <h2 class="text-center">Devenir membre {{ config('app.name') }}</h2>
+                    <p class="lead text-center">Téléchargez immédiatement de toutes les resources</p>
+                    {!! link_to_action('UserCtrl@authentication', 'Devenir membre', [], [ 'class' => 'btn btn-success' ]) !!}
+                </div>
             </div>
         </div>
         <!-- /.container -->
@@ -65,3 +70,11 @@
     </section>
     <!-- /.content-section-b -->
 @endsection
+
+@section('seo')
+    <title>{!! $title !!}</title>
+    <meta name="description" content="{!! $description !!}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset($thumbnail) }}">
+@stop
