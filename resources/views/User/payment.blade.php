@@ -33,7 +33,9 @@
     <section>
         <div class="container">
             <div class="row justify-content-md-center">
-                @widget('Alert', $alert)
+                <div class="col-md-8">
+                    @widget('Alert', $alert)
+                </div>
 
                 {!! Form::open(['action' => 'UserCtrl@postPayment']) !!}
 
