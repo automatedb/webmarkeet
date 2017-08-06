@@ -131,6 +131,16 @@ body {
       }
     }
 
+    aside {
+      .card {
+        border: none;
+
+        h4, .lead {
+          margin-bottom: 25px;
+        }
+      }
+    }
+
     section {
       &#all-tutorials {
         .row {
