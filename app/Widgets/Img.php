@@ -37,6 +37,9 @@ class Img extends AbstractWidget
             case 'tutorial-thumbnail':
                 $size = 540;
                 break;
+            case 'home-thumbnail':
+                $size = 356;
+                break;
         }
 
         $this->config['src'] = ImgHelper::link($this->config['src'], $this->config['id'], $size);

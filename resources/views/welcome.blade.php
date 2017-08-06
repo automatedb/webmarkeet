@@ -1,95 +1,148 @@
-<!doctype html>
-<html lang="{{ config('app.locale') }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('Layout.guest.content')
 
-        <title>Laravel</title>
-
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @if (Auth::check())
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ url('/login') }}">Login</a>
-                        <a href="{{ url('/register') }}">Register</a>
-                    @endif
-                </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+@section('content')
+    <!-- Header -->
+    <header class="intro-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="intro-message">
+                        <h1>{{ config('app.name') }}</h1>
+                        <h3>{{ config('app.slogan') }}</h3>
+                        <hr class="intro-divider">
+                        <ul class="list-inline intro-social-buttons">
+                            @foreach(config('social.brand') as $brand)
+                                @if(!empty($brand['url']))
+                                    <li class="list-inline-item">
+                                        <a href="{{ $brand['url'] }}" target="_blank" class="btn btn-secondary btn-lg"><i class="fa {{ $brand['css'] }} fa-fw"></i> <span class="network-name">{{ $brand['name'] }}</span></a>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </body>
-</html>
+        <!-- /.container -->
+    </header>
+    <!-- /.intro-header -->
+
+    <section>
+        <div class="container">
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <h2 class="section-heading">Les derniers tutoriels</h2>
+            <div class="clearfix"></div>
+            <div class="row">
+                @forelse($tutorials as $tutorial)
+                    <div class="col-md-4">
+                        <div class="card">
+                            <a href="{{ action('ContentCtrl@tutorial', $tutorial->slug) }}">
+                                @widget('Img', [
+                                    'id' => $tutorial->id,
+                                    'src' => $tutorial->thumbnail,
+                                    'title' => $tutorial->title,
+                                    'type' => 'home-thumbnail'
+                                ])
+
+                                <p class="card-text">{{ str_limit($tutorial->title, 40) }}</p>
+                            </a>
+                        </div>
+                    </div>
+                @empty
+                    <p class="lead">Aucun tutoriel pour le moment.</p>
+                @endforelse
+            </div>
+            <div class="row link-more">
+                <div class="col-md-12">
+                    <a class="btn btn-link pull-right" href="{{ action('ContentCtrl@tutorials') }}">Accéder aux autres tutoriels <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+        <!-- /.container -->
+    </section>
+    <!-- /.content-section-a -->
+
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h2>Devenir membre {{ config('app.name') }}</h2>
+                    <p class="lead">Accèdez immédiatement au téléchargement de toutes les resources</p>
+                    {!! link_to_action('UserCtrl@authentication', 'Accéder', [], [ 'class' => 'btn btn-success' ]) !!}
+                </div>
+            </div>
+        </div>
+        <!-- /.container -->
+    </section>
+    <!-- /.content-section-b -->
+
+    <section>
+        <div class="container">
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <h2 class="section-heading">Les derniers articles</h2>
+            <div class="clearfix"></div>
+            <div class="row">
+                @forelse($contents as $content)
+                    <div class="col-md-4">
+                        <div class="card">
+                            <a href="{{ action('ContentCtrl@content', $content->slug) }}">
+                                @widget('Img', [
+                                    'id' => $tutorial->id,
+                                    'src' => $tutorial->thumbnail,
+                                    'title' => $tutorial->title,
+                                    'type' => 'home-thumbnail'
+                                ])
+
+                                <p class="card-text">{{ str_limit($content->title, 40) }}</p>
+                            </a>
+                        </div>
+                    </div>
+                @empty
+                    <p class="lead">Aucun article pour le moment.</p>
+                @endforelse
+            </div>
+            <div class="row link-more">
+                <div class="col-md-12">
+                    <a class="btn btn-link pull-right" href="{{ action('ContentCtrl@index') }}">Accéder aux autres articles <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+    </section>
+    <!-- /.content-section-c -->
+
+    <div class="banner">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2>Suivez {{ config('app.name') }} :</h2>
+                </div>
+                <div class="col-lg-6">
+                    <ul class="list-inline banner-social-buttons">
+                        @foreach(config('social.brand') as $brand)
+                            @if(!empty($brand['url']))
+                                <li class="list-inline-item">
+                                    <a href="{{ $brand['url'] }}" target="_blank" class="btn btn-secondary btn-lg"><i class="fa {{ $brand['css'] }} fa-fw"></i> <span class="network-name">{{ $brand['name'] }}</span></a>
+                                </li>
+                            @endif
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /.container -->
+    </div>
+    <!-- /.banner -->
+@endsection
+
+@section('seo')
+    <title>{!! config('app.name') !!} - {{ config('app.slogan') }}</title>
+    <meta name="description" content="{{ config('app.description') }}">
+    <meta property="og:title" content="{!! config('app.name') !!} - {{ config('app.slogan') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset($thumbnail) }}">
+@stop
