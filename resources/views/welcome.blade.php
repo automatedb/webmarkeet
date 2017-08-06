@@ -12,9 +12,11 @@
                         <hr class="intro-divider">
                         <ul class="list-inline intro-social-buttons">
                             @foreach(config('social.brand') as $brand)
-                                <li class="list-inline-item">
-                                    <a href="{{ $brand['url'] }}" target="_blank" class="btn btn-secondary btn-lg"><i class="fa {{ $brand['css'] }} fa-fw"></i> <span class="network-name">{{ $brand['name'] }}</span></a>
-                                </li>
+                                @if(!empty($brand['url']))
+                                    <li class="list-inline-item">
+                                        <a href="{{ $brand['url'] }}" target="_blank" class="btn btn-secondary btn-lg"><i class="fa {{ $brand['css'] }} fa-fw"></i> <span class="network-name">{{ $brand['name'] }}</span></a>
+                                    </li>
+                                @endif
                             @endforeach
                         </ul>
                     </div>
@@ -121,9 +123,11 @@
                 <div class="col-lg-6">
                     <ul class="list-inline banner-social-buttons">
                         @foreach(config('social.brand') as $brand)
-                            <li class="list-inline-item">
-                                <a href="{{ $brand['url'] }}" target="_blank" class="btn btn-secondary btn-lg"><i class="fa {{ $brand['css'] }} fa-fw"></i> <span class="network-name">{{ $brand['name'] }}</span></a>
-                            </li>
+                            @if(!empty($brand['url']))
+                                <li class="list-inline-item">
+                                    <a href="{{ $brand['url'] }}" target="_blank" class="btn btn-secondary btn-lg"><i class="fa {{ $brand['css'] }} fa-fw"></i> <span class="network-name">{{ $brand['name'] }}</span></a>
+                                </li>
+                            @endif
                         @endforeach
                     </ul>
                 </div>

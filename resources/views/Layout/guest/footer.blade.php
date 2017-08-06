@@ -5,22 +5,18 @@
                 <div class="col-lg-12">
                     <ul class="list-inline text-center">
                         @foreach(config('social.brand') as $brand)
-                            <li class="list-inline-item">
-                                <a href="{{ $brand['url'] }}" target="_blank">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa {{ $brand['css'] }} fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
+                            @if(!empty($brand['url']))
+                                <li class="list-inline-item">
+                                    <a href="{{ $brand['url'] }}" target="_blank">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa {{ $brand['css'] }} fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            @endif
                         @endforeach
                     </ul>
-                    {{--<ul class="list-inline">--}}
-                        {{--<li class="list-inline-item">--}}
-                            {{--<a href="#">Home</a>--}}
-                        {{--</li>--}}
-                        {{--<li class="list-inline-item footer-menu-divider">&sdot;</li>--}}
-                    {{--</ul>--}}
                     <p class="copyright text-muted small text-center">Copyright &copy; {{ config('app.name') }} 2017. All Rights Reserved</p>
                 </div>
             </div>

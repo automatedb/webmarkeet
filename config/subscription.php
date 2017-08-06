@@ -2,7 +2,7 @@
 
 
 return [
-    'price' => '97',
+    'price' => env('SUBSCRIPTION_PRICE'),
 
-    'period' => 'mois'
+    'period' => env('SUBSCRIPTION_PERIOD')
 ];

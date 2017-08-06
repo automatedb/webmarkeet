@@ -4,18 +4,23 @@ return [
     'brand' => [
         [
             'name' => 'Facebook',
-            'url' => 'https://www.facebook.com/RobotsTrading',
+            'url' => env('SOCIAL_FACEBOOK_URL'),
             'css' => 'fa-facebook'
         ],
         [
             'name' => 'Twitter',
-            'url' => 'https://twitter.com/Robots_Trading',
+            'url' => env('SOCIAL_TWITTER_URL'),
             'css' => 'fa-twitter'
         ],
         [
             'name' => 'Github',
-            'url' => 'https://github.com/RobotsTrading',
+            'url' => env('SOCIAL_GITHUB_URL'),
             'css' => 'fa-github'
+        ],
+        [
+            'name' => 'Linkedin',
+            'url' => env('SOCIAL_LINKEDIN_URL'),
+            'css' => 'fa-linkedin'
         ]
     ]
 ];
