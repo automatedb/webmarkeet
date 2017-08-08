@@ -7,11 +7,15 @@ use App\Exceptions\EmailAlreadyExistsException;
 use App\Exceptions\PasswordRequiredException;
 use App\Exceptions\UnexpectedException;
 use App\Exceptions\UserNotFoundException;
+use App\Jobs\UnSubscribePlan;
 use App\Models\User;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
+    use DispatchesJobs;
+
     /** @var User */
     private $user;
 
@@ -83,7 +87,13 @@ class UserService
             return false;
         }
 
-        return $user->delete();
+        $this->cancelSubscription($user, true);
+
+        return true;
+    }
+
+    public function cancelSubscription(User $user, bool $delete = false) {
+        $this->dispatch(new UnSubscribePlan($user->id, $delete));
     }
 
     private function isEmailExists(int $id, string $email, int $acceptance = 1) {

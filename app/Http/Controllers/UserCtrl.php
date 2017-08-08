@@ -31,16 +31,9 @@ class UserCtrl extends Controller
     }
 
     /**
-     * Show index customer page
-     * @Get("/app")
-     */
-    public function index() {
-        return response()->view('User.index');
-    }
-
-    /**
      * Show profil page
-     * @Get("/app/profile")
+     * @Get("/profile")
+     * @Middleware("customer")
      */
     public function profile(Request $request) {
         return response()->view('User.profile', [
@@ -51,7 +44,8 @@ class UserCtrl extends Controller
 
     /**
      * Show index customer page
-     * @Post("/app/profile/update")
+     * @Post("/profile/update")
+     * @Middleware("customer")
      */
     public function modify(Request $request) {
         $user = Auth::user();
@@ -148,7 +142,7 @@ class UserCtrl extends Controller
 
             Auth::login($user, true);
 
-            $redirect = ($user->role === 'admin') ? 'AdminCtrl@index' : 'UserCtrl@index';
+            $redirect = ($user->role === 'admin') ? 'AdminCtrl@index' : 'IndexCtrl@index';
 
             return redirect()->action($redirect);
         } catch (BadCredentialsException | UserNotFoundException $e) {
@@ -162,7 +156,8 @@ class UserCtrl extends Controller
     }
 
     /**
-     * @Get("/app/delete")
+     * @Get("/delete")
+     * @Middleware("customer")
      */
     public function delete(Request $request) {
         $user = Auth::user();
@@ -187,12 +182,13 @@ class UserCtrl extends Controller
     }
 
     /**
-     * @Get("/app/logout")
+     * @Get("/logout")
+     * @Middleware("customer")
      */
     public function logout() {
         Auth::logout();
 
-        return redirect()->action('ContentCtrl@index');
+        return redirect()->action('IndexCtrl@index');
     }
 
     /**
@@ -278,5 +274,19 @@ class UserCtrl extends Controller
      */
     public function thanks() {
         return response()->view('User.payment-thanks');
+    }
+
+    /**
+     * @Get("/payment/cancel")
+     */
+    public function unSubscribe(Request $request) {
+        $this->userService->cancelSubscription(Auth::user());
+
+        $request->session()->flash('alert', [
+            'message' => 'Votre souscription a été annulé.',
+            'type' => 'success'
+        ]);
+
+        return redirect()->back();
     }
 }

@@ -138,7 +138,8 @@ class ContentCtrl extends Controller
 
     /**
      * Show all contents
-     * @Get("/app/admin/contents")
+     * @Get("/admin/contents")
+     * @Middleware("admin")
      */
     public function contents(Request $request) {
         return response()->view('Content.contents', [
@@ -149,7 +150,8 @@ class ContentCtrl extends Controller
 
     /**
      * Show content form
-     * @Get("/app/admin/contents/add")
+     * @Get("/admin/contents/add")
+     * @Middleware("admin")
      */
     public function add(Request $request) {
         return response()->view('Content.add', [
@@ -161,7 +163,8 @@ class ContentCtrl extends Controller
 
     /**
      * Post new content
-     * @Post("/app/admin/contents/add")
+     * @Post("/admin/contents/add")
+     * @Middleware("admin")
      */
     public function postAdd(Request $request) {
         $thumbnail = [];
@@ -211,7 +214,8 @@ class ContentCtrl extends Controller
 
     /**
      * Show content form to modify
-     * @Get("/app/admin/contents/modify/{id}")
+     * @Get("/admin/contents/modify/{id}")
+     * @Middleware("admin")
      */
     public function modify(Request $request, $id) {
         return response()->view('Content.modify', [
@@ -224,7 +228,8 @@ class ContentCtrl extends Controller
 
     /**
      * Post modifications
-     * @Post("/app/admin/contents/modify/{id}")
+     * @Post("/admin/contents/modify/{id}")
+     * @Middleware("admin")
      */
     public function postModify(Request $request) {
         $thumbnail = [];
@@ -276,7 +281,8 @@ class ContentCtrl extends Controller
 
     /**
      * Delete content
-     * @Get("/app/admin/contents/delete/{id}")
+     * @Get("/admin/contents/delete/{id}")
+     * @Middleware("admin")
      */
     public function delete(Request $request, $id) {
         $data = [

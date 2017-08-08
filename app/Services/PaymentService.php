@@ -39,6 +39,4 @@ class PaymentService
 
         return true;
     }
-
-
 }

@@ -22,6 +22,12 @@ $color-link : #337AB9;
 }
 
 body {
+  a, .btn {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
   &.guest-page {
     font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
 
@@ -33,8 +39,24 @@ body {
     a, p, ul, li, span {
       color: $color-dark;
 
-      &.btn-success {
+      &.btn {
         color: #FFF;
+
+        &.btn-link {
+          color: $color-dark;
+
+          &:hover {
+            color: $color-link;
+
+            i {
+              color: $color-link;
+            }
+          }
+        }
+
+        i {
+          color: $color-dark;
+        }
       }
     }
 
@@ -50,7 +72,7 @@ body {
           color: $color-link;
         }
 
-        &.btn-success {
+        &.btn {
           color: #FFF;
         }
 

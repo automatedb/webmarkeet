@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Services\ContentService;
 use Illuminate\Support\Facades\Config;
 
+/**
+ * @Middleware("web")
+ */
 class IndexCtrl extends Controller
 {
     private $contentService;

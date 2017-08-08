@@ -30,9 +30,22 @@
                     <li class="nav-item {{ \App\Helpers\Menu::activeMenu('tutorials') }}">
                         {{ link_to_action('ContentCtrl@tutorials', 'Tutoriels', [], ['class' => 'nav-link']) }}
                     </li>
-                    <li class="nav-item {{ \App\Helpers\Menu::activeMenu('authentication') }}">
-                        {{ link_to_action('UserCtrl@authentication', 'Authentification', [], ['class' => 'nav-link']) }}
-                    </li>
+                    @if(!\Illuminate\Support\Facades\Auth::check())
+                        <li class="nav-item {{ \App\Helpers\Menu::activeMenu('authentication') }}">
+                            {{ link_to_action('UserCtrl@authentication', 'Authentification', [], ['class' => 'nav-link']) }}
+                        </li>
+                    @else
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Settings
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                {{ link_to_action('UserCtrl@profile', 'Mon profil', [], ['class' => 'dropdown-item']) }}
+                                <div class="dropdown-divider"></div>
+                                {{ link_to_action('UserCtrl@logout', 'Me déconnecter', [], ['class' => 'dropdown-item']) }}
+                            </div>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>

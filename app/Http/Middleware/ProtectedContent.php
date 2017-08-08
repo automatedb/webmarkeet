@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class Authentication
+class ProtectedContent
 {
     /**
      * Handle an incoming request.
@@ -17,10 +17,6 @@ class Authentication
     public function handle($request, Closure $next)
     {
         if(!Auth::check()) {
-            return redirect()->action('UserCtrl@authentication');
-        }
-
-        if(Auth::user()->role != "admin") {
             return redirect()->action('UserCtrl@authentication');
         }
 
