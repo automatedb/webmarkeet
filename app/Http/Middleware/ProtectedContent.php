@@ -17,6 +17,16 @@ class ProtectedContent
     public function handle($request, Closure $next)
     {
         if(!Auth::check()) {
+            Auth::logout();
+
+            return redirect()->action('UserCtrl@authentication');
+        }
+
+        $user = Auth::user();
+
+        if($user->role != 'admin') {
+            Auth::logout();
+
             return redirect()->action('UserCtrl@authentication');
         }
 

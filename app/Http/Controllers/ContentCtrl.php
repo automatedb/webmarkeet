@@ -71,6 +71,7 @@ class ContentCtrl extends Controller
     /**
      * Able to download source
      * @Get("/blog/{slug}/download")
+     * @Middleware("download")
      */
     public function downloadSources(Request $request, string $slug) {
         try {

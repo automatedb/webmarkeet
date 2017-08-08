@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class Authentication
+class ProtectedDownload
 {
     /**
      * Handle an incoming request.
@@ -22,7 +22,14 @@ class Authentication
             return redirect()->action('UserCtrl@authentication');
         }
 
-        if(Auth::user()->role != "admin") {
+        $user = Auth::user();
+
+        if(!$user->subscribed('monthly') && $user->role != 'admin') {
+            $request->session()->flash('alert', [
+                'message' => 'Vous devez posséder un abonnment pour télécharger les ressources du site.',
+                'type' => 'warning'
+            ]);
+
             Auth::logout();
 
             return redirect()->action('UserCtrl@authentication');
