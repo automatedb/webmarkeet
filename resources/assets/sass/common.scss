@@ -46,8 +46,6 @@ body {
           color: $color-dark;
 
           &:hover {
-            color: $color-link;
-
             i {
               color: $color-link;
             }
@@ -67,6 +65,8 @@ body {
         color: $color-link;
 
         p {
+          color: $color-link;
+
           transition-duration: .3s;
           text-decoration: none;
           color: $color-link;
@@ -164,6 +164,12 @@ body {
     }
 
     section {
+      &#section-404 {
+        .section-heading-spacer {
+          float: inherit;
+        }
+      }
+
       &#all-tutorials {
         .row {
           margin-bottom: 20px;

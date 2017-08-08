@@ -61,8 +61,7 @@ class ContentCtrl extends Controller
                 'image' => ImgHelper::link($content->thumbnail, $content->id, 1200)
             ];
         } catch (NoFoundException $e) {
-            $view = '404';
-            $code = 404;
+            return abort(404);
         }
 
         return response()->view($view, $data, $code);
@@ -78,10 +77,10 @@ class ContentCtrl extends Controller
             $content = $this->contentService->getContentBySlug($slug);
 
             if(!$content->sources()->count()) {
-                return response()->view('404', [], 404);
+                return abort(404);
             }
         } catch (NoFoundException $e) {
-            return response()->view('404', [], 404);
+            return abort(404);
         }
 
         $file = storage_path(sprintf('app/public/%s', $content->sources()->first()->name));
@@ -130,8 +129,7 @@ class ContentCtrl extends Controller
                 'image' => ImgHelper::link($content->thumbnail, $content->id, 1200)
             ];
         } catch (NoFoundException $e) {
-            $view = '404';
-            $code = 404;
+            return abort(404);
         }
 
         return response()->view($view, $data, $code);
