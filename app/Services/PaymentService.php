@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Exceptions\InvalidCardException;
 use App\Exceptions\InvalidSubscriptionException;
 use App\Helpers\GenerateStripeToken;
+use Stripe\Error\Card;
 use Stripe\Stripe;
 
 class PaymentService
@@ -31,9 +33,15 @@ class PaymentService
 
         $user = $this->userService->registerUser($firstname, $lastname, $email, $password);
 
-        $subscription = $user->newSubscription('monthly', 'RT0001')->create($token);
+        try {
+            $subscription = $user->newSubscription('monthly', 'RT0001')->create($token);
+        } catch (Card $e) {
+            $user->forceDelete();
+            throw new InvalidCardException('Invalid subscription');
+        }
 
         if(empty($subscription)) {
+            $user->forceDelete();
             throw new InvalidSubscriptionException('Invalid subscription');
         }
 
