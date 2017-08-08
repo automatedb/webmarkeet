@@ -121,6 +121,7 @@ class UserCtrl extends Controller
     /**
      * Show authentication blog
      * @Get("/authentication")
+     * @Middleware("logged")
      */
     public function authentication(Request $request) {
         return response()->view('User/authentication', [
