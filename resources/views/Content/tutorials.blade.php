@@ -32,7 +32,7 @@
                 </div>
                 <div class="col-md-6 text-center">
                     <h2 class="text-center">Devenir membre {{ config('app.name') }}</h2>
-                    <p class="lead text-center">Téléchargez immédiatement de toutes les resources</p>
+                    <p class="lead text-center">Télécharger immédiatement de toutes les ressources</p>
                     {!! link_to_action('UserCtrl@authentication', 'Devenir membre', [], [ 'class' => 'btn btn-success' ]) !!}
                 </div>
             </div>

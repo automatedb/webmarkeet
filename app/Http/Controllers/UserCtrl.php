@@ -175,7 +175,7 @@ class UserCtrl extends Controller
         Auth::logout();
 
         $request->session()->flash('alert', [
-            'message' => "Votre comptes est supprimé. Nous sommes désolé de vous voir partir. Merci de la confiance que vous nous avez accordé jusqu'aujourd'hui. Cordialement.",
+            'message' => "Votre compte est supprimé. Nous sommes désolés de vous voir partir. Merci de la confiance que vous nous avez accordé jusqu'à présent. Cordialement.",
             'type' => 'success'
         ]);
 
@@ -273,8 +273,10 @@ class UserCtrl extends Controller
     /**
      * @Get("/payment/thanks")
      */
-    public function thanks() {
-        return response()->view('User.payment-thanks');
+    public function thanks(Request $request) {
+        return response()->view('User.payment-thanks', [
+            'alert' => $request->session()->get('alert')
+        ]);
     }
 
     /**

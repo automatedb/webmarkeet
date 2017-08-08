@@ -46,6 +46,8 @@ body {
           color: $color-dark;
 
           &:hover {
+            color: $color-link;
+
             i {
               color: $color-link;
             }
@@ -108,6 +110,12 @@ body {
         position: relative;
         padding-top: 20%;
         padding-bottom: 20%;
+
+        &#form-auth {
+          .form-control-feedback {
+            color: #d9534f !important;
+          }
+        }
 
         >h1 {
           font-size: 5em;

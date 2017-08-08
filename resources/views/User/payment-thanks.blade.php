@@ -22,6 +22,8 @@
             <div class="clearfix"></div>
             <div class="row justify-content-md-center">
                 <div class="col-md-5">
+                    @widget('alert', $alert)
+
                     {!! Form::open(['action' => 'UserCtrl@postAuthentication']) !!}
 
                     <div class="form-group">
@@ -33,7 +35,7 @@
                         <p class="form-control-feedback hidden-xs-up">Merci d'entrer votre mot de passe.</p>
                     </div>
                     <div class="form-group">
-                        {!! Form::submit('Connexion', ['class' => 'btn btn-primary']) !!}
+                        {!! Form::submit('Connexion', ['class' => 'btn btn-primary pull-right']) !!}
                     </div>
 
                     {!! Form::close() !!}

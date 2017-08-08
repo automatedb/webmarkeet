@@ -55,7 +55,7 @@
             </div>
             <div class="row link-more">
                 <div class="col-md-12">
-                    <a class="btn btn-link pull-right" href="{{ action('ContentCtrl@tutorials') }}">Accéder aux autres tutoriels <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                    <a class="btn btn-link pull-right" href="{{ action('ContentCtrl@tutorials') }}">Accéder à d'autres tutoriels <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
                 </div>
             </div>
         </div>
@@ -68,7 +68,7 @@
             <div class="row">
                 <div class="col-md-12 text-center">
                     <h2>Devenir membre {{ config('app.name') }}</h2>
-                    <p class="lead">Accèdez immédiatement au téléchargement de toutes les resources</p>
+                    <p class="lead">Accéder immédiatement au téléchargement de toutes les ressources</p>
                     {!! link_to_action('UserCtrl@authentication', 'Accéder', [], [ 'class' => 'btn btn-success' ]) !!}
                 </div>
             </div>
@@ -105,7 +105,7 @@
             </div>
             <div class="row link-more">
                 <div class="col-md-12">
-                    <a class="btn btn-link pull-right" href="{{ action('ContentCtrl@index') }}">Accéder aux autres articles <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                    <a class="btn btn-link pull-right" href="{{ action('ContentCtrl@index') }}">Accéder à d'autres articles <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
                 </div>
             </div>
 

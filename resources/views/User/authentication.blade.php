@@ -7,7 +7,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-5">
-                    <div class="intro-message">
+                    <div id="form-auth" class="intro-message">
                         <h2>Login</h2>
                         <hr class="intro-divider">
 
@@ -17,11 +17,11 @@
 
                         <div class="form-group">
                             {!! Form::text('email', '', ['class' => 'form-control required', 'placeholder' => 'Votre adresse email']) !!}
-                            <p class="form-control-feedback hidden-xs-up">Merci d'entrer votre email.</p>
+                            <p class="form-control-feedback hidden-xs-up text-left">Merci d'entrer votre email.</p>
                         </div>
                         <div class="form-group">
                             {!! Form::password('password', ['class' => 'form-control required', 'placeholder' => 'Votre mot de passe']) !!}
-                            <p class="form-control-feedback hidden-xs-up">Merci d'entrer votre mot de passe.</p>
+                            <p class="form-control-feedback hidden-xs-up text-left">Merci d'entrer votre mot de passe.</p>
                         </div>
                         <div class="form-group">
                             {!! Form::submit('Connexion', ['class' => 'btn btn-primary']) !!}
@@ -42,7 +42,7 @@
                         <h3 class="price text-center">{{ config('subscription.price') }}<small>€ HT</small></h3>
                         <p class="period text-center">par {{ config('subscription.period') }}</p>
                         <a href="{{ action('UserCtrl@payment') }}" class="btn btn-success">
-                            Accédez aux codes sources
+                            Accéder aux codes sources
                         </a>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <p>Devenir membre sur {{ env('APP_NAME') }}, c'est soutenir la création de nouveaux contenus et accéder à du contenu exclusif pour apprendre et s'améliorer (comme le téléchargement des vidéos et des sources).</p>
-                    <p>C'est aussi accéder à des contenus premium uniquement accéssible au membres {{ env('APP_NAME') }}.</p>
+                    <p>C'est aussi accéder à des contenus premium uniquement accessible aux membres {{ env('APP_NAME') }}.</p>
                 </div>
             </div>
         </div>
@@ -78,7 +78,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <p>Mon but à travers {{ env('APP_NAME') }} est de partager mes connaissances avec le plus grand nombre, c'est pourquoi j'essaie de rendre un maximum de contenu gratuit et public.</p>
-                    <p>Malgré tout, la recherche, les tests, la préparation, l'enregistrement et le montage des formations prend un temps considérable. Du coup proposer des options payantes, comme le téléchargement des sources, me permet d'amortir une partie du temps passé et de continuer à faire vivre le site.</p>
+                    <p>Malgré tout, la recherche, les tests, la préparation, l'enregistrement et le montage des formations prennent un temps considérable. Du coup proposer des options payantes, comme le téléchargement des sources, me permet d'amortir une partie du temps passé et de continuer à faire vivre le site.</p>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
             <div class="clearfix"></div>
             <div class="row">
                 <div class="col-lg-12">
-                    <p>Non, il est possible de se désabonner à tout moment. Votre désinscription sera effective immédiatement sans procédure complexe. Et tous les prélèvements seront stoppés.</p>
+                    <p>Non, il est possible de se désabonner à tout moment. Votre fermeture de compte sera effective immédiatement sans procédure complexe. Et tous les prélèvements seront stoppés.</p>
                 </div>
             </div>
         </div>
@@ -124,7 +124,7 @@
             <div class="row justify-content-md-center">
                 <div class="col-md-12 text-center">
                     <h2>Devenir membre {{ config('app.name') }}</h2>
-                    <p class="lead">Accèdez immédiatement au téléchargement de toutes les resources</p>
+                    <p class="lead">Accéder immédiatement au téléchargement de toutes les ressources</p>
                 </div>
                 <div class="col-lg-4">
                     {{ link_to_action('UserCtrl@payment', 'Créer mon compte', [], [ 'class' => 'btn btn-success btn-lg btn-block' ]) }}
@@ -152,7 +152,7 @@
                     <h4>Pas d'engagement de durée</h4>
                     <ul>
                         <li>Arrêtez votre abonnement à tout moment</li>
-                        <li>Désinscription simple</li>
+                        <li>Fermeture de compte simple</li>
                     </ul>
                 </div>
                 <div class="col-lg-6">

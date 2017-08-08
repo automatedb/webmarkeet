@@ -22,7 +22,7 @@
                     {!! Form::open(['action' => 'UserCtrl@modify']) !!}
 
                     <fieldset class="form-group">
-                        <legend>Information vous concernant</legend>
+                        <legend>Informations vous concernant</legend>
 
                         <div class="form-group">
                             {!! Form::text('firstname', $user->firstname, ['class' => 'form-control required']) !!}
@@ -41,7 +41,7 @@
                     </fieldset>
 
                     <fieldset class="form-group">
-                        <legend>Information permettant votre changement de mot de passe</legend>
+                        <legend>Informations permettant votre changement de mot de passe</legend>
 
                         <div class="form-group">
                             {!! Form::password('oldpassword',  ['class' => 'form-control']) !!}
@@ -71,7 +71,7 @@
                 <div class="col-lg-8">
                     <h2 class="text-left">Zone de danger</h2>
                     <hr>
-                    <p>Attention cette partie vous permet d'effectuer des actions qui ont des impacte sur l'utilisation de votre compte. Certaines actions ont sont immédiates et irréversible</p>
+                    <p>Attention cette partie vous permet d'effectuer des actions qui ont des impacts sur l'utilisation de votre compte. Certaines actions ont sont immédiates et irréversible</p>
                     <div class="card card-outline-danger mb-3 text-center">
                         <div class="card-block">
                             <div class="list-group">
@@ -82,7 +82,7 @@
                                             Stopper mon abonnement
                                         </button>
                                     </div>
-                                    <p class="mb-1">Cet espace vous permet de d'annuler votre abonnement de {{ config('subscription.price') }}<small>€ HT</small>/{{ config('subscription.period') }}.</p>
+                                    <p class="mb-1">Cet espace vous permet d'annuler votre abonnement de {{ config('subscription.price') }}<small>€ HT</small>/{{ config('subscription.period') }}.</p>
                                     <small class="text-muted text-left">Cette annulation est effective à la fin de la période courante. A la fin de la période, il ne vous sera plus possible d'accéder aux ressources de {{ config('app.name') }}. Vous perdez aussi les privilèges de code promotionnel si vous en avez eu lors de votre souscription.</small>
                                 </div>
                                 @if($user->role !== 'admin')
@@ -94,7 +94,7 @@
                                             </button>
                                         </div>
                                         <p class="mb-1">Cet espace vous permet de fermer votre compte.</p>
-                                        <small class="text-muted text-left">Cette suppression est immédiate. Elle entraine aussi l'annulation de votre abonnement. Vous perdez aussi accès à toutes les resources et toutes les formations achetées.</small>
+                                        <small class="text-muted text-left">Cette suppression est immédiate. Elle entraine aussi l'annulation de votre abonnement. Vous perdez aussi accès à toutes les ressources et toutes les formations achetées.</small>
                                     </div>
                                 @endif
                             </div>
@@ -139,7 +139,7 @@
                 </div>
                 <div class="modal-body">
                     <p>Je suis conscience qu'en stoppant mon abonnement je perds aussi tous mes accès aux formations vidéos, aux codes sources et code promotionnel que j'aurai pu bénéficier.</p>
-                    <p>Je comprends aussi que cette annulation sera effective et irreversible immédiatement après avoir cliqué sur "Je confirme". </p>
+                    <p>Je comprends aussi que cette annulation sera effective et irréversible immédiatement après avoir cliqué sur "Je confirme". </p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>

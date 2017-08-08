@@ -37,7 +37,7 @@
                     @else
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Settings
+                                Paramètres
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 {{ link_to_action('UserCtrl@profile', 'Mon profil', [], ['class' => 'dropdown-item']) }}

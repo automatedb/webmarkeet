@@ -22,14 +22,6 @@ class ProtectedContent
             return redirect()->action('UserCtrl@authentication');
         }
 
-        $user = Auth::user();
-
-        if($user->role != 'admin') {
-            Auth::logout();
-
-            return redirect()->action('UserCtrl@authentication');
-        }
-
         return $next($request);
     }
 }
