@@ -274,10 +274,13 @@ class ContentServiceTest extends TestCase
         // Arrange
         $mock = \Mockery::mock(Content::class);
 
+        $contentMocked = \Mockery::mock(Content::class);
+
+        $contentMocked->shouldReceive('getAttribute')->once()->with('id')->andReturn(1);
+
         $mock->shouldReceive('where')->once()->andReturn($mock);
         $mock->shouldReceive('count')->once()->andReturn(0);
-        $mock->shouldReceive('create')->once()->andReturn(true);
-        $mock->shouldReceive('getAttribute')->with('id')->once()->andReturn(1);
+        $mock->shouldReceive('create')->once()->andReturn($contentMocked);
 
         $contentService = new ContentService($mock, $this->converterMock);
 

@@ -257,7 +257,7 @@ class UserServiceTest extends TestCase
 
         $userMock = \Mockery::mock(new User([]));
 
-        $userMock->shouldReceive('delete')->andReturn(true);
+        $userMock->shouldReceive('getAttribute')->once()->with('id')->andReturn(1);
 
         $mock->shouldReceive('where')->once()->andReturn($mock);
         $mock->shouldReceive('first')->once()->andReturn($userMock);
