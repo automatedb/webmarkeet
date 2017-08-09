@@ -1,0 +1,1 @@
+{!! Html::image($config['src'], $config['title'], $config['options']) !!}

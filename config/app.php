@@ -12,7 +12,33 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Website name'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Description
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'description' => env('APP_DESCRIPTION'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Description
+    |--------------------------------------------------------------------------
+    |
+    */
+    'slogan' => env('APP_SLOGAN'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Thumbnail
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    'thumbnail' => env('APP_THUMBNAIL'),
 
     /*
     |--------------------------------------------------------------------------
@@ -177,6 +203,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\AnnotationsServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
+        Arrilot\Widgets\ServiceProvider::class,
+        GrahamCampbell\Markdown\MarkdownServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+        Laravel\Cashier\CashierServiceProvider::class,
 
     ],
 
@@ -226,7 +257,12 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
+        'Form' => Collective\Html\FormFacade::class,
+        'Html' => Collective\Html\HtmlFacade::class,
+        'Widget' => Arrilot\Widgets\Facade::class,
+        'AsyncWidget' => Arrilot\Widgets\AsyncFacade::class,
+        'Markdown' => GrahamCampbell\Markdown\Facades\Markdown::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

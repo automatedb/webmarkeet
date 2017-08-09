@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateContentsTable extends Migration
 {
@@ -17,10 +17,13 @@ class CreateContentsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->string('slug')->unique();
-            $table->text('content');
+            $table->text('content')->nullable();
+            $table->string('type');
             $table->string('status');
-            $table->string('thumbnail');
+            $table->string('thumbnail')->nullable();
+            $table->string('video_id')->nullable();
             $table->integer('user_id');
+            $table->timestamp('posted_at')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
@@ -34,6 +37,6 @@ class CreateContentsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('contents');
+        Schema::dropIfExists('contents');
     }
 }

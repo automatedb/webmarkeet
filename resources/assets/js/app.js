@@ -1,22 +1,22 @@
+$(document).ready(function() {
+    $('form').on('submit', function(e) {
+        $('.required').each(function(i, el) {
+            var value = $(el).val();
+            var hasError = false;
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+            $(el).parent().removeClass('has-danger');
+            $(el).parent().find('.form-control-feedback').addClass('hidden-xs-up');
 
-require('./bootstrap');
+            if($.trim(value) === '') {
+                hasError = true;
 
-window.Vue = require('vue');
+                $(el).parent().addClass('has-danger');
+                $(el).parent().find('.form-control-feedback').removeClass('hidden-xs-up');
+            }
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-Vue.component('example', require('./components/Example.vue'));
-
-const app = new Vue({
-    el: '#app'
+            if(hasError) {
+                e.preventDefault();
+            }
+        });
+    });
 });

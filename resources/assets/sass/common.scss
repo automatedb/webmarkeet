@@ -1,0 +1,496 @@
+$color-blue1: #002040;
+$color-blue2: #004060;
+$color-blue3: #002020;
+$color-gray : #404853;
+$color-dark : #292B30;
+$color-link : #337AB9;
+
+.admin-page {
+  #sidebar {
+    float: left;
+  }
+
+  #content {
+    float: right;
+    padding-top: 20px;
+  }
+
+  .CodeMirror
+  .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
+    background: transparent;
+  }
+}
+
+body {
+  a, .btn {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &.guest-page {
+    font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-weight: 700;
+    }
+
+    a, p, ul, li, span {
+      color: $color-dark;
+
+      &.btn {
+        color: #FFF;
+
+        &.btn-link {
+          color: $color-dark;
+
+          &:hover {
+            color: $color-link;
+
+            i {
+              color: $color-link;
+            }
+          }
+        }
+
+        i {
+          color: $color-dark;
+        }
+      }
+    }
+
+    a {
+      &:hover {
+        transition-duration: .3s;
+        text-decoration: none;
+        color: $color-link;
+
+        p {
+          color: $color-link;
+
+          transition-duration: .3s;
+          text-decoration: none;
+          color: $color-link;
+        }
+
+        &.btn {
+          color: #FFF;
+        }
+
+        &.btn-secondary {
+          i {
+            color: $color-dark;
+          }
+        }
+      }
+    }
+
+    .topnav {
+      font-size: 14px;
+    }
+
+    .intro-header {
+      position: relative;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      text-align: center;
+      color: #f8f8f8;
+      background: url(/img/robots-trading.jpg) no-repeat center center;
+      background-size: cover;
+
+      .col-lg-2 {
+        >.intro-message {
+          padding-top: 100% !important;
+          padding-bottom: 100%;
+        }
+      }
+
+      .intro-message {
+        position: relative;
+        padding-top: 20%;
+        padding-bottom: 20%;
+
+        &#form-auth {
+          .form-control-feedback {
+            color: #d9534f !important;
+          }
+        }
+
+        >h1 {
+          font-size: 5em;
+        }
+
+        >h1, >h2, >h3 {
+          margin: 0;
+          text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
+
+        }
+
+        h3 {
+          &.price {
+            font-size: 4rem;
+            margin-bottom: 0;
+
+            small {
+              font-size: 1.5rem;
+            }
+          }
+        }
+
+        p {
+          color: #FFF;
+          font-weight: 700;
+
+          &.period {
+            font-style: italic;
+            line-height: .8rem;
+            margin-bottom: 20px;
+          }
+        }
+      }
+
+      .intro-divider {
+        width: 400px;
+        border-top: 1px solid #f8f8f8;
+        border-bottom: 1px solid rgba(0,0,0,0.2);
+      }
+
+      .intro-message > h3 {
+        text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
+      }
+    }
+
+    aside {
+      .card {
+        border: none;
+
+        h4, .lead {
+          margin-bottom: 25px;
+        }
+      }
+    }
+
+    section {
+      &#section-404 {
+        .section-heading-spacer {
+          float: inherit;
+        }
+      }
+
+      &#all-tutorials {
+        .row {
+          margin-bottom: 20px;
+        }
+      }
+
+      &#resume {
+        .price {
+          font-size: 5rem;
+          margin-bottom: 0;
+
+          small {
+            font-size: 2rem;
+          }
+        }
+
+        .period {
+          line-height: .9rem;
+          font-style: italic;
+        }
+
+        .btn {
+          margin-top: 30px;
+        }
+      }
+
+      &#login-thanks-form {
+        .section-heading-spacer {
+          float: inherit;
+          margin-bottom: 30px;
+        }
+
+        .section-heading {
+          text-align: center;
+        }
+      }
+
+      padding: 50px 0;
+
+      .link-more {
+        margin-top: 20px;
+      }
+
+      .card-text {
+        padding: 10px;
+      }
+
+      .section-heading {
+        margin-top: 20px;
+        margin-bottom: 30px;
+      }
+
+      .section-heading-spacer {
+        width: 200px;
+        border-top: 3px solid #e7e7e7;
+      }
+
+      &:nth-child(odd) {
+        background-color: #f8f8f8;
+
+        .section-heading-spacer {
+          float: left;
+        }
+      }
+
+      &:nth-child(2n) {
+        border-top: 1px solid #e7e7e7;
+        border-bottom: 1px solid #e7e7e7;
+
+        .section-heading {
+          float: right;
+        }
+
+        .section-heading-spacer {
+          float: right;
+        }
+      }
+
+      #tutorial-thumb {
+        position: relative;
+        width: 100vw;
+        height: 170px;
+        display: table-cell;
+        vertical-align: middle;
+        padding-left: 20px;
+
+        h2 {
+          color: #FFF;
+          font-size: 1.6rem;
+          text-decoration: none;
+        }
+      }
+    }
+
+    .banner {
+      position: relative;
+      padding: 100px 0;
+      color: #f8f8f8;
+      background: url(/img/robots-trading.jpg) no-repeat center center;
+      background-size: cover;
+
+      &:before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 0;
+        background: rgba(64,72,82,.8);
+        transition-duration: .3s;
+      }
+
+      h2 {
+        margin: 0;
+        text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
+        font-size: 3em;
+      }
+
+      ul {
+        margin-bottom: 0;
+      }
+    }
+
+    .banner-social-buttons {
+      float: right;
+      margin-top: 0;
+    }
+
+    header {
+      min-height: 225px;
+      position: relative;
+
+      &:before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 0;
+        background: rgba(64,72,82,.8);
+        transition-duration: .3s;
+      }
+
+      .container {
+        padding-top: 80px;
+        padding-bottom: 30px;
+
+        h1 {
+          color: #FFF;
+          font-size: 2rem;
+          font-weight: 700;
+          line-height: 1.2;
+          margin-bottom: 30px;
+        }
+
+        #playing-video {
+          margin-bottom: 20px;
+
+          a {
+            color: #FFF;
+            font-size: 8rem;
+          }
+        }
+
+        //#download-btn {
+        //  >:first-child {
+        //    margin-right: 20px;
+        //  }
+        //}
+      }
+
+      &.masthead {
+        background: no-repeat center center;
+        background-color: #777777;
+        background-attachment: scroll;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+
+        .site-heading {
+          padding: 50px 0 50px;
+          color: white;
+          text-align: center;
+
+          h1 {
+            margin: 0;
+            text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
+            font-size: 5em;
+          }
+
+          .intro-divider {
+            width: 400px;
+            border-top: 1px solid #f8f8f8;
+            border-bottom: 1px solid rgba(0,0,0,0.2);
+          }
+
+          .subheading {
+            text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
+            color: #FFF;
+            font-size: 24px;
+            font-weight: 300;
+            line-height: 1.1;
+            display: block;
+            margin: 10px 0 0;
+          }
+        }
+
+        &#payment {
+          .container {
+            padding: 30px 0;
+          }
+
+          .site-heading {
+            padding: 10px 0;
+
+            .price {
+              font-size: 5rem;
+              margin-bottom: 0;
+
+              small {
+                font-size: 2rem;
+              }
+            }
+
+            .period {
+              line-height: 0.9rem;
+              color: #FFF;
+              font-style: italic;
+              font-weight: 700;
+            }
+
+            .col-md-6 {
+              h4, ul, li {
+                text-align: left;
+              }
+
+              ul, li {
+                padding-left: 10px;
+                color: #FFF;
+                list-style: none;
+                font-weight: 700;
+
+                i {
+                  margin-right: 10px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    >.container {
+      margin-top: 40px;
+
+      h1, h2, h3, h4, h5, h6, p {
+        color: $color-dark;
+      }
+
+      article {
+        h1, h2, h3 {
+          font-size: 1.8rem;
+
+          a {
+            color: $color-dark;
+            text-decoration: none;
+          }
+
+          :hover {
+            transition-duration: .3s;
+            color: $color-link;
+          }
+        }
+
+        p {
+          font-weight: 300;
+        }
+
+        img {
+          margin-bottom: 10px;
+        }
+
+        .meta {
+          color: $color-gray;
+          text-transform: uppercase;
+          font-size: .8rem;
+          margin-bottom: 6px;
+        }
+      }
+
+      &.post {
+        margin-top: 10px;
+      }
+
+      .row {
+        margin-bottom: 20px;
+      }
+    }
+
+    footer {
+      padding: 50px 0;
+      background-color: #f8f8f8;
+
+      p {
+        &.copyright {
+          margin: 15px 0 0;
+        }
+      }
+    }
+  }
+}
