@@ -60,6 +60,7 @@ class PaymentServiceTest extends TestCase
 
         $userMock->shouldReceive('newSubscription')->once()->andReturn($userMock);
         $userMock->shouldReceive('create')->once()->andReturn(null);
+        $userMock->shouldReceive('forceDelete')->once()->andReturn(true);
 
         $mock->shouldReceive('registerUser')->once()->andReturn($userMock);
 
