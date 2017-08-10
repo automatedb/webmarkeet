@@ -18,6 +18,7 @@
                         @endforeach
                     </ul>
                     <p class="copyright text-muted small text-center">Copyright &copy; {{ config('app.name') }} 2017. All Rights Reserved</p>
+                    <p class="copyright text-muted small text-center">{{ config('app.notice') }}</p>
                 </div>
             </div>
         </div>
