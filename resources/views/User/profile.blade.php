@@ -82,7 +82,7 @@
                                             Stopper mon abonnement
                                         </button>
                                     </div>
-                                    <p class="mb-1">Cet espace vous permet d'annuler votre abonnement de {{ config('subscription.price') }}<small>€ HT</small>/{{ config('subscription.period') }}.</p>
+                                    <p class="mb-1">Cet espace vous permet d'annuler votre abonnement de {{ config('subscription.price') }}<small>{{ config('subscription.devise') }}</small>/{{ config('subscription.period') }}.</p>
                                     <small class="text-muted text-left">Cette annulation est effective à la fin de la période courante. A la fin de la période, il ne vous sera plus possible d'accéder aux ressources de {{ config('app.name') }}. Vous perdez aussi les privilèges de code promotionnel si vous en avez eu lors de votre souscription.</small>
                                 </div>
                                 @if($user->role !== 'admin')

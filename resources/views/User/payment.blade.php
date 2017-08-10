@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
                     <div class="site-heading">
-                        <h3 class="price text-center">{{ config('subscription.price') }}<small>€ HT</small></h3>
+                        <h3 class="price text-center">{{ config('subscription.price') }}<small>{{ config('subscription.devise') }}</small></h3>
                         <p class="period text-center">par {{ config('subscription.period') }}</p>
                         <hr class="intro-divider">
                         <div class="row justify-content-md-center">

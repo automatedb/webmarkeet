@@ -39,7 +39,7 @@
                     <div class="intro-message">
                         <h2>Devenir membre</h2>
                         <hr class="intro-divider">
-                        <h3 class="price text-center">{{ config('subscription.price') }}<small>€ HT</small></h3>
+                        <h3 class="price text-center">{{ config('subscription.price') }}<small>{{ config('subscription.devise') }}</small></h3>
                         <p class="period text-center">par {{ config('subscription.period') }}</p>
                         <a href="{{ action('UserCtrl@payment') }}" class="btn btn-success">
                             Accéder aux codes sources
@@ -156,7 +156,7 @@
                     </ul>
                 </div>
                 <div class="col-lg-6">
-                    <h3 class="price text-center">{{ config('subscription.price') }}<small>€ HT</small></h3>
+                    <h3 class="price text-center">{{ config('subscription.price') }}<small>{{ config('subscription.devise') }}</small></h3>
                     <p class="period text-center">par {{ config('subscription.period') }}</p>
                     {{ link_to_action('UserCtrl@payment', 'Créer mon compte', [], [ 'class' => 'btn btn-success btn-lg btn-block' ]) }}
                 </div>
