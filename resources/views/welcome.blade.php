@@ -89,9 +89,9 @@
                         <div class="card">
                             <a href="{{ action('ContentCtrl@content', $content->slug) }}">
                                 @widget('Img', [
-                                    'id' => $tutorial->id,
-                                    'src' => $tutorial->thumbnail,
-                                    'title' => $tutorial->title,
+                                    'id' => $content->id,
+                                    'src' => $content->thumbnail,
+                                    'title' => $content->title,
                                     'type' => 'home-thumbnail'
                                 ])
 
