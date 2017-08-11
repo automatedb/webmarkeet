@@ -26,7 +26,6 @@
                     @widget('TutorialThumb', [
                         'id' => $firstContent['id'],
                         'src' => $firstContent[\App\Models\Content::$THUMBNAIL],
-                        'title' => $firstContent[\App\Models\Content::$TITLE],
                         'slug' => $firstContent[\App\Models\Content::$SLUG]
                     ])
                 </div>

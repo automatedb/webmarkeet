@@ -88,6 +88,8 @@ class ImageResizer
     private function resizeForHomePage(int $id, string $imageName, string $basename, string $ext): void {
         $img = Image::make(public_path('img/' . $imageName));
 
-        $img->crop(356, 200)->save(public_path('img/posts/' . ($id) . '/' . $basename . '-356' . '.' . $ext));
+        $img->resize(356, null, function($constraint) {
+            $constraint->aspectRatio();
+        })->save(public_path('img/posts/' . ($id) . '/' . $basename . '-356' . '.' . $ext));
     }
 }

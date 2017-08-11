@@ -15,7 +15,6 @@ class TutorialThumb extends AbstractWidget
     protected $config = [
         'id' => null,
         'src' => null,
-        'title' => null,
         'slug' => null
     ];
 
