@@ -21,6 +21,11 @@ return [
             'name' => 'Linkedin',
             'url' => env('SOCIAL_LINKEDIN_URL'),
             'css' => 'fa-linkedin'
+        ],
+        [
+            'name' => 'Youtube',
+            'url' => env('SOCIAL_YOUTUBE_URL'),
+            'css' => 'fa-youtube'
         ]
     ]
 ];
