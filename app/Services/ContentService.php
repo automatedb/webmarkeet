@@ -107,10 +107,12 @@ class ContentService
         }
 
         $this->setThumbnail($thumbnail, $contentModel);
-        
-        if(!empty($sourceModel)) {
-            $this->setSources($sources, $sourceModel);
+
+        if(empty($sourceModel)) {
+            $sourceModel = new Content();
         }
+
+        $this->setSources($sources, $sourceModel);
 
         $contentModel->title = $title;
         $contentModel->slug = $slug;
