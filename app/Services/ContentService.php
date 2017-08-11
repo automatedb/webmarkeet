@@ -109,7 +109,7 @@ class ContentService
         $this->setThumbnail($thumbnail, $contentModel);
 
         if(empty($sourceModel)) {
-            $sourceModel = new Content();
+            $sourceModel = [];
         }
 
         $this->setSources($sources, $sourceModel);
@@ -127,8 +127,10 @@ class ContentService
             throw new UnexpectedException('Unexpected error');
         }
 
-        if(!empty($sourceModel)) {
+        if(!empty($sourceModel) && !empty($sourceModel->id)) {
             $sourceModel->save();
+        } else if(!empty($sources)) {
+            $contentModel->sources()->create($sourceModel);
         }
 
         if(!empty($thumbnail)) {
@@ -150,10 +152,13 @@ class ContentService
         }
 
         $contentModel = [];
-        $sourceModel = [];
 
         $this->setThumbnail($thumbnail, $contentModel);
-        $this->setSources($sources, $sourceModel);
+
+        if(!empty($sources)) {
+            $sourceModel = [];
+            $this->setSources($sources, $sourceModel);
+        }
 
         $contentModel[Content::$TITLE] = $title;
         $contentModel[Content::$SLUG] = $slug;
@@ -168,7 +173,10 @@ class ContentService
         $lastId = 0;
 
         if($content = $this->content->create($contentModel)) {
-            $content->sources()->create($sourceModel);
+
+            if(!empty($sources)) {
+                $content->sources()->create($sourceModel);
+            }
 
             $lastId = $content->id;
 
