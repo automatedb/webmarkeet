@@ -36,6 +36,7 @@ class ImageResizer
 
         $this->resizeForPostList($id, $imageName, $basename, $ext);
         $this->resizeForPost($id, $imageName, $basename, $ext);
+        $this->resizeForTutorial($id, $imageName, $basename, $ext);
         $this->resizeForOgImage($id, $imageName, $basename, $ext);
         $this->resizeForLastTutorial($id, $imageName, $basename, $ext);
         $this->resizeForHomePage
@@ -60,6 +61,14 @@ class ImageResizer
         $img->crop($width, 300)->save(public_path('img/posts/' . ($id) . '/' . $basename . '-300' . '.' . $ext));
     }
 
+    private function resizeForTutorial(int $id, string $imageName, string $basename, string $ext): void {
+        $img = Image::make(public_path('img/' . $imageName));
+
+        $width = $img->width();
+
+        $img->crop($width, 760)->save(public_path('img/posts/' . ($id) . '/' . $basename . '-760' . '.' . $ext));
+    }
+
     private function resizeForOgImage(int $id, string $imageName, string $basename, string $ext): void {
         $img = Image::make(public_path('img/' . $imageName));
 
@@ -79,6 +88,8 @@ class ImageResizer
     private function resizeForHomePage(int $id, string $imageName, string $basename, string $ext): void {
         $img = Image::make(public_path('img/' . $imageName));
 
-        $img->crop(356, 200)->save(public_path('img/posts/' . ($id) . '/' . $basename . '-356' . '.' . $ext));
+        $img->resize(356, null, function($constraint) {
+            $constraint->aspectRatio();
+        })->save(public_path('img/posts/' . ($id) . '/' . $basename . '-356' . '.' . $ext));
     }
 }

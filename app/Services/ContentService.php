@@ -12,6 +12,7 @@ use App\Exceptions\UnknownTypeException;
 use App\Jobs\ImageCleaner;
 use App\Jobs\ImageResizer;
 use App\Models\Content;
+use App\Models\Source;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use League\CommonMark\Converter;
 
@@ -93,19 +94,20 @@ class ContentService
         return $content;
     }
 
-    public function update(int $id, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = []): Content {
+    public function update(int $id, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = [], array $sources = []): Content {
         $type = empty($videoId) ? Content::CONTENT : Content::TUTORIAL;
 
         $this->validParams($status, $type);
 
-
         $contentModel = $this->content->where('id', $id)->first();
+        $sourceModel = $contentModel->sources()->first();
 
         if(empty($contentModel)) {
             throw new ContentNotFoundException('Content not found');
         }
 
         $this->setThumbnail($thumbnail, $contentModel);
+        $this->setSources($sources, $sourceModel);
 
         $contentModel->title = $title;
         $contentModel->slug = $slug;
@@ -120,12 +122,16 @@ class ContentService
             throw new UnexpectedException('Unexpected error');
         }
 
-        $this->dispatch(new ImageResizer($contentModel));
+        $sourceModel->save();
+
+        if(!empty($thumbnail)) {
+            $this->dispatch(new ImageResizer($contentModel));
+        }
 
         return $contentModel;
     }
 
-    public function add(int $userId, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = []): int {
+    public function add(int $userId, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = [], array $sources = []): int {
         $type = empty($videoId) ? Content::CONTENT : Content::TUTORIAL;
 
         $this->validParams($status, $type);
@@ -137,8 +143,10 @@ class ContentService
         }
 
         $contentModel = [];
+        $sourceModel = [];
 
         $this->setThumbnail($thumbnail, $contentModel);
+        $this->setSources($sources, $sourceModel);
 
         $contentModel[Content::$TITLE] = $title;
         $contentModel[Content::$SLUG] = $slug;
@@ -153,9 +161,13 @@ class ContentService
         $lastId = 0;
 
         if($content = $this->content->create($contentModel)) {
+            $content->sources()->create($sourceModel);
+
             $lastId = $content->id;
 
-            $this->dispatch(new ImageResizer($content));
+            if(!empty($thumbnail)) {
+                $this->dispatch(new ImageResizer($content));
+            }
         }
 
         return $lastId;
@@ -187,7 +199,7 @@ class ContentService
         return $contents;
     }
 
-    private function setThumbnail(array $thumbnail, &$data) {
+    private function setThumbnail(array $thumbnail, &$data): void {
         if(!empty($thumbnail)) {
             try {
                 $this->moveThumbnail($thumbnail);
@@ -197,6 +209,21 @@ class ContentService
                 if($e->getCode() === 200) {
                     throw new UnexpectedException("The update method isn't used correctly. A right thumbnail parameter is required.");
                 }
+            }
+        }
+    }
+
+    private function setSources(array &$sources, &$data): void {
+        if(!empty($sources)) {
+            $sources[self::ORIGINAL_NAME] = $this->formatName($sources);
+
+            $from = storage_path('app' . DIRECTORY_SEPARATOR . config('content.uploadDirectory') . DIRECTORY_SEPARATOR . $sources[self::HASH_NAME]);
+            $to = storage_path('app' . DIRECTORY_SEPARATOR . 'public'  . DIRECTORY_SEPARATOR . $sources[self::ORIGINAL_NAME]);
+
+            $data[Source::NAME] = $sources[self::ORIGINAL_NAME];
+
+            if(!rename($from, $to)) {
+                throw new DontMoveFileException("Cannot move file.", 200);
             }
         }
     }
@@ -216,12 +243,7 @@ class ContentService
             throw new DontMoveFileException('%s and %s are required to move file.', 100);
         }
 
-        $originalNameExploded = explode('.', $thumbnail[self::ORIGINAL_NAME]);
-
-        $ext = array_pop($originalNameExploded);
-        $originalName = strtolower(str_slug(implode('.', $originalNameExploded)));
-
-        $thumbnail[self::ORIGINAL_NAME] = $originalName . '.' . $ext;
+        $thumbnail[self::ORIGINAL_NAME] = $this->formatName($thumbnail);
 
         $from = storage_path('app' . DIRECTORY_SEPARATOR . config('content.uploadDirectory') . DIRECTORY_SEPARATOR . $thumbnail[self::HASH_NAME]);
         $to = public_path('img' . DIRECTORY_SEPARATOR . $thumbnail[self::ORIGINAL_NAME]);
@@ -229,6 +251,15 @@ class ContentService
         if(!rename($from, $to)) {
             throw new DontMoveFileException("Cannot move file.", 200);
         }
+    }
+
+    private function formatName(array $data): string {
+        $originalNameExploded = explode('.', $data[self::ORIGINAL_NAME]);
+
+        $ext = array_pop($originalNameExploded);
+        $originalName = strtolower(str_slug(implode('.', $originalNameExploded)));
+
+        return $originalName . '.' . $ext;
     }
 
     private function publishContent(string $status, &$contentModel): void

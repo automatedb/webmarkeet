@@ -167,6 +167,7 @@ class ContentCtrl extends Controller
      */
     public function postAdd(Request $request) {
         $thumbnail = [];
+        $sources = [];
         $rules = [
             'title' => 'required',
             'slug' => 'required',
@@ -188,6 +189,13 @@ class ContentCtrl extends Controller
             $thumbnail[ContentService::ORIGINAL_NAME] = $request->thumbnail->getClientOriginalName();
         }
 
+        if($request->hasFile('sources')) {
+            $request->file('sources')->store(config('content.uploadDirectory'));
+
+            $sources[ContentService::HASH_NAME] = $request->sources->hashName();
+            $sources[ContentService::ORIGINAL_NAME] = $request->sources->getClientOriginalName();
+        }
+
         $user = Auth::user();
 
         try {
@@ -198,7 +206,8 @@ class ContentCtrl extends Controller
                 $values[Content::$STATUS],
                 $values[Content::$CONTENT],
                 $values[Content::$VIDEO_ID],
-                $thumbnail);
+                $thumbnail,
+                $sources);
         } catch (SlugAlreadyExistsException $e) {
             $request->session()->flash('alert', [
                 'message' => "L'url que vous essayez de saisir existe déjà pour un autre contenu.",
@@ -232,6 +241,7 @@ class ContentCtrl extends Controller
      */
     public function postModify(Request $request) {
         $thumbnail = [];
+        $source = [];
         $rules = [
             'title' => 'required',
             'slug' => 'required',
@@ -253,6 +263,13 @@ class ContentCtrl extends Controller
             $thumbnail[ContentService::ORIGINAL_NAME] = $request->thumbnail->getClientOriginalName();
         }
 
+        if($request->hasFile('sources')) {
+            $request->file('sources')->store(config('content.uploadDirectory'));
+
+            $source[ContentService::HASH_NAME] = $request->sources->hashName();
+            $source[ContentService::ORIGINAL_NAME] = $request->sources->getClientOriginalName();
+        }
+
         try {
             $this->contentService->update(
                 intval($values['id']),
@@ -261,7 +278,8 @@ class ContentCtrl extends Controller
                 $values[Content::$STATUS],
                 $values[Content::$CONTENT],
                 $values[Content::$VIDEO_ID],
-                $thumbnail
+                $thumbnail,
+                $source
             );
 
             $request->session()->flash('alert', [
