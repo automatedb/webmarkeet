@@ -33,10 +33,10 @@
             {!! Form::text('video_id', '', ['class' => 'form-control', 'placeholder' => "Saisissez un ID Youtube..."]) !!}
         </div>
 
-        {{--<div class="form-group">--}}
-            {{--{!! Form::label('type', 'Type de contenu') !!}--}}
-            {{--{!! Form::select('type', $types, '', [ 'class' => 'form-control', 'id' => 'type' ]) !!}--}}
-        {{--</div>--}}
+        <div class="form-group">
+            {!! Form::label('sources', 'Associer des sources') !!}
+            {!! Form::file('sources', [ 'class' => 'form-control', 'id' => 'sources' ]) !!}
+        </div>
 
         <div class="form-group">
             {!! Form::label('status', 'Status de publication', [ 'for' => 'status' ]) !!}
