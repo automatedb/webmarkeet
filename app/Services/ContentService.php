@@ -122,7 +122,9 @@ class ContentService
             throw new UnexpectedException('Unexpected error');
         }
 
-        $sourceModel->save();
+        if(!empty($sourceModel)) {
+            $sourceModel->save();
+        }
 
         if(!empty($thumbnail)) {
             $this->dispatch(new ImageResizer($contentModel));
