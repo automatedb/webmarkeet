@@ -311,6 +311,7 @@ body {
     header {
       min-height: 225px;
       position: relative;
+      background-position-y: center;
 
       &:before {
         content: "";
@@ -346,11 +347,16 @@ body {
           }
         }
 
-        //#download-btn {
+        #download-btn {
+          .btn {
+            i {
+              color: #FFF;
+            }
+          }
         //  >:first-child {
         //    margin-right: 20px;
         //  }
-        //}
+        }
       }
 
       &.masthead {

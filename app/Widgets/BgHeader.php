@@ -22,7 +22,7 @@ class BgHeader extends AbstractWidget
      */
     public function run()
     {
-        $this->config['content']['thumbnail'] = ImgHelper::link($this->config['content']['thumbnail'], $this->config['content']['id'], 300);
+        $this->config['content']['thumbnail'] = ImgHelper::link($this->config['content']['thumbnail'], $this->config['content']['id'], 760);
 
         return view('widgets.bg_header', [
             'config' => $this->config,
