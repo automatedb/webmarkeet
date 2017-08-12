@@ -12,7 +12,7 @@
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
         @stack('styles')
-        {!! Html::style('/css/app.css') !!}
+        {!! Html::style('/css/app.css', [], env('APP_ENV') == 'production') !!}
     </head>
     <body class="guest-page">
     <nav class="navbar navbar-toggleable-md navbar-light bg-faded topnav">
