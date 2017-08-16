@@ -67,6 +67,10 @@ class ContentService
         return $this->getContentsForType(Content::TUTORIAL);
     }
 
+    public function getContentsForFormations() {
+        return $this->getContentsForType(Content::FORMATION);
+    }
+
     public function getContentBySlug(string $slug) {
         /** @var Content $content */
         $content = $this->content->where('slug', $slug)->first();
@@ -202,8 +206,8 @@ class ContentService
     }
 
     private function getContentsForType(string $type) {
-        $contents = $this->content->where('type', $type)
-            ->where('status', Content::PUBLISHED)
+        $contents = $this->content->where(Content::$TYPE, $type)
+            ->where(Content::$STATUS, Content::PUBLISHED)
             ->whereNotNull(Content::$POSTED_AT)
             ->orderBy(Content::$POSTED_AT, 'desc')->get();
 

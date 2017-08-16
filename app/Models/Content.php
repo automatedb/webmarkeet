@@ -15,6 +15,8 @@ class Content extends Model
     public const CONTENT = 'CONTENT';
 
     public const TUTORIAL = 'TUTORIAL';
+    
+    public const FORMATION = 'FORMATION';
 
     // Properties
     public static $TITLE = 'title';
@@ -45,6 +47,10 @@ class Content extends Model
     protected $fillable = ['title', 'slug', 'content', 'status', 'type', 'video_id', 'thumbnail', 'posted_at', 'user_id'];
 
     public function sources() {
-        return $this->belongsToMany(\App\Models\Source::class, 'contains_sources');
+        return $this->belongsToMany(Source::class, 'contains_sources');
+    }
+
+    public function chapters() {
+        return $this->hasMany(Chapter::class);
     }
 }
