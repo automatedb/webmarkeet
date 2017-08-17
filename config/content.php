@@ -5,7 +5,8 @@ return [
 
     'type' => [
         'CONTENT' => 'Article',
-        'TUTORIAL' => 'Tutoriel'
+        'TUTORIAL' => 'Tutoriel',
+        'FORMATION' => 'Formation'
     ],
 
     'status' => [
