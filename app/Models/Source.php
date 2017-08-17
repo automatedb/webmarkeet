@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Source extends Model
 {
     const NAME = 'name';
+    
+    const TYPE = 'type';
 
     /**
      * The attributes that are mass assignable.

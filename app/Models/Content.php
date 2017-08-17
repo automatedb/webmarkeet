@@ -50,7 +50,11 @@ class Content extends Model
         return $this->belongsToMany(Source::class, 'contains_sources');
     }
 
-    public function chapters() {
+    public function chapters($all = false) {
+        if($all) {
+            return $this->hasMany(Chapter::class)->with('sources');
+        }
+
         return $this->hasMany(Chapter::class);
     }
 }
