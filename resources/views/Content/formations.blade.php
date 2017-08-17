@@ -17,20 +17,32 @@
     </header>
 
     @forelse ($formations as $formation)
-        <section>
+        <section class="items-formation">
             <div class="container">
                 <div class="row justify-content-md-center">
                     <div class="col-md-8">
                         <hr class="section-heading-spacer">
                         <div class="clearfix"></div>
                         <div class="row">
-                            <h4>{{ $formation[\App\Models\Content::$TITLE] }}</h4>
-                            <p>{!! $formation[\App\Models\Content::$CONTENT] !!}</p>
-                            @if(\Illuminate\Support\Facades\Auth::check())
-                                <a href="{{ action('FormationCtrl@formation', ['slug' => $formation[\App\Models\Content::$SLUG]]) }}">Télécharger <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
-                            @else
-                                <a href="{{ action('UserCtrl@authentication') }}">Commander <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
-                            @endif
+                            <div class="col-md-4">
+                                @widget('Img', [
+                                    'id' => $formation->id,
+                                    'src' => $formation->thumbnail,
+                                    'title' => $formation->title,
+                                    'type' => 'formation-thumbnail'
+                                ])
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <h4>{{ $formation[\App\Models\Content::$TITLE] }}</h4>
+                                    <p>{!! strip_tags($formation[\App\Models\Content::$CONTENT]) !!}</p>
+                                    @if(\Illuminate\Support\Facades\Auth::check())
+                                        <a href="{{ action('FormationCtrl@formation', ['slug' => $formation[\App\Models\Content::$SLUG]]) }}">Télécharger <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                    @else
+                                        <a href="{{ action('UserCtrl@authentication') }}">Commander <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                    @endif
+                                </div>
+                            </div>
 
                         </div>
                     </div>
