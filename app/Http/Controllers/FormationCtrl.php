@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Services\ContentService;
-use App\Services\FormationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
 
 /**
  * Class FormationCtrl
@@ -30,5 +31,33 @@ class FormationCtrl extends Controller
         return response()->view('Content.formations', [
             'formations' => $formations
         ]);
+    }
+
+    /**
+     * Show a formation
+     * @Get("/formations/{slug}")
+     */
+    public function formation(Request $request, $slug) {
+        $content= $this->contentService->getContentBySlug($slug);
+
+        return response()->view('Content.formation', [
+            'content' => $content
+        ]);
+    }
+
+    /**
+     * Show a formation
+     * @Get("/formations/video/{slug}")
+     */
+    public function video(Request $request, $slug) {
+        $path = storage_path('app/public/' . $slug);
+
+        $file = File::get($path);
+        $type = File::mimeType($path);
+
+        $response = Response::make($file, 200);
+        $response->header("Content-Type", $type);
+
+        return $response;
     }
 }

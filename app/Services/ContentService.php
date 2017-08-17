@@ -11,6 +11,7 @@ use App\Exceptions\UnknownStatusException;
 use App\Exceptions\UnknownTypeException;
 use App\Jobs\ImageCleaner;
 use App\Jobs\ImageResizer;
+use App\Models\Chapter;
 use App\Models\Content;
 use App\Models\Source;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -28,9 +29,12 @@ class ContentService
 
     private $converter;
 
-    public function __construct(Content $content, Converter $converter) {
+    private $chapter;
+
+    public function __construct(Content $content, Converter $converter, Chapter $chapter) {
         $this->content = $content;
         $this->converter = $converter;
+        $this->chapter = $chapter;
     }
 
     public function getRecentContentsForBlog() {
@@ -73,7 +77,7 @@ class ContentService
 
     public function getContentBySlug(string $slug) {
         /** @var Content $content */
-        $content = $this->content->where('slug', $slug)->first();
+        $content = $this->content->where(Content::$SLUG, $slug)->first();
 
         if(empty($content)) {
             throw new NoFoundException("Content not found");
@@ -82,6 +86,20 @@ class ContentService
         $content->content = $this->converter->convertToHtml($content->content);
 
         return $content;
+    }
+
+    public function getSourceFromChapter(int $chapterId, string $fileType) {
+        $source = $this->chapter->where('id', $chapterId)
+            ->first()
+            ->sources()
+            ->where(Source::TYPE, $fileType)
+            ->first();
+
+        if(empty($source)) {
+            throw new NoFoundException("Chapter not found");
+        }
+
+        return $source;
     }
 
     public function getContents() {
