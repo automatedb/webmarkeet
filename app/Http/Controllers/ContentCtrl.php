@@ -223,6 +223,12 @@ class ContentCtrl extends Controller
             $sources[ContentService::ORIGINAL_NAME] = $request->sources->getClientOriginalName();
         }
 
+        $chapters = [];
+
+        if(!empty($values['chapters'])) {
+            $chapters = $values['chapters'];
+        }
+        
         $user = Auth::user();
 
         try {
@@ -234,7 +240,8 @@ class ContentCtrl extends Controller
                 $values[Content::$CONTENT],
                 $values[Content::$VIDEO_ID],
                 $thumbnail,
-                $sources);
+                $sources,
+                $chapters);
         } catch (SlugAlreadyExistsException $e) {
             $request->session()->flash('alert', [
                 'message' => "L'url que vous essayez de saisir existe déjà pour un autre contenu.",
@@ -297,6 +304,12 @@ class ContentCtrl extends Controller
             $source[ContentService::ORIGINAL_NAME] = $request->sources->getClientOriginalName();
         }
 
+        $chapters = [];
+
+        if(!empty($values['chapters'])) {
+            $chapters = $values['chapters'];
+        }
+
         try {
             $this->contentService->update(
                 intval($values['id']),
@@ -306,7 +319,8 @@ class ContentCtrl extends Controller
                 $values[Content::$CONTENT],
                 $values[Content::$VIDEO_ID],
                 $thumbnail,
-                $source
+                $source,
+                $chapters
             );
 
             $request->session()->flash('alert', [

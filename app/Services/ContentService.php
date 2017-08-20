@@ -103,7 +103,9 @@ class ContentService
     }
 
     public function getContents() {
-        return $this->content->get();
+        return $this->content
+            ->orderBy(Content::$POSTED_AT, 'desc')
+            ->get();
     }
 
     public function getContent($id): Content {
@@ -116,8 +118,10 @@ class ContentService
         return $content;
     }
 
-    public function update(int $id, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = [], array $sources = []): Content {
+    public function update(int $id, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = [], array $sources = [], array $chapters = []): Content {
         $type = empty($videoId) ? Content::CONTENT : Content::TUTORIAL;
+
+        $type = empty($chapters) ? $type : Content::FORMATION;
 
         $this->validParams($status, $type);
 
@@ -136,12 +140,12 @@ class ContentService
 
         $this->setSources($sources, $sourceModel);
 
-        $contentModel->title = $title;
-        $contentModel->slug = $slug;
-        $contentModel->content = $content;
-        $contentModel->status = $status;
-        $contentModel->type = $type;
-        $contentModel->video_id = $videoId;
+        $contentModel[Content::$TITLE] = $title;
+        $contentModel[Content::$SLUG] = $slug;
+        $contentModel[Content::$CONTENT] = $content;
+        $contentModel[Content::$STATUS] = $status;
+        $contentModel[Content::$TYPE] = $type;
+        $contentModel[Content::$VIDEO_ID] = $videoId;
 
         $this->publishContent($status, $contentModel);
 
@@ -155,6 +159,8 @@ class ContentService
             $contentModel->sources()->create($sourceModel);
         }
 
+        $this->updateChapters($chapters, $contentModel);
+
         if(!empty($thumbnail)) {
             $this->dispatch(new ImageResizer($contentModel));
         }
@@ -162,8 +168,10 @@ class ContentService
         return $contentModel;
     }
 
-    public function add(int $userId, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = [], array $sources = []): int {
+    public function add(int $userId, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = [], array $sources = [], array $chapters = []): int {
         $type = empty($videoId) ? Content::CONTENT : Content::TUTORIAL;
+
+        $type = empty($chapters) ? $type : Content::FORMATION;
 
         $this->validParams($status, $type);
 
@@ -202,6 +210,8 @@ class ContentService
 
             $lastId = $content->id;
 
+            $this->updateChapters($chapters, $content);
+
             if(!empty($thumbnail)) {
                 $this->dispatch(new ImageResizer($content));
             }
@@ -221,6 +231,82 @@ class ContentService
         $this->dispatch(new ImageCleaner($id));
 
         return $content->delete($id);
+    }
+
+    private function updateChapters(array $chapters, Content $contentModel) {
+        if(!empty($chapters)) {
+            foreach ($chapters as $chapter) {
+                $chapterModel = $this->chapter->where('id', $chapter['id'])->first();
+
+                if(empty($chapterModel)) {
+                    $this->createChapter($chapter, $contentModel);
+                    continue;
+                }
+
+                $chapterModel[Chapter::TITLE] = $chapter[Chapter::TITLE];
+                $chapterModel[Chapter::CONTENT] = $chapter[Chapter::CONTENT];
+
+                if(!$chapterModel->save()) {
+                    throw new UnexpectedException('Unexpected error');
+                }
+
+                if(!empty($chapter[config('sources.type.VIDEO')])) {
+                    $this->setChaptersSources($chapterModel, config('sources.type.VIDEO'), $chapter);
+                }
+
+                if(!empty($chapter[config('sources.type.FILE')])) {
+                    $this->setChaptersSources($chapterModel, config('sources.type.FILE'), $chapter);
+                }
+            }
+        }
+    }
+
+    private function createChapter(array $chapter, Content $contentModel) {
+        $chapterModel = [
+            Chapter::TITLE => $chapter[Chapter::TITLE],
+            Chapter::CONTENT => $chapter[Chapter::CONTENT]
+        ];
+
+        if(!$chapterModel = $contentModel->chapters()->create($chapterModel)) {
+            throw new UnexpectedException('Unexpected error');
+        }
+
+        if(!empty($chapter[config('sources.type.VIDEO')])) {
+            $this->setChaptersSources($chapterModel, config('sources.type.VIDEO'), $chapter);
+        }
+
+        if(!empty($chapter[config('sources.type.FILE')])) {
+            $this->setChaptersSources($chapterModel, config('sources.type.FILE'), $chapter);
+        }
+    }
+
+    private function setChaptersSources(Chapter $chapterModel, string $type, array $chapter) {
+        $sourceModel = $chapterModel->sources()->where(Source::TYPE, $type)->first();
+
+        $chapter[$type]->store(config('content.uploadDirectory'));
+
+        $video[self::HASH_NAME] = $chapter[$type]->hashName();
+        $video[self::ORIGINAL_NAME] = $chapter[$type]->getClientOriginalName();
+
+        if(empty($sourceModel)) {
+            $sourceModel = [];
+            $sourceModel[Source::TYPE] = $type;
+        }
+
+        $sourceModel[Source::NAME] = $this->formatName($video);
+
+        $from = storage_path('app' . DIRECTORY_SEPARATOR . config('content.uploadDirectory') . DIRECTORY_SEPARATOR . $video[self::HASH_NAME]);
+        $to = storage_path('app' . DIRECTORY_SEPARATOR . 'public'  . DIRECTORY_SEPARATOR . $video[self::ORIGINAL_NAME]);
+
+        if(!rename($from, $to)) {
+            throw new DontMoveFileException("Cannot move file.", 200);
+        }
+
+        if(!empty($sourceModel) && !empty($sourceModel->id)) {
+            $sourceModel->save();
+        } else if(!empty($sourceModel)) {
+            $chapterModel->sources()->create($sourceModel);
+        }
     }
 
     private function getContentsForType(string $type) {

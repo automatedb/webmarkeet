@@ -96,6 +96,6 @@ $factory->define(App\Models\Content::class, function(Faker\Generator $faker): ar
 $factory->define(\App\Models\Chapter::class, function(Faker\Generator $faker): array {
     return [
         \App\Models\Chapter::TITLE => $faker->sentence,
-        \App\Models\Chapter::CONTENT => $faker->paragraphs(2, true)
+        \App\Models\Chapter::CONTENT => $faker->paragraphs(10, true)
     ];
 });
