@@ -132,8 +132,6 @@
 
                 var chapters = $('.chapter');
 
-                console.log(chapters.length);
-
                 content = String.format(content, chapters.length);
 
                 if(chapters.length) {
