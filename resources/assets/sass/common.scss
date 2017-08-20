@@ -6,6 +6,40 @@ $color-dark : #292B30;
 $color-link : #337AB9;
 
 .admin-page {
+  form {
+    input[type=file] {
+      display: none;
+    }
+
+    .files {
+      .video-file {
+        .custom-file-control {
+          &:after {
+            content: "Choisir une vidéo...";
+          }
+          &:before {
+            content: "Chercher";
+          }
+        }
+      }
+
+      .source-file {
+        .custom-file-control {
+          &:after {
+            content: "Choisir une source...";
+          }
+          &:before {
+            content: "Chercher";
+          }
+        }
+      }
+    }
+  }
+
+  #add-chapter {
+    margin-bottom: 30px;
+  }
+
   #sidebar {
     float: left;
   }
@@ -18,6 +52,10 @@ $color-link : #337AB9;
   .CodeMirror
   .cm-spell-error:not(.cm-url):not(.cm-comment):not(.cm-tag):not(.cm-word) {
     background: transparent;
+  }
+
+  .img-thumbnail {
+    margin-bottom: 10px;
   }
 }
 
@@ -217,12 +255,23 @@ body {
         }
       }
 
+      .explains {
+        height: 100px !important;
+        display: block;
+        overflow: hidden;
+
+        &.displaying {
+          height: auto !important;
+        }
+      }
+
       &.chapter {
         .btn-downloads {
           margin-top: 10px;
 
           .btn {
             margin-right: 10px;
+            margin-bottom: 10px;
 
             i {
               color: #FFF;
