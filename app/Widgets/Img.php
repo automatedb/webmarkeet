@@ -37,6 +37,9 @@ class Img extends AbstractWidget
             case 'tutorial-thumbnail':
                 $size = 540;
                 break;
+            case 'formation-thumbnail':
+                $size = 255;
+                break;
             case 'home-thumbnail':
                 $size = 356;
                 break;
