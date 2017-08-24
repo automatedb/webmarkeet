@@ -36,6 +36,26 @@ Démarrage en tâche de fond :
 docker-compose up -D
 ```
 
+## Ajouter des données de tests
+
+### Création d'articles
+
+Pour créer des articles, tutoriels et formations fictives, il faut lancer la commande suivante : 
+
+`php artisan migrate:refresh --seed`
+
+### Ajouter un administrateur
+
+Pour ajouter un administrateur, il faut lancer la commande suivante : 
+
+`php artisan make:user --firstname=john --lastname=doe --email=john.doe@domain.tld --password=P@ssword --role=customer`
+
+### Mise à jour des images
+
+Pour associer des images aux articles, il faut lancer la commande : 
+
+`php artisan image:resize`
+
 ## Contributeurs
 
 * Nicolas MORICET
