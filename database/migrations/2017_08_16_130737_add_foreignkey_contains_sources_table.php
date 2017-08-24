@@ -17,7 +17,7 @@ class AddForeignkeyContainsSourcesTable extends Migration
             $table->integer('content_id')->nullable()->change();
             $table->integer('chapter_id')->nullable();
 
-            $table->foreign('chapter_id')->references('id')->on('chapters');
+            $table->foreign('chapter_id')->references('id')->on('chapters')->onDelete('cascade');
         });
     }
 
