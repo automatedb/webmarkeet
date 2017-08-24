@@ -50,6 +50,14 @@
             </div>
         </section>
     @empty
-        <p>Pas de contenu pour le moment</p>
+        <section>
+            <div class="container">
+                <div class="row justify-content-md-center">
+                    <div class="col-md-6">
+                        <p class="text-center">Pas de contenu pour le moment</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     @endforelse
 @endsection
