@@ -61,3 +61,12 @@
         </section>
     @endforelse
 @endsection
+
+@section('seo')
+    <title>{!! $title !!}</title>
+    <meta name="description" content="{!! $description !!}">
+    <meta property="og:title" content="{!! $title !!}">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset('/img/blog-thumbnail.jpg') }}">
+@stop

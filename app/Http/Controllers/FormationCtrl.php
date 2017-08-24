@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\NoFoundException;
 use App\Services\ContentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 
@@ -30,7 +31,9 @@ class FormationCtrl extends Controller
         $formations = $this->contentService->getContentsForFormations();
 
         return response()->view('Content.formations', [
-            'formations' => $formations
+            'formations' => $formations,
+            'title' => sprintf('Formation en trading automatique (trading algorithmique - %s', Config::get('app.name')),
+            'description' => sprintf('%s vous propose des formations en trading automatique. Découvrez le trading algorithmique sous toutes ses formes', Config::get('app.name'))
         ]);
     }
 
