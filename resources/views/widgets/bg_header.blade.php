@@ -13,8 +13,7 @@
                 </div>
             @endif
             <div class="col-lg-10">
-
-                <h1 class="text-center">{{ $config['content']['title'] }}</h1>
+                <h1 itemprop="headline" class="text-center">{{ $config['content']['title'] }}</h1>
             </div>
             @if($config['content']['sources']->count())
                 <div id="download-btn" class="col-md-6 text-center">
@@ -34,6 +33,13 @@
 @push('styles')
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 @endpush
+
+@section('seo')
+    @parent
+
+    <meta itemprop="embedURL" content="https://www.youtube.com/watch?v={{ $config['content']['video_id'] }}" />
+    <meta itemprop="thumbnailUrl" content="{{ asset($config['content']['thumbnail']) }}" />
+@endsection
 
 @push('scripts')
     <script type="application/javascript">

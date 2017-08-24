@@ -49,13 +49,13 @@
                 @forelse(array_chunk($contents, 3) as $list)
                     <div class="row">
                         @foreach($list as $content)
-                            <article class="col-md-4">
+                            <article class="col-md-4" itemscope itemtype="http://schema.org/BlogPosting">
                                 <div class="card">
                                     <div class="card-block">
-                                        <h3 class="card-title text-center">
-                                            {!! link_to_action('ContentCtrl@tutorial', str_limit($content[\App\Models\Content::$TITLE], 20), [ 'slug' => $content[\App\Models\Content::$SLUG] ]) !!}
+                                        <h3 itemprop="headline" class="card-title text-center">
+                                            {!! link_to_action('ContentCtrl@tutorial', str_limit($content[\App\Models\Content::$TITLE], 20), [ 'slug' => $content[\App\Models\Content::$SLUG] ], [ 'itemprop' => 'url' ]) !!}
                                         </h3>
-                                        <p class="card-text">{!! strip_tags(str_limit($content[\App\Models\Content::$CONTENT], 50)) !!}</p>
+                                        <p itemprop="description" class="card-text">{!! strip_tags(str_limit($content[\App\Models\Content::$CONTENT], 50)) !!}</p>
                                     </div>
                                 </div>
                             </article>

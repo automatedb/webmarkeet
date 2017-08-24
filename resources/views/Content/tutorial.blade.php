@@ -1,17 +1,20 @@
 @extends('Layout.guest.content')
 
 @section('content')
-    @widget('BgHeader', [
-            'content' => $content
-        ])
-    <div class="container post">
-        <div class="row justify-content-md-center">
-            <article class="col-lg-8">
-                <div class="meta">Posté le {{ \Carbon\Carbon::parse($content->created_at)->format('d-m-Y') }}</div>
-                <p>{!! $content->content !!}</p>
-            </article>
+    <main class="content" itemscope itemtype="http://schema.org/BlogPosting">
+        @widget('BgHeader', [
+                'content' => $content
+            ])
+        <div class="container post">
+            <div class="row justify-content-md-center">
+                <article class="col-lg-8">
+                    <div itemprop="articleBody">
+                        {!! $content->content !!}
+                    </div>
+                </article>
+            </div>
         </div>
-    </div>
+    </main>
 @endsection
 
 @section('seo')

@@ -67,10 +67,18 @@ body {
   }
 
   &.guest-page {
-    font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    main {
+      &.content {
+        article {
+          margin-top: 20px;
+        }
+      }
+    }
 
     h1, h2, h3, h4, h5, h6 {
-      font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-weight: 700;
     }
 
