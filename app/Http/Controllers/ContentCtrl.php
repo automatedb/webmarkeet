@@ -163,18 +163,6 @@ class ContentCtrl extends Controller
     }
 
     /**
-     * Show all contents
-     * @Get("/admin/contents")
-     * @Middleware("admin")
-     */
-    public function contents(Request $request) {
-        return response()->view('Content.contents', [
-            'contents' => $this->contentService->getContents(),
-            'alert' => $request->session()->get('alert')
-        ]);
-    }
-
-    /**
      * Show content form
      * @Get("/admin/contents/add")
      * @Middleware("admin")

@@ -20,7 +20,7 @@ class CreateChaptersTable extends Migration
             $table->integer('content_id');
             $table->timestamps();
 
-            $table->foreign('content_id')->references('id')->on('contents');
+            $table->foreign('content_id')->references('id')->on('contents')->onDelete('cascade');
         });
     }
 
