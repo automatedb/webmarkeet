@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\NoFoundException;
 use App\Services\ContentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -38,7 +39,11 @@ class FormationCtrl extends Controller
      * @Get("/formations/{slug}")
      */
     public function formation(Request $request, $slug) {
-        $content= $this->contentService->getContentBySlug($slug);
+        try {
+            $content= $this->contentService->getContentBySlug($slug);
+        } catch (NoFoundException $e) {
+            return abort(404);
+        }
 
         return response()->view('Content.formation', [
             'content' => $content
