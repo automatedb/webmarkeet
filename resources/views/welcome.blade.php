@@ -153,7 +153,7 @@
 
 @foreach(config('social.brand') as $brand)
     @if(!empty($brand['url']))
-        {{ $list[] = sprintf('"%s"', $brand['url']) }}
+        @php($list[] = sprintf('"%s"', $brand['url']))
     @endif
 @endforeach
 
