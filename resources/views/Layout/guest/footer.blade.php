@@ -44,6 +44,13 @@
                         value: '{{ config('analytics.cookies.cnil.value') }}'
                     }
                 }
+            },
+            social: {
+                api: {
+                    facebook: {
+                        public_id: '{{ config('social.api.facebook.public_id') }}'
+                    }
+                }
             }
         };
     </script>

@@ -67,6 +67,7 @@ body {
   }
 
   &.guest-page {
+
     font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
     main {
@@ -103,6 +104,18 @@ body {
         i {
           color: $color-dark;
         }
+      }
+    }
+
+    .btn-share {
+      margin-bottom: 20px;
+
+      p {
+        margin-bottom: 5px;
+      }
+
+      i {
+        color: #FFF !important;
       }
     }
 

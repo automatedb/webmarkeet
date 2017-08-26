@@ -9,6 +9,24 @@
             <div class="row justify-content-md-center">
                 <article class="col-lg-7">
                     {!! $content->content !!}
+
+                    <div class="btn-share">
+                        <hr>
+                        <p>Faire connaitre cet article : </p>
+                        <p>
+                            <a href="{{ action('ContentCtrl@content', [ 'slug' => $content->slug ]) }}"
+                               data-image="{{ asset($content->thumbnail) }}"
+                               data-description="{{ strip_tags(str_limit($content->content)) }}"
+                               data-title="{{ $content->title }}"
+                               class="btn btn-social btn-facebook"><i class="fa fa-facebook"></i> Partager sur Facebook</a>
+
+                            <a href="https://twitter.com/share?
+                                url={{ action('ContentCtrl@content', [ 'slug' => $content->slug ]) }}
+                                &text={{ $content->title }}"
+                               class="btn btn-social btn-twitter"><i class="fa fa-twitter"></i> Partager sur Twitter</a>
+
+                        </p>
+                    </div>
                 </article>
                 <aside class="col-md-3">
                     <div class="card">
@@ -30,9 +48,11 @@
     <meta property="og:title" content="{!! $title !!}">
     <meta property="og:type" content="article">
     <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ asset($content->thumbnail) }}">
 @stop
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css" integrity="sha256-rFMLRbqAytD9ic/37Rnzr2Ycy/RlpxE5QH52h7VoIZo=" crossorigin="anonymous" />
     {!! Html::style('/css/libs.css') !!}
 @endpush
 
