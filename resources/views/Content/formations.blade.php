@@ -18,7 +18,7 @@
         </header>
 
         @forelse ($formations as $formation)
-            <section class="items-formation" itemscope itemtype="http://schema.org/Product">
+            <section class="items-formation">
                 <div class="container">
                     <div class="row justify-content-md-center">
                         <div class="col-md-8">
@@ -35,12 +35,12 @@
                                 </div>
                                 <div class="col-md-8">
                                     <div class="row">
-                                        <h4 itemprop="name">{{ $formation[\App\Models\Content::$TITLE] }}</h4>
-                                        <p itemprop="description">{!! strip_tags($formation[\App\Models\Content::$CONTENT]) !!}</p>
+                                        <h4>{{ $formation[\App\Models\Content::$TITLE] }}</h4>
+                                        <p>{!! strip_tags($formation[\App\Models\Content::$CONTENT]) !!}</p>
                                         @if(\Illuminate\Support\Facades\Auth::check())
-                                            <a itemprop="url" title="Commander : {{ $formation[\App\Models\Content::$TITLE] }}" href="{{ action('FormationCtrl@formation', ['slug' => $formation[\App\Models\Content::$SLUG]]) }}">Télécharger <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                            <a title="Commander : {{ $formation[\App\Models\Content::$TITLE] }}" href="{{ action('FormationCtrl@formation', ['slug' => $formation[\App\Models\Content::$SLUG]]) }}">Télécharger <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
                                         @else
-                                            <a itemprop="url" title="Commander : {{ $formation[\App\Models\Content::$TITLE] }}" href="{{ action('UserCtrl@authentication') }}">Commander <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+                                            <a title="Commander : {{ $formation[\App\Models\Content::$TITLE] }}" href="{{ action('UserCtrl@authentication') }}">Commander <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
                                         @endif
                                     </div>
                                 </div>
@@ -71,3 +71,37 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset('/img/blog-thumbnail.jpg') }}">
 @stop
+
+@push('scripts')
+<script type="application/ld+json">
+    [
+    @foreach($formations as $formation)
+        @if($loop->last)
+            {
+                "@context": "http://schema.org",
+                "@type": "Course",
+                "name": "{{ $formation[\App\Models\Content::$TITLE] }}",
+                "description": "{{ strip_tags($formation[\App\Models\Content::$CONTENT]) }}",
+                "provider": {
+                    "@type": "Organization",
+                    "name": "{{ config('app.name') }}",
+                    "sameAs": "{{ config('app.url') }}"
+                }
+            }
+            @else
+            {
+                "@context": "http://schema.org",
+                "@type": "Course",
+                "name": "{{ $formation[\App\Models\Content::$TITLE] }}",
+                "description": "{{ strip_tags($formation[\App\Models\Content::$CONTENT]) }}",
+                "provider": {
+                    "@type": "Organization",
+                    "name": "{{ config('app.name') }}",
+                    "sameAs": "{{ config('app.url') }}"
+                }
+            },
+            @endif
+    @endforeach
+    ]
+    </script>
+@endpush
