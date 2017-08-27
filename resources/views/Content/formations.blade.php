@@ -36,7 +36,7 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <h4>{{ $formation[\App\Models\Content::$TITLE] }}</h4>
-                                        <p>{!! strip_tags($formation[\App\Models\Content::$CONTENT]) !!}</p>
+                                        <p>{!! strip_tags(str_limit($formation[\App\Models\Content::$CONTENT], 250)) !!}</p>
                                         @if(\Illuminate\Support\Facades\Auth::check())
                                             <a title="Commander : {{ $formation[\App\Models\Content::$TITLE] }}" href="{{ action('FormationCtrl@formation', ['slug' => $formation[\App\Models\Content::$SLUG]]) }}">Télécharger <i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
                                         @else
