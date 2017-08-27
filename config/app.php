@@ -217,7 +217,7 @@ return [
         GrahamCampbell\Markdown\MarkdownServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Laravel\Cashier\CashierServiceProvider::class,
-
+        Spatie\Sitemap\SitemapServiceProvider::class,
     ],
 
     /*

@@ -11,6 +11,7 @@ use App\Exceptions\UnknownStatusException;
 use App\Exceptions\UnknownTypeException;
 use App\Jobs\ImageCleaner;
 use App\Jobs\ImageResizer;
+use App\Jobs\SiteMapGenerator;
 use App\Models\Chapter;
 use App\Models\Content;
 use App\Models\Source;
@@ -161,6 +162,10 @@ class ContentService
 
         $this->updateChapters($chapters, $contentModel);
 
+        if($contentModel[Content::$STATUS] == Content::PUBLISHED) {
+            $this->dispatch(new SiteMapGenerator($this));
+        }
+
         if(!empty($thumbnail)) {
             $this->dispatch(new ImageResizer($contentModel));
         }
@@ -211,6 +216,10 @@ class ContentService
             $lastId = $content->id;
 
             $this->updateChapters($chapters, $content);
+
+            if($contentModel[Content::$STATUS] == Content::PUBLISHED) {
+                $this->dispatch(new SiteMapGenerator($this));
+            }
 
             if(!empty($thumbnail)) {
                 $this->dispatch(new ImageResizer($content));

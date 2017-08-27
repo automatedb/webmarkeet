@@ -56,6 +56,12 @@ Pour associer des images aux articles, il faut lancer la commande :
 
 `php artisan image:resize`
 
+### Générer un sitemap
+
+Pour générer manuellement un sitemap, il faut lancer la commande : 
+
+`php artisan make:sitemap`
+
 ## Contributeurs
 
 * Nicolas MORICET
