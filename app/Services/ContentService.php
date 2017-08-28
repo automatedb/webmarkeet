@@ -11,6 +11,8 @@ use App\Exceptions\UnknownStatusException;
 use App\Exceptions\UnknownTypeException;
 use App\Jobs\ImageCleaner;
 use App\Jobs\ImageResizer;
+use App\Jobs\SiteMapGenerator;
+use App\Models\Chapter;
 use App\Models\Content;
 use App\Models\Source;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -28,9 +30,12 @@ class ContentService
 
     private $converter;
 
-    public function __construct(Content $content, Converter $converter) {
+    private $chapter;
+
+    public function __construct(Content $content, Converter $converter, Chapter $chapter) {
         $this->content = $content;
         $this->converter = $converter;
+        $this->chapter = $chapter;
     }
 
     public function getRecentContentsForBlog() {
@@ -67,9 +72,13 @@ class ContentService
         return $this->getContentsForType(Content::TUTORIAL);
     }
 
+    public function getContentsForFormations() {
+        return $this->getContentsForType(Content::FORMATION);
+    }
+
     public function getContentBySlug(string $slug) {
         /** @var Content $content */
-        $content = $this->content->where('slug', $slug)->first();
+        $content = $this->content->where(Content::$SLUG, $slug)->first();
 
         if(empty($content)) {
             throw new NoFoundException("Content not found");
@@ -80,8 +89,24 @@ class ContentService
         return $content;
     }
 
+    public function getSourceFromChapter(int $chapterId, string $fileType) {
+        $source = $this->chapter->where('id', $chapterId)
+            ->first()
+            ->sources()
+            ->where(Source::TYPE, $fileType)
+            ->first();
+
+        if(empty($source)) {
+            throw new NoFoundException("Chapter not found");
+        }
+
+        return $source;
+    }
+
     public function getContents() {
-        return $this->content->get();
+        return $this->content
+            ->orderBy(Content::$POSTED_AT, 'desc')
+            ->get();
     }
 
     public function getContent($id): Content {
@@ -94,8 +119,10 @@ class ContentService
         return $content;
     }
 
-    public function update(int $id, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = [], array $sources = []): Content {
+    public function update(int $id, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = [], array $sources = [], array $chapters = []): Content {
         $type = empty($videoId) ? Content::CONTENT : Content::TUTORIAL;
+
+        $type = empty($chapters) ? $type : Content::FORMATION;
 
         $this->validParams($status, $type);
 
@@ -114,12 +141,12 @@ class ContentService
 
         $this->setSources($sources, $sourceModel);
 
-        $contentModel->title = $title;
-        $contentModel->slug = $slug;
-        $contentModel->content = $content;
-        $contentModel->status = $status;
-        $contentModel->type = $type;
-        $contentModel->video_id = $videoId;
+        $contentModel[Content::$TITLE] = $title;
+        $contentModel[Content::$SLUG] = $slug;
+        $contentModel[Content::$CONTENT] = $content;
+        $contentModel[Content::$STATUS] = $status;
+        $contentModel[Content::$TYPE] = $type;
+        $contentModel[Content::$VIDEO_ID] = $videoId;
 
         $this->publishContent($status, $contentModel);
 
@@ -133,6 +160,12 @@ class ContentService
             $contentModel->sources()->create($sourceModel);
         }
 
+        $this->updateChapters($chapters, $contentModel);
+
+        if($contentModel[Content::$STATUS] == Content::PUBLISHED) {
+            $this->dispatch(new SiteMapGenerator($this));
+        }
+
         if(!empty($thumbnail)) {
             $this->dispatch(new ImageResizer($contentModel));
         }
@@ -140,8 +173,10 @@ class ContentService
         return $contentModel;
     }
 
-    public function add(int $userId, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = [], array $sources = []): int {
+    public function add(int $userId, string $title, string $slug, string $status, string $content = null, string $videoId = null, array $thumbnail = [], array $sources = [], array $chapters = []): int {
         $type = empty($videoId) ? Content::CONTENT : Content::TUTORIAL;
+
+        $type = empty($chapters) ? $type : Content::FORMATION;
 
         $this->validParams($status, $type);
 
@@ -180,6 +215,12 @@ class ContentService
 
             $lastId = $content->id;
 
+            $this->updateChapters($chapters, $content);
+
+            if($contentModel[Content::$STATUS] == Content::PUBLISHED) {
+                $this->dispatch(new SiteMapGenerator($this));
+            }
+
             if(!empty($thumbnail)) {
                 $this->dispatch(new ImageResizer($content));
             }
@@ -201,9 +242,85 @@ class ContentService
         return $content->delete($id);
     }
 
+    private function updateChapters(array $chapters, Content $contentModel) {
+        if(!empty($chapters)) {
+            foreach ($chapters as $chapter) {
+                $chapterModel = $this->chapter->where('id', $chapter['id'])->first();
+
+                if(empty($chapterModel)) {
+                    $this->createChapter($chapter, $contentModel);
+                    continue;
+                }
+
+                $chapterModel[Chapter::TITLE] = $chapter[Chapter::TITLE];
+                $chapterModel[Chapter::CONTENT] = $chapter[Chapter::CONTENT];
+
+                if(!$chapterModel->save()) {
+                    throw new UnexpectedException('Unexpected error');
+                }
+
+                if(!empty($chapter[config('sources.type.VIDEO')])) {
+                    $this->setChaptersSources($chapterModel, config('sources.type.VIDEO'), $chapter);
+                }
+
+                if(!empty($chapter[config('sources.type.FILE')])) {
+                    $this->setChaptersSources($chapterModel, config('sources.type.FILE'), $chapter);
+                }
+            }
+        }
+    }
+
+    private function createChapter(array $chapter, Content $contentModel) {
+        $chapterModel = [
+            Chapter::TITLE => $chapter[Chapter::TITLE],
+            Chapter::CONTENT => $chapter[Chapter::CONTENT]
+        ];
+
+        if(!$chapterModel = $contentModel->chapters()->create($chapterModel)) {
+            throw new UnexpectedException('Unexpected error');
+        }
+
+        if(!empty($chapter[config('sources.type.VIDEO')])) {
+            $this->setChaptersSources($chapterModel, config('sources.type.VIDEO'), $chapter);
+        }
+
+        if(!empty($chapter[config('sources.type.FILE')])) {
+            $this->setChaptersSources($chapterModel, config('sources.type.FILE'), $chapter);
+        }
+    }
+
+    private function setChaptersSources(Chapter $chapterModel, string $type, array $chapter) {
+        $sourceModel = $chapterModel->sources()->where(Source::TYPE, $type)->first();
+
+        $chapter[$type]->store(config('content.uploadDirectory'));
+
+        $video[self::HASH_NAME] = $chapter[$type]->hashName();
+        $video[self::ORIGINAL_NAME] = $chapter[$type]->getClientOriginalName();
+
+        if(empty($sourceModel)) {
+            $sourceModel = [];
+            $sourceModel[Source::TYPE] = $type;
+        }
+
+        $sourceModel[Source::NAME] = $this->formatName($video);
+
+        $from = storage_path('app' . DIRECTORY_SEPARATOR . config('content.uploadDirectory') . DIRECTORY_SEPARATOR . $video[self::HASH_NAME]);
+        $to = storage_path('app' . DIRECTORY_SEPARATOR . 'public'  . DIRECTORY_SEPARATOR . $video[self::ORIGINAL_NAME]);
+
+        if(!rename($from, $to)) {
+            throw new DontMoveFileException("Cannot move file.", 200);
+        }
+
+        if(!empty($sourceModel) && !empty($sourceModel->id)) {
+            $sourceModel->save();
+        } else if(!empty($sourceModel)) {
+            $chapterModel->sources()->create($sourceModel);
+        }
+    }
+
     private function getContentsForType(string $type) {
-        $contents = $this->content->where('type', $type)
-            ->where('status', Content::PUBLISHED)
+        $contents = $this->content->where(Content::$TYPE, $type)
+            ->where(Content::$STATUS, Content::PUBLISHED)
             ->whereNotNull(Content::$POSTED_AT)
             ->orderBy(Content::$POSTED_AT, 'desc')->get();
 

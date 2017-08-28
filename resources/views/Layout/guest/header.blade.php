@@ -20,19 +20,22 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="container d-flex justify-content-between">
-            <a class="navbar-brand topnav" href="/">{{ env('APP_NAME') }}</a>
+            <a class="navbar-brand topnav" href="/" rel="home">{{ env('APP_NAME') }}</a>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="nav navbar-nav ml-auto">
+                <ul class="nav navbar-nav ml-auto" itemscope itemtype="https://schema.org/SiteNavigationElement">
                     <li class="nav-item {{ \App\Helpers\Menu::activeMenu('blog') }}">
-                        {{ link_to_action('ContentCtrl@index', 'Blog', [], ['class' => 'nav-link']) }}
+                        {{ link_to_action('ContentCtrl@index', 'Blog', [], ['class' => 'nav-link', 'itemprop' => 'url']) }}
                     </li>
                     <li class="nav-item {{ \App\Helpers\Menu::activeMenu('tutorials') }}">
-                        {{ link_to_action('ContentCtrl@tutorials', 'Tutoriels', [], ['class' => 'nav-link']) }}
+                        {{ link_to_action('ContentCtrl@tutorials', 'Tutoriels', [], ['class' => 'nav-link', 'itemprop' => 'url']) }}
+                    </li>
+                    <li class="nav-item {{ \App\Helpers\Menu::activeMenu('formations') }}">
+                        {{ link_to_action('FormationCtrl@index', 'Formations', [], ['class' => 'nav-link', 'itemprop' => 'url']) }}
                     </li>
                     @if(!\Illuminate\Support\Facades\Auth::check())
                         <li class="nav-item {{ \App\Helpers\Menu::activeMenu('authentication') }}">
-                            {{ link_to_action('UserCtrl@authentication', 'Authentification', [], ['class' => 'nav-link']) }}
+                            {{ link_to_action('UserCtrl@authentication', 'Authentification', [], ['class' => 'nav-link', 'itemprop' => 'url']) }}
                         </li>
                     @else
                         <li class="nav-item dropdown">

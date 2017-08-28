@@ -7,6 +7,7 @@ use App\Exceptions\RequireFieldsException;
 use App\Exceptions\SlugAlreadyExistsException;
 use App\Helpers\ImgHelper;
 use App\Models\Content;
+use App\Models\Source;
 use App\Services\ContentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -83,9 +84,35 @@ class ContentCtrl extends Controller
             return abort(404);
         }
 
-        $file = storage_path(sprintf('app/public/%s', $content->sources()->first()->name));
+        return $this->downloadFile($content->sources()->first());
+    }
 
-        $typeMime = mime_content_type(storage_path(sprintf('app/public/%s', $content->sources()->first()->name)));
+    /**
+     * Able to download source
+     * @Get("/formation/chapter/{id}/type/{type}")
+     * @Middleware("download")
+     */
+    public function downloadChaptersSources(Request $request, string $id, string $type) {
+        try {
+            $source = $this->contentService->getSourceFromChapter(intval($id), $type);
+
+            if(empty($source)) {
+                return abort(404);
+            }
+        } catch (NoFoundException $e) {
+            return abort(404);
+        }
+
+        return $this->downloadFile($source);
+    }
+
+    /**
+     * Return file from source
+     */
+    private function downloadFile($source) {
+        $file = storage_path(sprintf('app/public/%s', $source[Source::NAME]));
+
+        $typeMime = mime_content_type(storage_path(sprintf('app/public/%s', $source[Source::NAME])));
 
         return response()->download($file, null, [
             'Content-Type' => $typeMime
@@ -133,18 +160,6 @@ class ContentCtrl extends Controller
         }
 
         return response()->view($view, $data, $code);
-    }
-
-    /**
-     * Show all contents
-     * @Get("/admin/contents")
-     * @Middleware("admin")
-     */
-    public function contents(Request $request) {
-        return response()->view('Content.contents', [
-            'contents' => $this->contentService->getContents(),
-            'alert' => $request->session()->get('alert')
-        ]);
     }
 
     /**
@@ -196,6 +211,12 @@ class ContentCtrl extends Controller
             $sources[ContentService::ORIGINAL_NAME] = $request->sources->getClientOriginalName();
         }
 
+        $chapters = [];
+
+        if(!empty($values['chapters'])) {
+            $chapters = $values['chapters'];
+        }
+        
         $user = Auth::user();
 
         try {
@@ -207,7 +228,8 @@ class ContentCtrl extends Controller
                 $values[Content::$CONTENT],
                 $values[Content::$VIDEO_ID],
                 $thumbnail,
-                $sources);
+                $sources,
+                $chapters);
         } catch (SlugAlreadyExistsException $e) {
             $request->session()->flash('alert', [
                 'message' => "L'url que vous essayez de saisir existe déjà pour un autre contenu.",
@@ -270,6 +292,12 @@ class ContentCtrl extends Controller
             $source[ContentService::ORIGINAL_NAME] = $request->sources->getClientOriginalName();
         }
 
+        $chapters = [];
+
+        if(!empty($values['chapters'])) {
+            $chapters = $values['chapters'];
+        }
+
         try {
             $this->contentService->update(
                 intval($values['id']),
@@ -279,7 +307,8 @@ class ContentCtrl extends Controller
                 $values[Content::$CONTENT],
                 $values[Content::$VIDEO_ID],
                 $thumbnail,
-                $source
+                $source,
+                $chapters
             );
 
             $request->session()->flash('alert', [

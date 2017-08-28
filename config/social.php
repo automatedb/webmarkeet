@@ -1,6 +1,12 @@
 <?php
 
 return [
+    'api' => [
+        'facebook' => [
+            'public_id' => env('SOCIAL_FACEBOOK_ID')
+        ]
+    ],
+
     'brand' => [
         [
             'name' => 'Facebook',

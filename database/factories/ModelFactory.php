@@ -27,7 +27,7 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
 /**
  * Permet de définir un adminstrateur en base de données
  */
-$factory->defineAs(\App\Models\User::class, 'admin', function($faker) use ($factory) {
+$factory->defineAs(\App\Models\User::class, 'admin', function(Faker\Generator $faker) use ($factory) {
     $user1 = $factory->raw(\App\Models\User::class);
 
     return array_merge($user1, [
@@ -42,7 +42,7 @@ $factory->defineAs(\App\Models\User::class, 'admin', function($faker) use ($fact
 /**
  * Permet de définir un adminstrateur en base de données
  */
-$factory->defineAs(\App\Models\User::class, 'userdeleted', function($faker) use ($factory) {
+$factory->defineAs(\App\Models\User::class, 'userdeleted', function(Faker\Generator $faker) use ($factory) {
     $user1 = $factory->raw(\App\Models\User::class);
 
     return array_merge($user1, [
@@ -90,5 +90,12 @@ $factory->define(App\Models\Content::class, function(Faker\Generator $faker): ar
         ]),
         \App\Models\Content::$VIDEO_ID => $video_id,
         \App\Models\Content::$POSTED_AT => $posted_at
+    ];
+});
+
+$factory->define(\App\Models\Chapter::class, function(Faker\Generator $faker): array {
+    return [
+        \App\Models\Chapter::TITLE => $faker->sentence,
+        \App\Models\Chapter::CONTENT => $faker->paragraphs(10, true)
     ];
 });

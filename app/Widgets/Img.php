@@ -30,12 +30,18 @@ class Img extends AbstractWidget
     {
         $size = 730;
 
+        $this->config['options']['title'] = $this->config['title'];
+        $this->config['options']['alt'] = $this->config['title'];
+
         switch ($this->config['type']) {
             case 'post':
                 $size = 300;
                 break;
             case 'tutorial-thumbnail':
                 $size = 540;
+                break;
+            case 'formation-thumbnail':
+                $size = 255;
                 break;
             case 'home-thumbnail':
                 $size = 356;

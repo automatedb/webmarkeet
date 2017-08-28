@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\MakeSiteMap;
 use App\Console\Commands\MakeUser;
 use App\Console\Commands\ResizeImages;
 use Illuminate\Console\Scheduling\Schedule;
@@ -16,7 +17,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         ResizeImages::class,
-        MakeUser::class
+        MakeUser::class,
+        MakeSiteMap::class,
     ];
 
     /**

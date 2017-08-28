@@ -13,7 +13,6 @@
                 </div>
             @endif
             <div class="col-lg-10">
-
                 <h1 class="text-center">{{ $config['content']['title'] }}</h1>
             </div>
             @if($config['content']['sources']->count())

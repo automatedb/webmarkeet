@@ -1,0 +1,55 @@
+#cookies {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 400px;
+  background-color: #000;
+  padding: 20px;
+
+  p, label, input, span, button {
+    font-family: "Gotham SSm A", "Gotham SSm B", Helvetica, Arial, sans-serif;
+    font-size: .8rem;
+  }
+
+  button {
+    span {
+      color: #FFF;
+    }
+  }
+
+  label {
+    color: #CCC;
+    margin-bottom: 0;
+  }
+
+  p {
+    color: #CCC;
+    margin-bottom: 10px;
+
+    &.man-cookies {
+      margin-bottom: 0;
+    }
+  }
+
+  .cmd {
+    margin-bottom: 0;
+  }
+
+  label {
+    float: left;
+  }
+
+  input {
+    display: flex;
+    float: right;
+    width: 85%;
+    border: none;
+    background-color: #000;
+    color: #CCC;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+}

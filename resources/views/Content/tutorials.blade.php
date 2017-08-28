@@ -52,10 +52,10 @@
                             <article class="col-md-4">
                                 <div class="card">
                                     <div class="card-block">
-                                        <h3 class="card-title text-center">
-                                            {!! link_to_action('ContentCtrl@tutorial', str_limit($content[\App\Models\Content::$TITLE], 20), [ 'slug' => $content[\App\Models\Content::$SLUG] ]) !!}
+                                        <h3 class="card-title">
+                                            {!! link_to_action('ContentCtrl@tutorial', str_limit($content[\App\Models\Content::$TITLE], 30), [ 'slug' => $content[\App\Models\Content::$SLUG] ], [ 'itemprop' => 'url' ]) !!}
                                         </h3>
-                                        <p class="card-text">{!! strip_tags(str_limit($content[\App\Models\Content::$CONTENT], 50)) !!}</p>
+                                        <p class="card-text">{!! strip_tags(str_limit($content[\App\Models\Content::$CONTENT], 80)) !!}</p>
                                     </div>
                                 </div>
                             </article>
@@ -77,3 +77,14 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset($thumbnail) }}">
 @stop
+
+@push('scripts')
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "headline": "Tutoriels",
+        "description": "Découvrez tous les tutoriels proposés sur {{ config('app.name') }}",
+    }
+    </script>
+@endpush

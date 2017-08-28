@@ -26,11 +26,15 @@
                             'title' => $content->title,
                             'type' => 'post-list'
                         ])
-                        <h2><a href="/blog/{{ $content->slug }}">{{ $content->title }}</a></h2>
+                        <h2>
+                            <a href="/blog/{{ $content->slug }}">{{ $content->title }}</a>
+                        </h2>
                         <div class="row meta">
-                            <div class="col-md-6">Date: {{ \Carbon\Carbon::parse($content->created_at)->format('d-m-Y') }}</div>
+                            <div class="col-md-6">
+                                Date: <time datetime="{{ $content->created_at }}">{{ \Carbon\Carbon::parse($content->created_at)->format('d-m-Y') }}</time>
+                            </div>
                         </div>
-                        <p>{!! str_limit($content->content, 100) !!}</p>
+                        <p>{{ strip_tags(str_limit($content->content, 100)) }}</p>
                     </article>
                 @empty
                     <p>Pas de contenu pour le moment</p>
@@ -47,3 +51,38 @@
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:image" content="{{ asset($thumbnail) }}">
 @stop
+
+@push('scripts')
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "headline": "Blog",
+        "description": "Toutes les astuces, actualités et billets d'humeurs sont ici."
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context":"http://schema.org",
+      "@type":"ItemList",
+      "itemListElement":[
+        @foreach($contents as $i => $content)
+            @if($loop->last)
+                {
+                   "@type": "ListItem",
+                   "position": {{ $i + 1 }},
+                   "url": "{{ action('ContentCtrl@content', [ 'slug' => $content[\App\Models\Content::$SLUG] ]) }}"
+                }
+             @else
+                {
+                  "@type": "ListItem",
+                  "position": {{ $i + 1 }},
+                  "url": "{{ action('ContentCtrl@content', [ 'slug' => $content[\App\Models\Content::$SLUG] ]) }}"
+                },
+            @endif
+        @endforeach
+      ]
+    }
+    </script>
+@endpush
