@@ -8,11 +8,14 @@ use App\Exceptions\InvalidCardException;
 use App\Exceptions\RequireFieldsException;
 use App\Exceptions\UnexpectedException;
 use App\Exceptions\UserNotFoundException;
+use App\Mail\UnRegisterConfirmed;
+use App\Mail\UnSubscribeConfirmed;
 use App\Models\User;
 use App\Services\PaymentService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -163,6 +166,8 @@ class UserCtrl extends Controller
     public function delete(Request $request) {
         $user = Auth::user();
 
+        $email = $user[User::$EMAIL];
+
         if(!$this->userService->delete($user->id)) {
             $request->session()->flash('alert', [
                 'message' => "Il nous est impossible de supprimer votre compte. Notre équipe a été informé de ce problème. Nous vous prions de nous excuser et vous invitons à recommencer ultérieurement.",
@@ -178,6 +183,8 @@ class UserCtrl extends Controller
             'message' => "Votre compte est supprimé. Nous sommes désolés de vous voir partir. Merci de la confiance que vous nous avez accordé jusqu'à présent. Cordialement.",
             'type' => 'success'
         ]);
+
+        Mail::to($email)->queue(new UnRegisterConfirmed());
 
         return redirect()->action('UserCtrl@authentication');
     }
@@ -283,12 +290,16 @@ class UserCtrl extends Controller
      * @Get("/payment/cancel")
      */
     public function unSubscribe(Request $request) {
-        $this->userService->cancelSubscription(Auth::user());
+        $user = Auth::user();
+
+        $this->userService->cancelSubscription($user);
 
         $request->session()->flash('alert', [
             'message' => 'Votre souscription a été annulé.',
             'type' => 'success'
         ]);
+
+        Mail::to($user[User::$EMAIL])->queue(new UnSubscribeConfirmed());
 
         return redirect()->back();
     }
