@@ -5,11 +5,16 @@ namespace App\Services;
 use App\Exceptions\InvalidCardException;
 use App\Exceptions\InvalidSubscriptionException;
 use App\Helpers\GenerateStripeToken;
+use App\Mail\SubscriptionConfirmed;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Error\Card;
 use Stripe\Stripe;
 
 class PaymentService
 {
+    use DispatchesJobs;
+
     /**
      * @var UserService
      */
@@ -44,6 +49,8 @@ class PaymentService
             $user->forceDelete();
             throw new InvalidSubscriptionException('Invalid subscription');
         }
+
+        Mail::to($email)->queue(new SubscriptionConfirmed());
 
         return true;
     }
