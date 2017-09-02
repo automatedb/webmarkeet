@@ -43,7 +43,8 @@ class UnSubscribeConfirmed extends Mailable
         return $this->view('Mails.unsubscribe')
             ->subject(sprintf("Confirmation d'annulation d'abonnement à %s", config('app.name')))
             ->with([
-            'css' => implode(' ', $this->cssList)
+            'css' => implode(' ', $this->cssList),
+            'action' => 'MailCtrl@unsubscribe'
         ]);
     }
 
