@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Exceptions\EmailAlreadyExistsException;
 use App\Exceptions\InvalidCardException;
 use App\Exceptions\InvalidSubscriptionException;
 use App\Helpers\GenerateStripeToken;
 use App\Mail\SubscriptionConfirmed;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Error\Card;
@@ -36,7 +38,11 @@ class PaymentService
     public function payment(string $firstname, string $lastname, string $email, string $password, string $numberCard, string $expMonth, string $expYear, string $cvc) {
         $token = $this->generateStripeToken->getToken($firstname, $lastname, $numberCard, $expMonth, $expYear, $cvc);
 
-        $user = $this->userService->registerUser($firstname, $lastname, $email, $password);
+        try {
+            $user = $this->userService->registerUser($firstname, $lastname, $email, $password);
+        } catch (QueryException $e) {
+            throw new EmailAlreadyExistsException('Email already exception');
+        }
 
         try {
             $subscription = $user->newSubscription('monthly', 'RT0001')->create($token);
