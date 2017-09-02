@@ -23,7 +23,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="nav navbar-nav ml-auto">
                     <li class="nav-item">
-                        {{ link_to_action('MailCtrl@subscription', "Ce message ne s'affiche pas correctement...", [], ['class' => 'nav-link']) }}
+                        <a class="nav-link" href="{{ action($action) }}">Ce message ne s'affiche pas correctement...</a>
                     </li>
                 </ul>
             </div>
