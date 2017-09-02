@@ -41,9 +41,10 @@ class UnRegisterConfirmed extends Mailable
     public function build()
     {
         return $this->view('Mails.unregister')
-            ->subject(sprintf("Confirmation désinscription à %s", config('app.name')))
+            ->subject(sprintf("Confirmation de désinscription à %s", config('app.name')))
             ->with([
-            'css' => implode(' ', $this->cssList)
+            'css' => implode(' ', $this->cssList),
+            'action' => 'MailCtrl@unregister'
         ]);
     }
 

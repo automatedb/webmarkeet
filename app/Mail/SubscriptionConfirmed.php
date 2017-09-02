@@ -44,7 +44,8 @@ class SubscriptionConfirmed extends Mailable
         return $this->view('Mails.subscription')
             ->subject(sprintf("Confirmation d'inscription à %s", config('app.name')))
             ->with([
-            'css' => implode(' ', $this->cssList)
+            'css' => implode(' ', $this->cssList),
+            'action' => 'MailCtrl@subscription'
         ]);
     }
 

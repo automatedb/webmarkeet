@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mail\SubscriptionConfirmed;
+use App\Mail\UnRegisterConfirmed;
+use App\Mail\UnSubscribeConfirmed;
 
 class MailCtrl extends Controller
 {
@@ -13,7 +15,32 @@ class MailCtrl extends Controller
         $mail = new SubscriptionConfirmed();
 
         return view($mail->preview(), [
-            'css' => implode(' ', $mail->getCssList())
+            'css' => implode(' ', $mail->getCssList()),
+            'action' => 'MailCtrl@subscription'
+        ]);
+    }
+
+    /**
+     * @Get("/mail/unregister")
+     */
+    public function unregister() {
+        $mail = new UnRegisterConfirmed();
+
+        return view($mail->preview(), [
+            'css' => implode(' ', $mail->getCssList()),
+            'action' => 'MailCtrl@unregister'
+        ]);
+    }
+
+    /**
+     * @Get("/mail/unsubscribe")
+     */
+    public function unsubscribe() {
+        $mail = new UnSubscribeConfirmed();
+
+        return view($mail->preview(), [
+            'css' => implode(' ', $mail->getCssList()),
+            'action' => 'MailCtrl@unsubscribe'
         ]);
     }
 }
