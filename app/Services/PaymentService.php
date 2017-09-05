@@ -55,28 +55,35 @@ class PaymentService
     public function renewal(string $email, string $numberCard, string $expMonth, string $expYear, string $cvc) {
         $user = $this->userService->getUserByMail($email);
 
-        $this->subscription($user, $numberCard, $expMonth, $expYear, $cvc);
+        $this->subscription($user, $numberCard, $expMonth, $expYear, $cvc, true);
 
         Mail::to($email)->queue(new RenewalSubscriptionConfirmed());
     }
     
-    private function subscription(User $user, string $numberCard, string $expMonth, string $expYear, string $cvc) {
+    private function subscription(User $user, string $numberCard, string $expMonth, string $expYear, string $cvc, $renewal = false) {
         try {
             $token = $this->generateStripeToken->getToken($user[User::$FIRSTNAME], $user[User::$LASTNAME], $numberCard, $expMonth, $expYear, $cvc);
         } catch (ApiConnection $e) {
-            $user->forceDelete();
+            if(!$renewal) {
+                $user->forceDelete();
+            }
+
             throw new InvalidSubscriptionException('Invalid Api connection');
         }
 
         try {
             $subscription = $user->newSubscription('monthly', 'RT0001')->create($token);
         } catch (Card $e) {
-            $user->forceDelete();
+            if(!$renewal) {
+                $user->forceDelete();
+            }
             throw new InvalidCardException('Invalid subscription');
         }
 
         if(empty($subscription)) {
-            $user->forceDelete();
+            if(!$renewal) {
+                $user->forceDelete();
+            }
             throw new InvalidSubscriptionException('Invalid subscription');
         }
     }
