@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Mail;
+use Stripe\Error\ApiConnection;
 use Stripe\Error\Card;
 use Stripe\Stripe;
 
@@ -60,7 +61,12 @@ class PaymentService
     }
     
     private function subscription(User $user, string $numberCard, string $expMonth, string $expYear, string $cvc) {
-        $token = $this->generateStripeToken->getToken($user[User::$FIRSTNAME], $user[User::$LASTNAME], $numberCard, $expMonth, $expYear, $cvc);
+        try {
+            $token = $this->generateStripeToken->getToken($user[User::$FIRSTNAME], $user[User::$LASTNAME], $numberCard, $expMonth, $expYear, $cvc);
+        } catch (ApiConnection $e) {
+            $user->forceDelete();
+            throw new InvalidSubscriptionException('Invalid Api connection');
+        }
 
         try {
             $subscription = $user->newSubscription('monthly', 'RT0001')->create($token);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\BadCredentialsException;
 use App\Exceptions\EmailAlreadyExistsException;
 use App\Exceptions\InvalidCardException;
+use App\Exceptions\InvalidSubscriptionException;
 use App\Exceptions\RequireFieldsException;
 use App\Exceptions\UnexpectedException;
 use App\Exceptions\UserNotFoundException;
@@ -15,6 +16,7 @@ use App\Services\PaymentService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
@@ -255,6 +257,8 @@ class UserCtrl extends Controller
                 $values['cvc']
             );
         } catch (InvalidCardException $e) {
+            Log::error($e->getMessage());
+            
             $request->session()->flash('alert', [
                 'message' => 'Les informations de paiement ne sont pas valides.',
                 'type' => 'warning'
@@ -262,8 +266,19 @@ class UserCtrl extends Controller
 
             return redirect()->back()->withInput();
         } catch (EmailAlreadyExistsException $e) {
+            Log::error($e->getMessage());
+
             $request->session()->flash('alert', [
                 'message' => 'Un compte est déjà existant avec cette adresse email.',
+                'type' => 'warning'
+            ]);
+
+            return redirect()->back()->withInput();
+        } catch (InvalidSubscriptionException $e) {
+            Log::error($e->getMessage());
+
+            $request->session()->flash('alert', [
+                'message' => "Une erreur est survenue pendant votre payement. Vous n'avez pas été débité et votre compte n'a pas été créé. Notre équipe a été prévenue de l'erreur",
                 'type' => 'warning'
             ]);
 
