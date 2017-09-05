@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\RenewalSubscriptionConfirmed;
 use App\Mail\SubscriptionConfirmed;
 use App\Mail\UnRegisterConfirmed;
 use App\Mail\UnSubscribeConfirmed;
@@ -41,6 +42,18 @@ class MailCtrl extends Controller
         return view($mail->preview(), [
             'css' => implode(' ', $mail->getCssList()),
             'action' => 'MailCtrl@unsubscribe'
+        ]);
+    }
+
+    /**
+     * @Get("/mail/renewal")
+     */
+    public function renewal() {
+        $mail = new RenewalSubscriptionConfirmed();
+
+        return view($mail->preview(), [
+            'css' => implode(' ', $mail->getCssList()),
+            'action' => 'MailCtrl@renewal'
         ]);
     }
 }

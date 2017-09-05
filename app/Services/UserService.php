@@ -95,6 +95,16 @@ class UserService
     public function cancelSubscription(User $user, bool $delete = false) {
         $this->dispatch(new UnSubscribePlan($user->id, $delete));
     }
+    
+    public function getUserByMail(string $email): User {
+        $user = $this->user->where(User::$EMAIL, $email)->first();
+        
+        if(empty($user)) {
+            throw new UserNotFoundException('User not found');
+        }
+        
+        return $user;
+    }
 
     private function isEmailExists(int $id, string $email, int $acceptance = 1) {
         $n = $this->user->where(User::$EMAIL, $email)->where('id', '!=', $id)->count();

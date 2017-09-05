@@ -79,26 +79,26 @@
                         <legend>Souscription</legend>
                         <div class="form-group">
                             {!! Form::text('card_number', '', ['class' => 'form-control required', 'placeholder' => 'Numéro de carte']) !!}
-                            <p class="form-control-feedback hidden-xs-up">Merci d'entrer votre nom.</p>
+                            <p class="form-control-feedback hidden-xs-up">Merci d'entrer le numéro de carte.</p>
                         </div>
 
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     {!! Form::text('exp_month', '', ['class' => 'form-control required', 'placeholder' => 'Expiration mois']) !!}
-                                    <p class="form-control-feedback hidden-xs-up">Merci d'entrer votre nom.</p>
+                                    <p class="form-control-feedback hidden-xs-up">Merci d'entrer le mois d'expiration.</p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     {!! Form::text('exp_year', '', ['class' => 'form-control required', 'placeholder' => 'Expiration année']) !!}
-                                    <p class="form-control-feedback hidden-xs-up">Merci d'entrer votre nom.</p>
+                                    <p class="form-control-feedback hidden-xs-up">Merci d'entrer l'année d'expiration.</p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     {!! Form::text('cvc', '', ['class' => 'form-control required', 'placeholder' => 'Code carte']) !!}
-                                    <p class="form-control-feedback hidden-xs-up">Merci d'entrer votre nom.</p>
+                                    <p class="form-control-feedback hidden-xs-up">Merci d'entrer le code au dos de votre carte.</p>
                                 </div>
                             </div>
                         </div>
