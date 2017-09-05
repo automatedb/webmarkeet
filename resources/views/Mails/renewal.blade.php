@@ -4,17 +4,15 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <h1 class="text-center">Bienvenue sur {{ config('app.name') }}</h1>
+            <h1 class="text-center">Bonjour,</h1>
 
-            <p>Votre souscription a bien été prise en compte. Vous pouvez dès à présent vous connecter à votre compte avec votre adresse email et le mot de passe que vous avez choisi lors de votre inscription.</p>
+            <p>Votre souscription a bien été prise en compte. Merci de votre confiance.</p>
 
-            <h4>Quelques conseils...</h4>
+            <h4>Vous pouvez dès maintenant :</h4>
 
             <ul>
-                <li>Vous pouvez accéder à votre espace profil via le menu déroulant en haut à droite du site.</li>
-                <li>Vous pouvez modifier vos informations de connexion dans votre espace profil.</li>
-                <li>Toutes les sources téléchargeables sont accéssibles via les boutons de téléchargement en vert.</li>
-                <li>Toutes les formations sont accéssibles dans l'onglet "Formations" via le menu.</li>
+                <li>Télécharger toutes les sources disponibles avec les tutoriels et formations via les boutons de téléchargement en vert.</li>
+                <li>Accéder et télécharger les formations via l'onglet "Formations" présent dans le menu.</li>
             </ul>
         </div>
 

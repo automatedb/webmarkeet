@@ -226,11 +226,7 @@ class UserCtrl extends Controller
 
         $values = $request->all();
 
-        $validator = Validator::make($values, $rules);
-
-        if($validator->fails()) {
-            throw new RequireFieldsException("Tous les champs sont requis.");
-        }
+        $this->fieldsValidation($values, $rules);
 
         $passwordRules = [
             'confirm' => 'same:password'
@@ -278,6 +274,42 @@ class UserCtrl extends Controller
     }
 
     /**
+     * @Post("/payment/renewal-subscription")
+     */
+    public function postRenewalSubscription(Request $request) {
+        $rules = [
+            'card_number' => 'required',
+            'exp_month' => 'required',
+            'exp_year' => 'required',
+            'cvc' => 'required',
+        ];
+
+        $values = $request->all();
+
+        $this->fieldsValidation($values, $rules);
+
+        $user = Auth::user();
+
+        try {
+            $this->paymentService->renewal($user[User::$EMAIL], $values['card_number'], $values['exp_month'], $values['exp_year'], $values['cvc']);
+        } catch (InvalidCardException $e) {
+            $request->session()->flash('alert', [
+                'message' => 'Les informations de paiement ne sont pas valides.',
+                'type' => 'warning'
+            ]);
+
+            return redirect()->back();
+        }
+
+        $request->session()->flash('alert', [
+            'message' => 'Félicitations ! Votre souscription a bien été prise en compte. Vous avez reçu un email confirmant votre commande.',
+            'type' => 'success'
+        ]);
+
+        return redirect()->back();
+    }
+
+    /**
      * @Get("/payment/thanks")
      */
     public function thanks(Request $request) {
@@ -302,5 +334,13 @@ class UserCtrl extends Controller
         Mail::to($user[User::$EMAIL])->queue(new UnSubscribeConfirmed());
 
         return redirect()->back();
+    }
+
+    private function fieldsValidation($values, $rules) {
+        $validator = Validator::make($values, $rules);
+
+        if($validator->fails()) {
+            throw new RequireFieldsException("Tous les champs sont requis.");
+        }
     }
 }
