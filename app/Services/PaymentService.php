@@ -61,7 +61,7 @@ class PaymentService
     
     private function subscription(User $user, string $numberCard, string $expMonth, string $expYear, string $cvc) {
         $token = $this->generateStripeToken->getToken($user[User::$FIRSTNAME], $user[User::$LASTNAME], $numberCard, $expMonth, $expYear, $cvc);
-        
+
         try {
             $subscription = $user->newSubscription('monthly', 'RT0001')->create($token);
         } catch (Card $e) {
