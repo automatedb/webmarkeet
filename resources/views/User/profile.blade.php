@@ -129,6 +129,10 @@
                                         <small class="text-muted text-left">Cette suppression est immédiate. Elle entraine aussi l'annulation de votre abonnement. Vous perdez aussi accès à toutes les ressources et toutes les formations achetées.</small>
                                     </div>
                                 @endif
+
+                                @if($user->role === 'admin' && !$user->subscribed('monthly'))
+                                    <p>Il n'y a pas de données pour le moment</p>
+                                @endif
                             </div>
                         </div>
                     </div>
