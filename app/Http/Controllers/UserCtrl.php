@@ -5,14 +5,19 @@ namespace App\Http\Controllers;
 use App\Exceptions\BadCredentialsException;
 use App\Exceptions\EmailAlreadyExistsException;
 use App\Exceptions\InvalidCardException;
+use App\Exceptions\InvalidSubscriptionException;
 use App\Exceptions\RequireFieldsException;
 use App\Exceptions\UnexpectedException;
 use App\Exceptions\UserNotFoundException;
+use App\Mail\UnRegisterConfirmed;
+use App\Mail\UnSubscribeConfirmed;
 use App\Models\User;
 use App\Services\PaymentService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -163,6 +168,8 @@ class UserCtrl extends Controller
     public function delete(Request $request) {
         $user = Auth::user();
 
+        $email = $user[User::$EMAIL];
+
         if(!$this->userService->delete($user->id)) {
             $request->session()->flash('alert', [
                 'message' => "Il nous est impossible de supprimer votre compte. Notre équipe a été informé de ce problème. Nous vous prions de nous excuser et vous invitons à recommencer ultérieurement.",
@@ -178,6 +185,8 @@ class UserCtrl extends Controller
             'message' => "Votre compte est supprimé. Nous sommes désolés de vous voir partir. Merci de la confiance que vous nous avez accordé jusqu'à présent. Cordialement.",
             'type' => 'success'
         ]);
+
+        Mail::to($email)->queue(new UnRegisterConfirmed());
 
         return redirect()->action('UserCtrl@authentication');
     }
@@ -219,11 +228,7 @@ class UserCtrl extends Controller
 
         $values = $request->all();
 
-        $validator = Validator::make($values, $rules);
-
-        if($validator->fails()) {
-            throw new RequireFieldsException("Tous les champs sont requis.");
-        }
+        $this->fieldsValidation($values, $rules);
 
         $passwordRules = [
             'confirm' => 'same:password'
@@ -252,6 +257,8 @@ class UserCtrl extends Controller
                 $values['cvc']
             );
         } catch (InvalidCardException $e) {
+            Log::error($e->getMessage());
+            
             $request->session()->flash('alert', [
                 'message' => 'Les informations de paiement ne sont pas valides.',
                 'type' => 'warning'
@@ -259,8 +266,19 @@ class UserCtrl extends Controller
 
             return redirect()->back()->withInput();
         } catch (EmailAlreadyExistsException $e) {
+            Log::error($e->getMessage());
+
             $request->session()->flash('alert', [
                 'message' => 'Un compte est déjà existant avec cette adresse email.',
+                'type' => 'warning'
+            ]);
+
+            return redirect()->back()->withInput();
+        } catch (InvalidSubscriptionException $e) {
+            Log::error($e->getMessage());
+
+            $request->session()->flash('alert', [
+                'message' => "Une erreur est survenue pendant votre payement. Vous n'avez pas été débité et votre compte n'a pas été créé. Notre équipe a été prévenue de l'erreur",
                 'type' => 'warning'
             ]);
 
@@ -268,6 +286,42 @@ class UserCtrl extends Controller
         }
 
         return redirect()->action('UserCtrl@thanks');
+    }
+
+    /**
+     * @Post("/payment/renewal-subscription")
+     */
+    public function postRenewalSubscription(Request $request) {
+        $rules = [
+            'card_number' => 'required',
+            'exp_month' => 'required',
+            'exp_year' => 'required',
+            'cvc' => 'required',
+        ];
+
+        $values = $request->all();
+
+        $this->fieldsValidation($values, $rules);
+
+        $user = Auth::user();
+
+        try {
+            $this->paymentService->renewal($user[User::$EMAIL], $values['card_number'], $values['exp_month'], $values['exp_year'], $values['cvc']);
+        } catch (InvalidCardException $e) {
+            $request->session()->flash('alert', [
+                'message' => 'Les informations de paiement ne sont pas valides.',
+                'type' => 'warning'
+            ]);
+
+            return redirect()->back();
+        }
+
+        $request->session()->flash('alert', [
+            'message' => 'Félicitations ! Votre souscription a bien été prise en compte. Vous avez reçu un email confirmant votre commande.',
+            'type' => 'success'
+        ]);
+
+        return redirect()->back();
     }
 
     /**
@@ -283,13 +337,25 @@ class UserCtrl extends Controller
      * @Get("/payment/cancel")
      */
     public function unSubscribe(Request $request) {
-        $this->userService->cancelSubscription(Auth::user());
+        $user = Auth::user();
+
+        $this->userService->cancelSubscription($user);
 
         $request->session()->flash('alert', [
             'message' => 'Votre souscription a été annulé.',
             'type' => 'success'
         ]);
 
+        Mail::to($user[User::$EMAIL])->queue(new UnSubscribeConfirmed());
+
         return redirect()->back();
+    }
+
+    private function fieldsValidation($values, $rules) {
+        $validator = Validator::make($values, $rules);
+
+        if($validator->fails()) {
+            throw new RequireFieldsException("Tous les champs sont requis.");
+        }
     }
 }

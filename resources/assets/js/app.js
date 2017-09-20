@@ -1,20 +1,22 @@
-(function(d, s, id){
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/fr_FR/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
+if(config !== undefined) {
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/fr_FR/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
 
-window.fbAsyncInit = function() {
-    FB.init({
-        appId            : config.social.api.facebook.public_id,
-        autoLogAppEvents : true,
-        xfbml            : true,
-        version          : 'v2.10'
-    });
-    FB.AppEvents.logPageView();
-};
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId            : config.social.api.facebook.public_id,
+            autoLogAppEvents : true,
+            xfbml            : true,
+            version          : 'v2.10'
+        });
+        FB.AppEvents.logPageView();
+    };
+}
 
 
 var cookiesFunctions = {
@@ -50,13 +52,15 @@ $.fn.customerPopup = function (e, intWidth, intHeight, blnResize) {
 };
 
 $(document).ready(function() {
-    if(!Cookies.get(config.analytics.cookies.cnil.name)) {
-        Cookies.set(config.analytics.cookies.cnil.name, config.analytics.cookies.cnil.value, {
-            expires: config.analytics.cookies.cnil.days
-        });
+    if(config !== undefined) {
+        if(!Cookies.get(config.analytics.cookies.cnil.name)) {
+            Cookies.set(config.analytics.cookies.cnil.name, config.analytics.cookies.cnil.value, {
+                expires: config.analytics.cookies.cnil.days
+            });
 
-        $('#cookies').removeClass('hidden-xs-up');
-        $('#cookies input').focus();
+            $('#cookies').removeClass('hidden-xs-up');
+            $('#cookies input').focus();
+        }
     }
 
     /**

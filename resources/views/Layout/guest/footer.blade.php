@@ -55,9 +55,9 @@
         };
     </script>
 
-    @stack('scripts')
-
     {!! Html::script('/js/app.js', [], env('APP_ENV') == 'production') !!}
+
+    @stack('scripts')
 
     @if(env('APP_ENV') == 'production')
         {!! Html::script('/js/analytics.js', [], env('APP_ENV') == 'production') !!}

@@ -127,11 +127,12 @@ class ContentService
         $this->validParams($status, $type);
 
         $contentModel = $this->content->where('id', $id)->first();
-        $sourceModel = $contentModel->sources()->first();
 
         if(empty($contentModel)) {
             throw new ContentNotFoundException('Content not found');
         }
+
+        $sourceModel = $contentModel->sources()->first();
 
         $this->setThumbnail($thumbnail, $contentModel);
 

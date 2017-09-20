@@ -6,9 +6,13 @@ use App\Exceptions\EmailAlreadyExistsException;
 use App\Exceptions\InvalidCardException;
 use App\Exceptions\InvalidSubscriptionException;
 use App\Helpers\GenerateStripeToken;
+use App\Mail\SubscriptionConfirmed;
 use App\Models\User;
 use App\Services\PaymentService;
 use App\Services\UserService;
+use Illuminate\Mail\PendingMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Queue;
 use Laravel\Cashier\Subscription;
 use Tests\TestCase;
 
@@ -19,7 +23,6 @@ class PaymentServiceTest extends TestCase
         $mock = \Mockery::mock(UserService::class);
 
         $mockGenerateStripeToken = \Mockery::mock(GenerateStripeToken::class);
-        $mockGenerateStripeToken->shouldReceive('getToken')->once()->andReturn('token-string');
 
         $mock->shouldReceive('registerUser')->once()->andThrow(EmailAlreadyExistsException::class);
 
@@ -75,12 +78,19 @@ class PaymentServiceTest extends TestCase
 
     public function testPaymentWithSuccess() {
         // Arrange
+        $mockMail = \Mockery::mock(PendingMail::class);
+
+        Mail::shouldReceive('to')->once()->andReturn($mockMail);
+
         $mock = \Mockery::mock(UserService::class);
 
-        $userMock = \Mockery::mock(User::class);
+        $userMock = \Mockery::mock(new User([
+            User::$FIRSTNAME => 'firstname',
+            User::$LASTNAME => 'lastname'
+        ]));
 
         $userMock->shouldReceive('newSubscription')->once()->andReturn($userMock);
-        $userMock->shouldReceive('create')->once()->andReturn(new Subscription());
+        $userMock->shouldReceive('create')->once()->andReturn(true);
 
         $mockGenerateStripeToken = \Mockery::mock(GenerateStripeToken::class);
         $mockGenerateStripeToken->shouldReceive('getToken')->once()->andReturn('token-string');

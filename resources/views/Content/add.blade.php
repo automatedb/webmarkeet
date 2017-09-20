@@ -139,7 +139,6 @@
                 } else {
                     $(content).insertAfter($('#editor').parent('div'));
                 }
-
             });
 
             $('.chapter').initialize(function(i, el) {

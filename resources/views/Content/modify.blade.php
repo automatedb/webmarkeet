@@ -89,7 +89,7 @@
                 @endif
                 <div class="form-group">
                     <label class="custom-file col-md-12">
-                        {!! Form::file('thumbnail', [ 'class' => 'form-control', 'id' => 'thumbnail' ]) !!}
+                        {!! Form::file('thumbnail', [ 'class' => 'custom-file-input', 'id' => 'thumbnail' ]) !!}
                         <span class="custom-file-control"></span>
                     </label>
                 </div>
@@ -191,7 +191,11 @@
 
                 content = String.format(content, chapters.length);
 
-                $(content).insertAfter(chapters.last());
+                if(chapters.length) {
+                    $(content).insertAfter(chapters.last());
+                } else {
+                    $(content).insertAfter($('#editor').parent('div'));
+                }
             });
 
             $('.chapter').initialize(function(i, el) {
