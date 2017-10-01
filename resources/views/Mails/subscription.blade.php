@@ -14,7 +14,7 @@
                 <li>Vous pouvez accéder à votre espace profil via le menu déroulant en haut à droite du site.</li>
                 <li>Vous pouvez modifier vos informations de connexion dans votre espace profil.</li>
                 <li>Toutes les sources téléchargeables sont accéssibles via les boutons de téléchargement en vert.</li>
-                <li>Toutes les formations sont accéssibles dans l'onglet "Formations" via le menu.</li>
+                {{--<li>Toutes les formations sont accéssibles dans l'onglet "Formations" via le menu.</li>--}}
             </ul>
         </div>
 
