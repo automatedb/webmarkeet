@@ -11,7 +11,7 @@
             <p>Sachez tout de même que votre abonnement reste valable jusqu'à la fin de la période en cours. Pendant cette période, vous pouvez toujours :</p>
 
             <ul>
-                <li>Accéder aux formations vidéos</li>
+                {{--<li>Accéder aux formations vidéos</li>--}}
                 <li>Accéder aux téléchargements des codes sources</li>
             </ul>
 

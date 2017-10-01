@@ -12,7 +12,7 @@
 
             <ul>
                 <li>Télécharger toutes les sources disponibles avec les tutoriels et formations via les boutons de téléchargement en vert.</li>
-                <li>Accéder et télécharger les formations via l'onglet "Formations" présent dans le menu.</li>
+                {{--<li>Accéder et télécharger les formations via l'onglet "Formations" présent dans le menu.</li>--}}
             </ul>
         </div>
 
