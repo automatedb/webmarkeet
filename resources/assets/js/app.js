@@ -67,7 +67,7 @@ $(document).ready(function() {
      * Permet la validation des formulaires
      */
     $('form').on('submit', function(e) {
-        $('.required').each(function(i, el) {
+        $(this).find('.required').each(function(i, el) {
             var value = $(el).val();
             var hasError = false;
 
@@ -90,7 +90,7 @@ $(document).ready(function() {
     /**
      * Gestion des bouton de partage
      */
-    $('.btn-facebook').on('click', function(e) {
+    $('.btn-share .btn-facebook').on('click', function(e) {
         e.preventDefault();
 
         FB.ui({
@@ -107,7 +107,7 @@ $(document).ready(function() {
             }, function (response) { });
     });
 
-    $('.btn-twitter').on('click', function(e) {
+    $('.btn-share .btn-twitter').on('click', function(e) {
         $(this).customerPopup(e);
     });
 
@@ -125,4 +125,71 @@ $(document).ready(function() {
             $(this).val('');
         }
     });
+
+    /**
+     * Permet la connexion avec un bouton facebook
+     */
+    $('#popin .btn').on('click', function(e) {
+        e.preventDefault();
+
+        FB.login(function(response) {
+            if (response.authResponse) {
+                FB.api('/me?fields=first_name,last_name,email', function(response) {
+                    if(response.email === undefined) {
+                        FB.api('/' + response.id + '/permissions', 'delete', function(response) {
+                            $('#popin-email-alert').addClass('show');
+                        })
+                    } else {
+                        var user = {
+                            firstname: response.first_name,
+                            lastname: response.last_name,
+                            email: response.email,
+                            facebook_id: response.id
+                        }
+
+                        $.ajax({
+                            method: 'POST',
+                            url: '/api/v1/facebook-registration',
+                            data: user,
+                            success: function(response) {
+                                if(response.message === 'success_registration') {
+                                    Cookies.set(config.analytics.cookies.facebook_refuse_registration.name, config.analytics.cookies.facebook_refuse_registration.value);
+
+                                    $('#popin-success-alert').addClass('show');
+                                } else {
+                                    $('#popin-failure-alert').addClass('show');
+                                }
+
+                                $('#popin').remove();
+                                $('body').removeClass('popin-registration');
+                            }
+                        })
+                    }
+                });
+            } else {
+                console.log('User cancelled login or did not fully authorize.');
+            }
+        }, {scope: 'email,public_profile'});
+    });
+
+    /**
+     * Permet de fermer la popin invitant à l'inscription
+     */
+    $('#popin .close-popin').on('click', function(e) {
+        e.preventDefault();
+
+        $('#popin').remove();
+        $('body').removeClass('popin-registration');
+
+        Cookies.set(config.analytics.cookies.facebook_refuse_registration.name, config.analytics.cookies.facebook_refuse_registration.value, {
+            expires: config.analytics.cookies.facebook_refuse_registration.days
+        });
+    });
+
+    if(!Cookies.get(config.analytics.cookies.facebook_refuse_registration.name) && config.hasReferer) {
+        setTimeout(function() {
+            $('#popin').removeClass('hidden-xs-up');
+            $('body').addClass('popin-registration');
+        }, config.popin.display_after);
+    }
 });
