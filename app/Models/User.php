@@ -28,6 +28,8 @@ class User extends Model implements Authenticatable
 
     public static $PASSWORD = 'password';
 
+    public static $FACEBOOK_ID = 'facebook_id';
+
     public static $ROLE = 'role';
 
     protected $table = 'users';
@@ -37,7 +39,7 @@ class User extends Model implements Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['firstname', 'lastname', 'email', 'password', 'role'];
+    protected $fillable = ['firstname', 'lastname', 'email', 'password', 'facebook_id', 'role'];
 
     /**
      * The attributes that should be mutated to dates.

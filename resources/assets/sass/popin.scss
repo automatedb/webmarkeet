@@ -1,0 +1,54 @@
+body {
+  &.popin-registration {
+    overflow: hidden;
+  }
+
+  #popin {
+    padding-top: 10rem;
+    background-color: rgba(255, 255, 255, .8);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+
+    .lead {
+      font-weight: bold;
+    }
+
+    h3 {
+      font-size: 2.5rem;
+    }
+
+    hr {
+      margin: 2rem 0;
+    }
+
+    ul {
+      list-style: none;
+      margin-bottom: 1.5rem;
+
+      li {
+        font-size: 1.2rem;
+      }
+    }
+
+    .btn-social {
+      i {
+        color: #FFF;
+      }
+    }
+
+    .close-popin {
+      color: #333333;
+    }
+  }
+
+  #popin-success-alert, #popin-failure-alert, #popin-email-alert {
+    position: absolute;
+    bottom: 30px;
+    z-index: 200;
+    right: 30px;
+  }
+}

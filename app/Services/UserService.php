@@ -8,9 +8,11 @@ use App\Exceptions\PasswordRequiredException;
 use App\Exceptions\UnexpectedException;
 use App\Exceptions\UserNotFoundException;
 use App\Jobs\UnSubscribePlan;
+use App\Mail\FreeSubscriptionConfirmed;
 use App\Models\User;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class UserService
 {
@@ -23,16 +25,21 @@ class UserService
         $this->user = $user;
     }
 
-    public function registerUser(string $firstname, string $lastname, string $email, string $password): User {
+    public function registerUser(string $firstname, string $lastname, string $email, string $password, string $facebook_id = null): User {
         $this->isEmailExists(0, $email, 1);
 
-        return $this->user->create([
+        $user = $this->user->create([
             User::$FIRSTNAME => $firstname,
             User::$LASTNAME => $lastname,
             User::$EMAIL => $email,
             User::$PASSWORD => bcrypt($password),
-            User::$ROLE => User::CUSTOMER
+            User::$ROLE => User::CUSTOMER,
+            User::$FACEBOOK_ID => $facebook_id
         ]);
+
+        Mail::to($email)->queue(new FreeSubscriptionConfirmed($password));
+
+        return $user;
     }
 
     public function authentication(string $email, string $password): User {

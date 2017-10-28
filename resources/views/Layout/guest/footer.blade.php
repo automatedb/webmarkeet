@@ -26,7 +26,7 @@
 
     @widget('Cookies')
 
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
@@ -42,6 +42,11 @@
                         days: {{ config('analytics.cookies.cnil.days') }},
                         name: '{{ config('analytics.cookies.cnil.name') }}',
                         value: '{{ config('analytics.cookies.cnil.value') }}'
+                    },
+                    facebook_refuse_registration: {
+                        days: {{ config('analytics.cookies.facebook_refuse_registration.days') }},
+                        name: '{{ config('analytics.cookies.facebook_refuse_registration.name') }}',
+                        value: '{{ config('analytics.cookies.facebook_refuse_registration.value') }}'
                     }
                 }
             },
@@ -53,6 +58,13 @@
                 }
             }
         };
+
+        @if(!empty($referer))
+            config.hasReferer = true;
+            config.popin = {
+                display_after: {{ config('popin.display_after') }}
+            };
+        @endif
     </script>
 
     {!! Html::script('/js/app.js', [], env('APP_ENV') == 'production') !!}

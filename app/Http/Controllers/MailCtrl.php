@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\FreeSubscriptionConfirmed;
 use App\Mail\RenewalSubscriptionConfirmed;
 use App\Mail\SubscriptionConfirmed;
 use App\Mail\UnRegisterConfirmed;
@@ -18,6 +19,19 @@ class MailCtrl extends Controller
         return view($mail->preview(), [
             'css' => implode(' ', $mail->getCssList()),
             'action' => 'MailCtrl@subscription'
+        ]);
+    }
+
+    /**
+     * @Get("/mail/free-subscription")
+     */
+    public function freeSubscription() {
+        $mail = new FreeSubscriptionConfirmed('****');
+
+        return view($mail->preview(), [
+            'css' => implode(' ', $mail->getCssList()),
+            'action' => 'MailCtrl@subscription',
+            'password' => "<strong>**** Par sécurité, nous n'affichons pas le mot de passe dans votre navigateur ****</strong>"
         ]);
     }
 
