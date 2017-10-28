@@ -49,7 +49,7 @@ class FreeSubscriptionConfirmed extends Mailable
             ->subject(sprintf("Confirmation d'inscription à %s", config('app.name')))
             ->with([
             'css' => implode(' ', $this->cssList),
-            'action' => 'MailCtrl@subscription',
+            'action' => 'MailCtrl@freeSubscription',
             'password' => $this->password
         ]);
     }

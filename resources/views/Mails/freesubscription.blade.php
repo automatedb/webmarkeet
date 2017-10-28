@@ -8,7 +8,7 @@
 
             <p>Merci pour votre inscription. Ce mail contient un mot de passe par défaut pour vos connecter. Nous vous recommandons de le changer en vous connectant et en vous rendant sur votre profil.</p>
 
-            <p>Votre mot de passe est le suivant : {{ $password }}</p>
+            <p>Votre mot de passe est le suivant : {!! $password !!}</p>
         </div>
 
         <div class="btn-share">
