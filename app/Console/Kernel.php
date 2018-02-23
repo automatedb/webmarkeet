@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\MakeSiteMap;
 use App\Console\Commands\MakeUser;
 use App\Console\Commands\ResizeImages;
+use App\Console\Commands\UploadVideo;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -19,6 +20,7 @@ class Kernel extends ConsoleKernel
         ResizeImages::class,
         MakeUser::class,
         MakeSiteMap::class,
+        UploadVideo::class,
     ];
 
     /**

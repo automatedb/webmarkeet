@@ -218,6 +218,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Laravel\Cashier\CashierServiceProvider::class,
         Spatie\Sitemap\SitemapServiceProvider::class,
+        Dawson\Youtube\YoutubeServiceProvider::class,
     ],
 
     /*
@@ -272,6 +273,7 @@ return [
         'AsyncWidget' => Arrilot\Widgets\AsyncFacade::class,
         'Markdown' => GrahamCampbell\Markdown\Facades\Markdown::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Youtube' => Dawson\Youtube\Facades\Youtube::class,
     ],
 
 ];
