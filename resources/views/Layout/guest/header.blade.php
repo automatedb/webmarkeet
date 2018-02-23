@@ -30,9 +30,9 @@
                     <li class="nav-item {{ \App\Helpers\Menu::activeMenu('tutorials') }}">
                         {{ link_to_action('ContentCtrl@tutorials', 'Tutoriels', [], ['class' => 'nav-link', 'itemprop' => 'url']) }}
                     </li>
-                    {{--<li class="nav-item {{ \App\Helpers\Menu::activeMenu('formations') }}">--}}
-                        {{--{{ link_to_action('FormationCtrl@index', 'Formations', [], ['class' => 'nav-link', 'itemprop' => 'url']) }}--}}
-                    {{--</li>--}}
+                    <li class="nav-item {{ \App\Helpers\Menu::activeMenu('formations') }}">
+                        {{ link_to_action('FormationCtrl@index', 'Formations', [], ['class' => 'nav-link', 'itemprop' => 'url']) }}
+                    </li>
                     @if(!\Illuminate\Support\Facades\Auth::check())
                         <li class="nav-item {{ \App\Helpers\Menu::activeMenu('authentication') }}">
                             {{ link_to_action('UserCtrl@authentication', 'Authentification', [], ['class' => 'nav-link', 'itemprop' => 'url']) }}

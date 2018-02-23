@@ -16,5 +16,6 @@ public/img
 public/css/
 public/fonts/
 public/js/
+public/sitemap.xml
 public/mix-manifest.json
 supervisord.*
