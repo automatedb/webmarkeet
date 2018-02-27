@@ -16,17 +16,12 @@ class UploadController extends Controller
 {
     use DispatchesJobs;
 
-    private $youtubeUploaderService;
-
-    public function __construct(YoutubeUploaderService $youtubeUploaderService) {
-        $this->youtubeUploaderService = $youtubeUploaderService;
-    }
-
     /**
      * @Post("upload/youtube")
      */
     public function index(Request $request) {
         $rules = [
+            'id' => 'required',
             'title' => 'required',
             'video' => 'required'
         ];
@@ -42,15 +37,33 @@ class UploadController extends Controller
         }
 
         $values['tags'] = !empty($values['tags']) ? $values['tags'] : "";
+        $values['description'] = !empty($values['description']) ? $values['description'] : "";
+
+        if(!$request->hasFile('video')) {
+            return response()->json([
+                'message' => 'unexpected_error'
+            ]);
+        }
 
         $request->file('video')->store(config('content.uploadDirectory'));
-        $request->file('thumbnail')->store(config('content.uploadDirectory'));
+
+        $thumbnailName = "";
+
+        if($request->hasFile('thumbnail')) {
+            $request->file('thumbnail')->store(config('content.uploadDirectory'));
+            $thumbnailName = $request->file('thumbnail')->hashName();
+        }
 
         $this->dispatch(new YoutubeUpload(
+            $values['id'],
             $request->file('video')->hashName(),
             $values['title'],
             $values['description'],
             $values['tags'],
-            $request->file('thumbnail')->hashName()));
+            $thumbnailName));
+
+        return response()->json([
+            'message' => 'success'
+        ]);
     }
 }

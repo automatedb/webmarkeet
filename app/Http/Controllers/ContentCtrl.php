@@ -226,7 +226,8 @@ class ContentCtrl extends Controller
                 $values[Content::$SLUG],
                 $values[Content::$STATUS],
                 $values[Content::$CONTENT],
-                $values[Content::$VIDEO_ID],
+//                $values[Content::$VIDEO_ID],
+                "",
                 $thumbnail,
                 $sources,
                 $chapters);

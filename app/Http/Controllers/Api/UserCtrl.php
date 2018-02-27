@@ -23,7 +23,7 @@ class UserCtrl extends Controller
 
     /**
      * Show authentication blog
-     * @Post("/facebook-registration    ")
+     * @Post("/facebook-registration")
      */
     public function facebookRegistration(Request $request) {
         $rules = [

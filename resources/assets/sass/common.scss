@@ -4,35 +4,20 @@ $color-blue3: #002020;
 $color-gray : #404853;
 $color-dark : #292B30;
 $color-link : #337AB9;
-
 .admin-page {
   form {
-    input[type=file] {
-      display: none;
+    .custom-file-control[lang="fr"] {
+      &:before {
+        content: "Chercher";
+      }
+
+      &:after {
+        content: "Ajouter un fichier...";
+      }
     }
 
-    .files {
-      .video-file {
-        .custom-file-control {
-          &:after {
-            content: "Choisir une vidéo...";
-          }
-          &:before {
-            content: "Chercher";
-          }
-        }
-      }
-
-      .source-file {
-        .custom-file-control {
-          &:after {
-            content: "Choisir une source...";
-          }
-          &:before {
-            content: "Chercher";
-          }
-        }
-      }
+    input[type=file] {
+      display: none;
     }
   }
 

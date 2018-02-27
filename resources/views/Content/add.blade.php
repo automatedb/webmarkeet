@@ -5,7 +5,7 @@
         @widget('Alert', $alert)
     </section>
 
-    {!! Form::open(['class' => 'row', 'files' => true]) !!}
+    {!! Form::open(['class' => 'row', 'files' => true, 'name' => 'global-form']) !!}
     <div class="col col-md-9">
         <div class="form-group">
             {!! Form::text('title', '', ['class' => 'form-control required', 'placeholder' => "Saisissez un titre...", "data-slugger" => ""]) !!}
@@ -28,25 +28,23 @@
         </div>
     </div>
     <div class="col col-md-3">
-
         <div class="form-group">
             {!! Form::label('thumbnail', 'Illustration du contenu') !!}
             <label class="custom-file col-md-12">
                 {!! Form::file('thumbnail', [ 'class' => 'form-control', 'id' => 'thumbnail' ]) !!}
-                <span class="custom-file-control"></span>
+                <span class="custom-file-control" lang="{{ config('app.locale') }}"></span>
             </label>
         </div>
 
-        <div class="form-group">
-            {!! Form::label('video_id', 'ID video youtube', [ 'for' => 'video_id' ]) !!}
-            {!! Form::text('video_id', '', ['class' => 'form-control', 'placeholder' => "Saisissez un ID Youtube..."]) !!}
-        </div>
+        {{--<div class="form-group">--}}
+            {{--<a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#uploadModal">Uploader un vidéo</a>--}}
+        {{--</div>--}}
 
         <div id="add-sources-files" class="form-group">
             {!! Form::label('sources', 'Associer des sources') !!}
             <label class="custom-file col-md-12">
-                {!! Form::file('sources', [ 'class' => 'form-control', 'id' => 'sources' ]) !!}
-                <span class="custom-file-control"></span>
+                {!! Form::file('sources', [ 'class' => 'form-control', 'id' => 'sources', 'lang' => 'fr' ]) !!}
+                <span class="custom-file-control" lang="{{ config('app.locale') }}"></span>
             </label>
         </div>
 
@@ -60,6 +58,57 @@
         </div>
     </div>
     {!! Form::close() !!}
+
+    {{--<!-- Modal -->--}}
+    {{--<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">--}}
+        {{--<div class="modal-dialog" role="document">--}}
+            {{--{!! Form::open(['class' => 'row', 'files' => true, 'name' => 'upload-from']) !!}--}}
+                {{--<div class="modal-content">--}}
+                    {{--<div class="modal-header">--}}
+                        {{--<h5 class="modal-title" id="exampleModalLabel">Choisir une vidéo...</h5>--}}
+                        {{--<button type="button" class="close" data-dismiss="modal" aria-label="Close">--}}
+                            {{--<span aria-hidden="true">&times;</span>--}}
+                        {{--</button>--}}
+                    {{--</div>--}}
+                    {{--<div class="modal-body">--}}
+                        {{--<div class="form-group">--}}
+                            {{--{!! Form::label('video', 'Séléctionner un vidéo') !!}--}}
+                            {{--<label class="custom-file col-md-12">--}}
+                                {{--{!! Form::file('video', [ 'class' => 'form-control required', 'id' => 'video' ]) !!}--}}
+                                {{--<span class="custom-file-control" lang="{{ config('app.locale') }}"></span>--}}
+                                {{--<p class="form-control-feedback hidden-xs-up">Merci séléctionner une vidéo.</p>--}}
+                            {{--</label>--}}
+                        {{--</div>--}}
+
+                        {{--<div class="form-group">--}}
+                            {{--{!! Form::text('title', '', ['class' => 'form-control required', 'placeholder' => "Saisissez un titre..."]) !!}--}}
+                            {{--<p class="form-control-feedback hidden-xs-up">Merci d'entrer un titre.</p>--}}
+                        {{--</div>--}}
+
+                        {{--<div class="form-group">--}}
+                            {{--{!! Form::textarea('content', '', ['class' => 'form-control']) !!}--}}
+                        {{--</div>--}}
+
+                        {{--<div class="form-group">--}}
+                            {{--{!! Form::text('tags', '', ['class' => 'form-control', 'placeholder' => "Saisissez une liste de mots clés (tag 1, tag 2...)"]) !!}--}}
+                        {{--</div>--}}
+
+                        {{--<div class="form-group">--}}
+                            {{--{!! Form::label('youtube-thumbnail', 'Séléctionner une illustration') !!}--}}
+                            {{--<label class="custom-file col-md-12">--}}
+                                {{--{!! Form::file('youtube-thumbnail', [ 'class' => 'form-control', 'id' => 'youtube-thumbnail' ]) !!}--}}
+                                {{--<span class="custom-file-control" lang="{{ config('app.locale') }}"></span>--}}
+                            {{--</label>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                    {{--<div class="modal-footer">--}}
+                        {{--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>--}}
+                        {{--<button type="submit" class="btn btn-primary">Uploader</button>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+            {{--{!! Form::close() !!}--}}
+        {{--</div>--}}
+    {{--</div>--}}
 @endsection
 
 @push('styles')
@@ -146,6 +195,44 @@
                     element: $(el).find('textarea')[0],
                     showIcons: ["code"]
                 });
+            });
+
+//            $('form[name="upload-from"]').on('submit', function(e) {
+//                e.preventDefault();
+//                e.stopPropagation();
+//
+//                if($(this).validForm(this, e)) {
+//                    var data = new FormData();
+//
+//                    data.append('title', $(this).find('input[name="title"]').val());
+//                    data.append('description', $(this).find('input[name="description"]').val());
+//                    data.append('tags', $(this).find('input[name="tags"]').val());
+//                    data.append('video', $(this).find('input[name="video"]').get(0).files[0]);
+//                    data.append('thumbnail', $(this).find('input[name="thumbnail"]').get(0).files[0]);
+//
+//                    $.ajax({
+//                        url: '/api/v1/upload/youtube',
+//                        type: 'POST',
+//                        data: data,
+//                        cache: false,
+//                        dataType: 'json',
+//                        processData: false,
+//                        contentType: false,
+//                        success: function(result) {
+//                          console.log(result);
+//                        },
+//                        error: function(result) {
+//                          console.log(result);
+//                        },
+//                        complete: function() {
+//                          console.log('complete');
+//                        }
+//                    })
+//                }
+//            });
+
+            $('form[name="global-form"]').on('submit', function(e) {
+                validForm(this, e);
             });
         });
     </script>

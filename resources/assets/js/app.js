@@ -18,7 +18,6 @@ if(config !== undefined) {
     };
 }
 
-
 var cookiesFunctions = {
     'man cookies': function() {
         $('#cookies p.man-cookies').insertBefore('.clearfix');
@@ -32,8 +31,33 @@ var cookiesFunctions = {
     }
 };
 
-$.fn.customerPopup = function (e, intWidth, intHeight, blnResize) {
+$.fn.validForm = function(elm, e) {
+    var validForm = true;
 
+    $(elm).find('.required').each(function(i, el) {
+        var value = $(el).val();
+        var hasError = false;
+
+        $(el).parent().removeClass('has-danger');
+        $(el).parent().find('.form-control-feedback').addClass('hidden-xs-up');
+
+        if($.trim(value) === '') {
+            hasError = true;
+            validForm = false;
+
+            $(el).parent().addClass('has-danger');
+            $(el).parent().find('.form-control-feedback').removeClass('hidden-xs-up');
+        }
+
+        if(hasError) {
+            e.preventDefault();
+        }
+    });
+
+    return validForm;
+};
+
+$.fn.customerPopup = function (e, intWidth, intHeight, blnResize) {
     // Prevent default anchor event
     e.preventDefault();
 
@@ -52,40 +76,18 @@ $.fn.customerPopup = function (e, intWidth, intHeight, blnResize) {
 };
 
 $(document).ready(function() {
-    if(config !== undefined) {
-        if(!Cookies.get(config.analytics.cookies.cnil.name)) {
-            Cookies.set(config.analytics.cookies.cnil.name, config.analytics.cookies.cnil.value, {
-                expires: config.analytics.cookies.cnil.days
-            });
+    if(jQuery().Cookies) {
+        if(config !== undefined) {
+            if(!Cookies.get(config.analytics.cookies.cnil.name)) {
+                Cookies.set(config.analytics.cookies.cnil.name, config.analytics.cookies.cnil.value, {
+                    expires: config.analytics.cookies.cnil.days
+                });
 
-            $('#cookies').removeClass('hidden-xs-up');
-            $('#cookies input').focus();
+                $('#cookies').removeClass('hidden-xs-up');
+                $('#cookies input').focus();
+            }
         }
     }
-
-    /**
-     * Permet la validation des formulaires
-     */
-    $('form').on('submit', function(e) {
-        $(this).find('.required').each(function(i, el) {
-            var value = $(el).val();
-            var hasError = false;
-
-            $(el).parent().removeClass('has-danger');
-            $(el).parent().find('.form-control-feedback').addClass('hidden-xs-up');
-
-            if($.trim(value) === '') {
-                hasError = true;
-
-                $(el).parent().addClass('has-danger');
-                $(el).parent().find('.form-control-feedback').removeClass('hidden-xs-up');
-            }
-
-            if(hasError) {
-                e.preventDefault();
-            }
-        });
-    });
 
     /**
      * Gestion des bouton de partage
@@ -186,10 +188,14 @@ $(document).ready(function() {
         });
     });
 
-    if(!Cookies.get(config.analytics.cookies.facebook_refuse_registration.name) && config.hasReferer) {
-        setTimeout(function() {
-            $('#popin').removeClass('hidden-xs-up');
-            $('body').addClass('popin-registration');
-        }, config.popin.display_after);
+    if(jQuery().Cookies) {
+        //run plugin dependent code
+        if(!Cookies.get(config.analytics.cookies.facebook_refuse_registration.name) && config.hasReferer) {
+            setTimeout(function() {
+                $('#popin').removeClass('hidden-xs-up');
+                $('body').addClass('popin-registration');
+            }, config.popin.display_after);
+        }
     }
+
 });
