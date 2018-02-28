@@ -14,13 +14,14 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     static $password;
+    static $role;
 
     return [
         'firstname' => $faker->firstName,
         'lastname' => $faker->lastName,
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
-        'role' => str_random(10),
+        'role' => !empty($role) ? $role : str_random(10),
     ];
 });
 
