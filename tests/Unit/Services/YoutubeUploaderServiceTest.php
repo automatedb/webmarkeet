@@ -2,10 +2,13 @@
 
 namespace Tests\Unit\Services;
 
+use App\Exceptions\ContentNotFoundException;
 use App\Exceptions\MaxFileExceededException;
 use App\Exceptions\VideoNotFoundException;
 use App\Helpers\YoutubeUploader;
+use App\Models\Content;
 use App\Services\YoutubeUploaderService;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 class YoutubeUploaderServiceTest extends TestCase
@@ -120,5 +123,46 @@ class YoutubeUploaderServiceTest extends TestCase
 
         // Assert
         $this->assertEquals($videoId, "VIDEO_ID");
+    }
+
+    /**
+     * Vérifie que le post existe bien, sinon retourne une erreur
+     */
+    public function testMoveVideoToPublicDirectory_Case_ExpectException() {
+        // Arrange
+        $file = UploadedFile::fake()->create('video.mp4', 1024);
+
+        $videoUploaderMock = \Mockery::mock(YoutubeUploader::class);
+
+        $youtubeUploaderService = new YoutubeUploaderService($videoUploaderMock);
+
+        // Assert
+        $this->expectException(ContentNotFoundException::class);
+
+        // Act
+        $youtubeUploaderService->moveVideoToPublicDirectory($file->hashName(), 12345);
+    }
+
+    /**
+     * Vérifie que le vidéo a bien été déplacée dans le dossier public
+     */
+    public function testMoveVideoToPublicDirectory_CheckVideoFileCase_Success() {
+        // Arrange
+        $content = Content::find(1);
+
+        $file = UploadedFile::fake()->create('video.mp4', 1024);
+        copy(storage_path('app/uploads/intro.mp4'), storage_path('app/uploads/' . $file->hashName()));
+
+        $videoUploaderMock = \Mockery::mock(YoutubeUploader::class);
+
+        $youtubeUploaderService = new YoutubeUploaderService($videoUploaderMock);
+
+        // Act
+        $youtubeUploaderService->moveVideoToPublicDirectory($file->hashName(), $content['id']);
+
+        // Assert
+        $this->assertFileExists(storage_path('app/public/tutorial-video-' . $content['id'] . '-' . $content[Content::$VIDEO_ID] . '.mp4'));
+
+        unlink(storage_path('app/public/tutorial-video-' . $content['id'] . '-' . $content[Content::$VIDEO_ID] . '.mp4'));
     }
 }

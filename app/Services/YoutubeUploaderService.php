@@ -9,10 +9,13 @@
 namespace App\Services;
 
 
+use App\Exceptions\ContentNotFoundException;
 use App\Exceptions\MaxFileExceededException;
 use App\Exceptions\VideoNotFoundException;
 use App\Helpers\YoutubeUploader;
+use App\Models\Content;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class YoutubeUploaderService
 {
@@ -38,6 +41,18 @@ class YoutubeUploaderService
         $tags = $this->convertStringToTag($tags);
 
         return $this->youtubeUploader->upload($filename, $title, $description, $tags, $thumbnail);
+    }
+
+    public function moveVideoToPublicDirectory(string $filename, int $postId) {
+        $content = Content::find($postId);
+
+        if(is_null($content)) {
+            throw new ContentNotFoundException('content_not_found');
+        }
+
+        $newFileName = 'tutorial-video-' . $content['id'] . '-' . $content[Content::$VIDEO_ID] . '.mp4';
+
+        rename(storage_path('app/uploads/' . $filename), storage_path('app/public/' . $newFileName));
     }
 
     private function convertStringToTag(string $tags): array {
