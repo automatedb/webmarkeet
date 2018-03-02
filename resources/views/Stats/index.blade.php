@@ -60,7 +60,7 @@
                 <div class="clearfix"></div>
                 <div class="row">
                     <div id="gains" class="col-md-4">
-                        <div class="card">
+                        <div id="account-name" class="card">
                             <div class="card-body">
                                 <h5 class="card-title text-center">{{ $stats[\App\Models\StatsTrading::NAME] }}</h5>
                             </div>
@@ -68,7 +68,7 @@
 
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title text-center">{{ number_format($stats[\App\Models\StatsTrading::GAINS], 2) }}<small>%</small>
+                                <h5 class="card-title text-center {{ $stats[\App\Models\StatsTrading::GAINS] >= 0 ? 'text-success' : 'text-danger' }}">{{ number_format($stats[\App\Models\StatsTrading::GAINS], 2) }}<small>%</small>
                                     <span>Gains</span></h5>
                             </div>
                         </div>
