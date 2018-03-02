@@ -1,0 +1,23 @@
+#stats {
+  .intro-message {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  #gains {
+    .card-title {
+      font-size: 5rem;
+
+      span {
+        display: block;
+        font-size: 3rem;
+      }
+    }
+  }
+
+  .banner {
+    h4 {
+      margin-bottom: 1rem;
+    }
+  }
+}
