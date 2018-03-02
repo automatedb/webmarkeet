@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\MakeSiteMap;
 use App\Console\Commands\MakeUser;
+use App\Console\Commands\MyFxBookScanner;
 use App\Console\Commands\ResizeImages;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -19,6 +20,7 @@ class Kernel extends ConsoleKernel
         ResizeImages::class,
         MakeUser::class,
         MakeSiteMap::class,
+        MyFxBookScanner::class
     ];
 
     /**

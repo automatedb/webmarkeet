@@ -62,7 +62,13 @@
                     <div id="gains" class="col-md-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title text-center">92<small>%</small>
+                                <h5 class="card-title text-center">{{ $stats[\App\Models\StatsTrading::NAME] }}</h5>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title text-center">{{ number_format($stats[\App\Models\StatsTrading::GAINS], 2) }}<small>%</small>
                                     <span>Gains</span></h5>
                             </div>
                         </div>
@@ -71,13 +77,13 @@
                     <div class="col-md-8">
                         <div class="card">
                             <div class="card-header">
-                                34.83€ <small>- Nom du compte</small>
+                                <strong>Solde du compte : {{ number_format($stats[\App\Models\StatsTrading::BALANCE], 2) }}€</strong>
                             </div>
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Type de compte : REEL</li>
-                                <li class="list-group-item">Profit : -216.34€</li>
-                                <li class="list-group-item">Drawdown : 86.26%</li>
-                                <li class="list-group-item">Pips : -2826.4</li>
+                                <li class="list-group-item">Type de compte : {{ !$stats[\App\Models\StatsTrading::DEMO] ? 'Compte réel' : 'Compte de démonstration' }}</li>
+                                <li class="list-group-item">Profit : {{ number_format($stats[\App\Models\StatsTrading::PROFITS], 2) }}€</li>
+                                <li class="list-group-item">Drawdown : {{ number_format($stats[\App\Models\StatsTrading::DRAWDOWN], 2) }}%</li>
+                                <li class="list-group-item">Pips : {{ number_format($stats[\App\Models\StatsTrading::PIPS], 2) }}</li>
                             </ul>
                         </div>
                     </div>

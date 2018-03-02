@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\StatsTrading;
 
 class StatsCtrl extends Controller
 {
@@ -10,8 +10,11 @@ class StatsCtrl extends Controller
      * @Get("/stats")
      */
     public function index() {
+        $stats = StatsTrading::where(StatsTrading::ACCOUNT_ID, config('myfxbook.accountId'))->first();
+
         return view('Stats.index', [
-            'thumbnail' => config('app.thumbnail')
+            'thumbnail' => config('app.thumbnail'),
+            'stats' => $stats
         ]);
     }
 }
